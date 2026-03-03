@@ -107,6 +107,8 @@ const BackCorner = () => {
       document.removeEventListener('pointerup', handlePointerUp);
       document.removeEventListener('pointercancel', handlePointerCancel);
     };
+    // These handlers intentionally close over refs/state and are wired once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -50,13 +50,6 @@ const SolarDial = ({ onTermChange }) => {
     return ms / 86400000 + 1;
   };
 
-  const estimateDayHours = (doy) => {
-    const t = ((doy - 172) / 365) * (Math.PI * 2);
-    const v = Math.cos(t);
-    const day = 12 + 3 * v;
-    return Math.max(8.5, Math.min(15.5, day));
-  };
-
   const getTodayInfo = () => {
     const now = new Date();
     const yearDays = isLeapYear(now.getFullYear()) ? 366 : 365;
@@ -94,11 +87,6 @@ const SolarDial = ({ onTermChange }) => {
   const rotationFromValue = (value, units) => {
     const deg = (Number(value) / units) * 360;
     return TEXT_TOP_OFFSET + deg;
-  };
-
-  const valueFromRotation = (rot, units) => {
-    const deg = mod(rot - TEXT_TOP_OFFSET, 360);
-    return (deg / 360) * units;
   };
 
   const rotationForTerm = (kind, idx) => {
@@ -147,37 +135,6 @@ const SolarDial = ({ onTermChange }) => {
     root.setProperty('--term-fill', rgbStr(fill));
     root.setProperty('--term-rim', rgbStr(rim));
     root.setProperty('--term-text', rgbStr(mix(base, { r: 20, g: 18, b: 16 }, 0.65)));
-  };
-
-  const valueForTerm = (kind, term) => {
-    if (kind === 'date') return Number(term.doy || 0);
-    if (kind === 'lon') return mod(Number(term.solarLon || 0), 360);
-    if (kind === 'daynight') return Number(term.dayH || 0);
-    return 0;
-  };
-
-  const circularDistance = (a, b, units) => {
-    const d = Math.abs(a - b);
-    return Math.min(d, units - d);
-  };
-
-  const nearestTermIndexFor = (kind, value) => {
-    let bestI = 0;
-    let bestD = Infinity;
-
-    for (let i = 0; i < TERM_LIST.length; i++) {
-      const v = valueForTerm(kind, TERM_LIST[i]);
-      let dist;
-      if (kind === 'date') dist = circularDistance(value, v, 365);
-      else if (kind === 'lon') dist = circularDistance(value, v, 360);
-      else dist = Math.abs(value - v);
-
-      if (dist < bestD) {
-        bestD = dist;
-        bestI = i;
-      }
-    }
-    return bestI;
   };
 
   const outerRotationForIndex = (idx) => {
@@ -271,9 +228,6 @@ const SolarDial = ({ onTermChange }) => {
   const applyTermToAll = (idx) => {
     const term = TERM_LIST[idx];
     setTermTheme(term);
-    
-    const info = getTodayInfo();
-    const yearPct = Math.round(info.yearProgress * 100);
 
     setState(prev => ({
       ...prev,
@@ -428,6 +382,8 @@ const SolarDial = ({ onTermChange }) => {
       },
       currentTermIndex: startIdx
     }));
+    // Initialization is intentionally run once on mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Add event listeners
@@ -443,6 +399,8 @@ const SolarDial = ({ onTermChange }) => {
         moveRafRef.current = null;
       }
     };
+    // Listener lifecycle is intentionally coupled to state updates.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   useEffect(() => {

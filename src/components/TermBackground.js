@@ -8,7 +8,7 @@ import {
 const TermBackground = ({ termId }) => {
   useEffect(() => {
     ensureTermBackgroundScript()
-      .then(() => applyTermBackgroundTheme(window.__TERM_ID__ || termId))
+      .then(() => applyTermBackgroundTheme(window.__TERM_ID__))
       .catch(() => {
         // Keep UI resilient if runtime fails to load.
       });
