@@ -1,0 +1,26 @@
+/* Terms list page */
+.terms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.term-card {
+    display: block;
+    padding: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    background: #fdfbf4;
+    text-decoration: none;
+    color: #1b1b1b;
+}
+
+.term-card:hover {
+    border-color: rgba(0, 0, 0, 0.18);
+}
+
+.term-card-summary {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #555;
+}

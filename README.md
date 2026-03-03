@@ -1,70 +1,104 @@
-# Getting Started with Create React App
+# 24 Solar Terms - React Version
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a React port of the 24 Solar Terms interactive web application.
+
+## About
+
+An interactive exploration of the traditional Chinese 24 solar terms (二十四节气), featuring:
+- Interactive solar dial visualization
+- Detailed pages for each solar term
+- Beautiful traditional Chinese aesthetics
+- P5.js animations
+
+## Features
+
+- **Landing Page**: Interactive dial showing all 24 solar terms with animations
+- **Terms List**: Grid view of all solar terms
+- **Term Detail Pages**: Detailed information about each term including phases, poems, and rituals
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v14 or higher)
+- npm or yarn
+
+### Installation
+
+```bash
+# Navigate to project directory
+cd 24-solar-terms-react
+
+# Install dependencies (if not already installed)
+npm install
+
+# Start development server
+npm start
+```
+
+The app will open in your browser at [http://localhost:3000](http://localhost:3000)
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+This creates an optimized production build in the `build` folder.
+
+## Project Structure
+
+```
+24-solar-terms-react/
+├── public/
+│   ├── css/           # Original CSS files
+│   ├── assets/        # Images, fonts, and other assets
+│   └── data/          # JSON data for terms
+├── src/
+│   ├── components/    # React components
+│   │   ├── P5Wrapper.js       # P5.js animation wrapper
+│   │   ├── SolarDial.js       # Interactive solar term dial
+│   │   └── BackCorner.js      # Drag-to-return component
+│   ├── pages/         # Page components
+│   │   ├── Landing.js         # Landing page with dial
+│   │   ├── TermsList.js       # List of all terms
+│   │   └── TermDetail.js      # Individual term details
+│   ├── data/
+│   │   └── termsData.js       # Term constants and data
+│   ├── App.js         # Main app with routing
+│   └── index.js       # Entry point
+└── package.json
+```
+
+## Technologies Used
+
+- **React** - UI framework
+- **React Router** - Navigation and routing
+- **P5.js** - Interactive animations
+- **CSS** - Original styling preserved
+
+## React-First Architecture Notes
+
+- Source of truth is in [src/](src/): pages, components, hooks, and data modules.
+- P5 is loaded from npm (`p5`) in React components, not a CDN script.
+- Term background now runs as a React-managed p5 instance in [src/components/TermBackground.js](src/components/TermBackground.js), with seasonal theme mapping in [src/lib/termBackgroundTheme.js](src/lib/termBackgroundTheme.js).
+- `public/` is treated as static assets/template only.
+- `build/` is generated output and should not be manually edited.
+
+## Original Project
+
+This is a React conversion of the original vanilla JavaScript project located at:
+`/Users/tata/24 solar terms/`
+
+See [MIGRATION_SUMMARY.md](MIGRATION_SUMMARY.md) for detailed migration notes.
 
 ## Available Scripts
 
-In the project directory, you can run:
+- `npm start` - Runs the app in development mode
+- `npm test` - Launches the test runner
+- `npm run build` - Builds the app for production
+- `npm run eject` - Ejects from Create React App (irreversible)
 
-### `npm start`
+## License
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is for educational purposes.

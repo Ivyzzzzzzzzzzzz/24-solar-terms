@@ -1,0 +1,395 @@
+/* Landing page layout */
+.landing-page {
+    height: 100%;
+    overflow: hidden;
+    --landing-pad-top: 96px;
+    --landing-pad-x: 136px;
+}
+
+.landing-page .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 12;
+    background: rgba(245, 242, 234, 0.85);
+    backdrop-filter: blur(6px);
+}
+
+#p5Mount {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+#p5Mount canvas {
+    display: block;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.landing {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    padding: 0;
+}
+
+.landing-title {
+    font-family: "Cutive Mono", "Cutive Mono-Regular", Helvetica, sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(84, 80, 76, 0.8);
+    margin: 0;
+}
+
+.landing-title-wrap {
+    position: absolute;
+    top: var(--landing-pad-top);
+    left: var(--landing-pad-x);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.landing-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    color: rgba(84, 80, 76, 0.78);
+    perspective: 500px;
+}
+
+.landing-meta-year {
+    font-family: "Cutive Mono", "Cutive Mono-Regular", Helvetica, sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.08em;
+    line-height: 1;
+}
+
+.landing-meta-date {
+    display: inline-flex;
+    align-items: center;
+    min-height: 22px;
+    padding: 3px 8px;
+    border: 1px solid rgba(84, 80, 76, 0.22);
+    /* background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.96) 0%,
+        rgba(255, 255, 255, 0.88) 49%,
+        rgba(236, 232, 224, 0.92) 50%,
+        rgba(248, 246, 240, 0.95) 100%
+    ); */
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.65) inset, 0 1px 4px rgba(20, 18, 16, 0.08);
+    transform-origin: top center;
+    backface-visibility: hidden;
+    animation: landingFlipIn 440ms cubic-bezier(0.24, 0.72, 0.24, 1);
+}
+
+.landing-meta-date-en {
+    font-family: "Cutive Mono", "Cutive Mono-Regular", Helvetica, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    line-height: 1;
+}
+
+.landing-meta-date-zh {
+    font-size: 12px;
+    line-height: 1;
+}
+
+@keyframes landingFlipIn {
+    0% {
+        transform: rotateX(-86deg);
+        opacity: 0;
+        filter: brightness(1.06);
+    }
+    55% {
+        transform: rotateX(8deg);
+        opacity: 1;
+        filter: brightness(1.02);
+    }
+    100% {
+        transform: rotateX(0deg);
+        opacity: 1;
+        filter: brightness(1);
+    }
+}
+
+.landing .term-grid-link {
+    top: var(--landing-pad-top);
+    right: var(--landing-pad-x);
+    margin: 0;
+}
+
+.landing-dial {
+    position: relative;
+    width: min(82vmin, 640px);
+    aspect-ratio: 1 / 1;
+}
+
+.dial-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.dial-ring {
+    transform-origin: 200px 200px;
+    cursor: default;
+}
+
+.dial-ring:active {
+    cursor: grabbing;
+}
+
+.dial-ring-static {
+    cursor: default;
+}
+
+.dial-ring-outer {
+    cursor: grab;
+}
+
+.dial-halo {
+    fill: none;
+    stroke: var(--term-fill);
+    stroke-width: 18;
+    opacity: 0.18;
+}
+
+.dial-rim-soft {
+    opacity: 0.6;
+}
+
+/* Dial styling */
+:root {
+    --term-base: #9aa6b2;
+    --term-track: #e4e0d6;
+    --term-fill: #d9d5c9;
+    --term-rim: #cfc9bf;
+    --term-text: #1d1b19;
+}
+
+.dial-track {
+    fill: none;
+    stroke: var(--term-track);
+    stroke-width: 1.6;
+}
+
+.dial-track-0 { stroke-width: 1.4; }
+.dial-track-1 { stroke-width: 1.2; }
+.dial-track-2 { stroke-width: 1.0; }
+.dial-track-3 { stroke-width: 0.9; }
+.dial-track-4 { stroke-width: 1.2; }
+
+.dial-rim {
+    fill: none;
+    stroke: var(--term-rim);
+    stroke-width: 0.8;
+}
+
+.dial-fill {
+    fill: none;
+    stroke-width: 3.2;
+}
+
+.dial-fill-day {
+    stroke: var(--term-fill);
+}
+
+.dial-fill-night {
+    stroke: #d0c9be;
+}
+
+.dial-text {
+    font-size: var(--ring-text-size);
+    fill: var(--term-text);
+    letter-spacing: 0.3px;
+}
+
+.dial-text .dial-inline-zh {
+    font-family: var(--zh);
+}
+
+.dial-sep {
+    opacity: 0.6;
+}
+
+.dial-tick {
+    stroke: var(--term-text);
+    stroke-width: 0.8;
+    opacity: 0.2;
+}
+
+.dial-tick.major {
+    opacity: 0.5;
+    stroke-width: 1.1;
+}
+
+.dial-center-btn {
+    cursor: pointer;
+}
+
+.dial-core {
+    fill: rgba(255, 255, 255, 0.6);
+    stroke: var(--term-rim);
+    stroke-width: 1.2;
+}
+
+.dial-center-term {
+    font-size: 12px;
+    font-weight: 500;
+    fill: var(--term-text);
+}
+
+.dial-center-term-zh {
+    font-size: 14px;
+    fill: var(--term-text);
+    font-family: var(--zh);
+}
+
+.dial-center-hint {
+    font-size: 10px;
+    opacity: 0.7;
+    fill: var(--term-text);
+}
+
+.dial-allterms-text {
+    font-size: var(--ring-text-size);
+    fill: var(--term-text);
+}
+
+.outer-tip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    font-size: 11px;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.en {
+    font-family: var(--en), var(--zh);
+}
+
+.zh {
+    font-family: var(--zh);
+}
+/* Ensure the p5 canvas fills the screen and sits behind any UI */
+.term-page canvas {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+}
+
+/* Top tabs overlay */
+.term-page .top-tabs {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 10;
+    display: flex;
+    gap: 8px;
+    padding: 6px;
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+    backdrop-filter: blur(6px);
+}
+
+.term-page .top-tabs .tab {
+    appearance: none;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.8);
+    color: #1f1f1f;
+    font-size: 12px;
+    letter-spacing: 0.2px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.term-page .top-tabs .tab.active {
+    background: #2e8b57;
+    border-color: #2e8b57;
+    color: #f6f8f0;
+}
+
+/* Term page navigation */
+.term-page .term-nav {
+    position: fixed;
+    bottom: 14px;
+    left: 14px;
+    z-index: 10;
+    display: flex;
+    gap: 10px;
+    padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+    font-size: 12px;
+    backdrop-filter: blur(6px);
+}
+
+.term-page .term-nav a {
+    text-decoration: none;
+    color: #1b1b1b;
+}
+
+.term-page .term-nav a:hover {
+    text-decoration: underline;
+}
+
+/* Term page title overlay */
+.term-title {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+    font-size: 12px;
+    letter-spacing: 0.3px;
+    backdrop-filter: blur(6px);
+}
+
+/* Terms list */
+.terms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.term-card {
+    display: block;
+    padding: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    background: #fdfbf4;
+    text-decoration: none;
+    color: #1b1b1b;
+}
+
+.term-card:hover {
+    border-color: rgba(0, 0, 0, 0.18);
+}

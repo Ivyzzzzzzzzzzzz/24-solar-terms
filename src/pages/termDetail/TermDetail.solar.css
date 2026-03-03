@@ -1,0 +1,169 @@
+/* TermDetail: solar info panel + interaction/glint/shadow */
+.term-solar-panel-wrap {
+    position: absolute;
+    top: 167px;
+    right: calc(34px + 104px);
+    width: 140px;
+    z-index: 2;
+}
+
+.term-solar-panel {
+    position: relative;
+    width: 140px;
+    height: 150px;
+    padding: 6px 8px;
+    box-sizing: border-box;
+    border: 1px solid rgba(84, 80, 76, 0.38);
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background-image:
+        linear-gradient(120deg,
+            rgba(255, 255, 255, 0) 36%,
+            rgba(255, 255, 255, 0.10) 43%,
+            rgba(255, 255, 255, 0.46) 50%,
+            rgba(255, 255, 255, 0.11) 57%,
+            rgba(255, 255, 255, 0) 64%),
+        linear-gradient(120deg,
+            rgba(255, 255, 255, 0) 12%,
+            rgba(212, 216, 223, 0.12) 46%,
+            rgba(255, 255, 255, 0.05) 74%,
+            rgba(255, 255, 255, 0) 92%),
+        linear-gradient(180deg,
+            rgba(225, 228, 232, 0.12) 0%,
+            rgba(255, 255, 255, 0.03) 38%,
+            rgba(128, 133, 141, 0.08) 100%);
+    background-repeat: no-repeat, no-repeat, no-repeat;
+    background-size: 180px 180px, 220px 220px, 100% 100%;
+    background-position: -170% -45%, -130% -38%, 0 0;
+    color: #54504c;
+    isolation: isolate;
+    cursor: ns-resize;
+    outline: none;
+    transition: background 180ms ease, box-shadow 180ms ease, backdrop-filter 180ms ease, -webkit-backdrop-filter 180ms ease;
+    animation: termPanelSunGlint 3.2s linear infinite;
+}
+
+.term-solar-panel:focus,
+.term-solar-panel:focus-visible {
+    outline: none;
+}
+
+.term-solar-panel-wrap.is-hover .term-solar-panel,
+.term-solar-panel:hover,
+.term-solar-panel:focus-within {
+    background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.10)),
+        repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.12) 0 1px, rgba(255, 255, 255, 0) 1px 4px),
+        rgba(245, 242, 236, 0.18);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24), inset 0 8px 18px rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(2px) saturate(110%);
+    -webkit-backdrop-filter: blur(2px) saturate(110%);
+    animation: none;
+}
+
+@keyframes termPanelSunGlint {
+    0% {
+        background-position: -170% -45%, -130% -38%, 0 0;
+    }
+    50% {
+        background-position: -8% -7%, -18% -8%, 0 0;
+    }
+    100% {
+        background-position: 130% 22%, 112% 14%, 0 0;
+    }
+}
+
+.term-solar-panel::before,
+.term-solar-panel::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    pointer-events: none;
+    z-index: -1;
+    transform-origin: bottom left;
+    opacity: 0;
+    transition: opacity 220ms ease, transform 280ms cubic-bezier(.22,.8,.24,1);
+}
+
+.term-solar-panel::before {
+    height: calc(140px * var(--term-solar-shadow-scale, 0.68));
+    background: rgba(84, 80, 76, 0.214);
+    transform: skewX(45deg) translateY(0px) scaleY(0.02);
+}
+
+.term-solar-panel::after {
+    height: calc(14px * var(--term-solar-shadow-scale, 0.68));
+    background: linear-gradient(to top, rgba(84, 80, 76, 0.1), rgba(84, 80, 76, 0));
+    transform: skewX(45deg) translateY(calc(-5px * var(--term-solar-shadow-scale, 0.68))) scaleY(0.02);
+}
+
+.term-solar-panel-wrap.is-hover .term-solar-panel::before,
+.term-solar-panel:hover::before,
+.term-solar-panel:focus-within::before {
+    opacity: 1;
+    transform: skewX(45deg) translateY(0px) scaleY(1);
+}
+
+.term-solar-panel-wrap.is-hover .term-solar-panel::after,
+.term-solar-panel:hover::after,
+.term-solar-panel:focus-within::after {
+    opacity: 1;
+    transform: skewX(45deg) translateY(calc(-5px * var(--term-solar-shadow-scale, 0.68))) scaleY(1);
+}
+
+.term-solar-panel-value {
+    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 1.3;
+    margin-bottom: 2px;
+}
+
+.term-solar-panel-note {
+    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-size: 12px;
+    line-height: 1.3;
+    opacity: 1;
+}
+
+.term-solar-panel-note-zh {
+    margin-top: 2px;
+    font-family: "FZZJ-YZDKJW-Regular", "Noto Serif SC", Helvetica, sans-serif;
+    font-size: 12px;
+    line-height: 1.3;
+    opacity: 1;
+}
+
+.term-solar-panel-instruction {
+    margin-top: 8px;
+    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-size: 12px;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    text-align: right;
+    opacity: 0;
+    transform: translateY(2px);
+    transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.term-solar-panel-instruction-zh {
+    font-family: "FZFangSong-Z02S", "FZFangSong-Z02S-Regular", Helvetica, sans-serif;
+    font-size: 12px;
+    line-height: 1.25;
+}
+
+.term-solar-panel-instruction-en {
+    margin-top: 1px;
+    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-size: 10px;
+    line-height: 1.2;
+}
+
+.term-solar-panel-wrap.is-hover .term-solar-panel-instruction,
+.term-solar-panel:focus-within + .term-solar-panel-instruction {
+    opacity: 0.68;
+    transform: translateY(0);
+}

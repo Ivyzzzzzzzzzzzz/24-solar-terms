@@ -1,0 +1,22 @@
+{
+  "terms": [
+    {
+      "id": "dongzhi",
+      "nameZh": "冬至",
+      "nameEn": "Winter Solstice",
+      "summary": "The longest night holds a returning warmth within it."
+    },
+    {
+      "id": "guyu",
+      "nameZh": "谷雨",
+      "nameEn": "Grain Rain",
+      "summary": "Rain becomes a condition that supports growth."
+    },
+    {
+      "id": "yushui",
+      "nameZh": "雨水",
+      "nameEn": "Rain Water",
+      "summary": "Brief rain softens the ground, then recedes."
+    }
+  ]
+}

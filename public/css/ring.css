@@ -1,0 +1,465 @@
+/* ==========================
+   Ring Styles (from design)
+========================== */
+@font-face {
+    font-family: "FZFangSong-Z02S";
+    src: url("fonts/FZFangSong-Z02S-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "FZZJ-YZDKJW-Regular";
+    src: url("../assets/fonts/FZZJ-YZDKJW.TTF") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "FZZJ-YZDKJW";
+    src: url("../assets/fonts/FZZJ-YZDKJW.TTF") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "FZZJ-TLKSJW-Regular";
+    src: url("../assets/fonts/FZFSJW.TTF") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --paper: #f6f1ea;
+    --ink: rgba(20, 18, 16, 0.88);
+    --muted: rgba(20, 18, 16, 0.55);
+    --hair: rgba(20, 18, 16, 0.18);
+    --hair2: rgba(20, 18, 16, 0.10);
+
+    --zh: "FZFangSong-Z02S", "FangSong", "Songti SC", serif;
+    --en: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+    --pad: 56px;
+    --page-max: 1320px;
+    --spine: 110px;
+    --gutter: 46px;
+    --left-col: 520px;
+    --right-col: 620px;
+    --rhythm: 24px;
+    --label-col: 90px;
+    --almanac-track: 0.14em;
+    --almanac-leading: 1.55;
+    --almanac-meta-size: 12px;
+    --ring-text-size: 10px;
+    --ring-text-size-en: 9px;
+
+    --term-base: #929eaa;
+    --term-track: rgba(20, 18, 16, 0.08);
+    --term-fill: rgba(20, 18, 16, 0.20);
+    --term-rim: rgba(20, 18, 16, 0.14);
+    --term-text: rgba(20, 18, 16, 0.50);
+}
+
+body {
+    background: var(--paper);
+    color: var(--ink);
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-family: var(--en), var(--zh);
+}
+
+.en {
+    font-family: var(--en), var(--zh);
+    letter-spacing: 0.2px;
+}
+
+.zh {
+    font-family: var(--zh);
+    letter-spacing: 0.6px;
+    font-weight: 400;
+}
+
+/* p5 background */
+#p5Mount {
+    pointer-events: auto;
+}
+
+/* Landing dial */
+.landing {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: grid;
+    place-items: center;
+    background: var(--paper);
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.landing.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.landing-dial {
+    position: relative;
+    width: min(86vw, 660px);
+    height: min(86vw, 660px);
+    max-width: 660px;
+    max-height: 660px;
+    display: grid;
+    place-items: center;
+}
+
+.dial-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.dial-halo {
+    display: none;
+}
+
+.outer-tip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 6px 8px;
+    border-radius: 999px;
+    background: rgba(246, 241, 234, 0.86);
+    border: 1px solid rgba(20, 18, 16, 0.14);
+    box-shadow: 0 18px 28px rgba(0, 0, 0, 0.08);
+    font-size: 10px;
+    letter-spacing: 0.10em;
+    color: rgba(20, 18, 16, 0.70);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-9999px, -9999px);
+}
+
+.dial-ring {
+    transform-origin: 200px 200px;
+    cursor: default;
+    touch-action: none;
+}
+
+.dial-ring:active {
+    cursor: grabbing;
+}
+
+.dial-ring-static {
+    cursor: default;
+    touch-action: none;
+}
+
+.term-selector-arc {
+    fill: none;
+    stroke: rgba(0, 0, 0, 0);
+    stroke-width: .5;
+    pointer-events: none;
+}
+
+.term-selector-hit {
+    fill: none;
+    stroke: rgba(0, 0, 0, 0);
+    stroke-width: 12;
+    pointer-events: none;
+    cursor: default;
+}
+
+#ringSelector {
+    display: none;
+    pointer-events: none;
+}
+
+#ringSelector.selector-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#ringName {
+    pointer-events: none;
+}
+
+#ringAllTerms {
+    pointer-events: auto;
+    cursor: grab;
+    touch-action: none;
+}
+
+.dial-outer-hit {
+    fill: none;
+    stroke: rgba(0, 0, 0, 0);
+    stroke-width: 24;
+    pointer-events: stroke;
+}
+
+.outer-snap-guide {
+    pointer-events: none;
+}
+
+.outer-snap-highlight {
+    fill: color-mix(in srgb, var(--term-fill) 98%, rgba(20, 18, 16, 0.02));
+    stroke: color-mix(in srgb, var(--term-rim) 48%, rgba(20, 18, 16, 0.08));
+    stroke-width: 0.9;
+    stroke-linecap: round;
+    stroke-dasharray: 3.2 4.8;
+    opacity: 1;
+    filter:
+        drop-shadow(0 0 5px color-mix(in srgb, var(--term-fill) 78%, rgba(20, 18, 16, 0.06)))
+        drop-shadow(0 0 10px color-mix(in srgb, var(--term-fill) 38%, rgba(20, 18, 16, 0.10)));
+    animation: none;
+}
+
+#ringHou {
+    cursor: default;
+    transform-origin: 200px 200px;
+    animation: houRingTurn 42s linear infinite;
+}
+
+#ringHou text,
+#ringHou textPath {
+    pointer-events: none;
+}
+
+@keyframes houRingTurn {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.dial-tick {
+    display: none;
+    stroke: rgba(20, 18, 16, 0.14);
+    stroke-linecap: round;
+    stroke-width: 1.1;
+}
+
+.dial-tick.major {
+    stroke: rgba(20, 18, 16, 0.20);
+    stroke-width: 1.4;
+    opacity: 0.85;
+}
+
+.dial-tick.minor {
+    opacity: 0.55;
+}
+
+@keyframes dashFlow {
+    from { stroke-dashoffset: 0; }
+    to   { stroke-dashoffset: -240; }
+}
+
+@keyframes thicknessPulse {
+    0%   { stroke-width: 32; stroke-opacity: 0.28; }
+    50%  { stroke-width: 38; stroke-opacity: 0.62; }
+    100% { stroke-width: 32; stroke-opacity: 0.28; }
+}
+
+@keyframes bleedPulse {
+    0%   { opacity: 0.10; filter: blur(0px); }
+    50%  { opacity: 0.22; filter: blur(1.2px); }
+    100% { opacity: 0.10; filter: blur(0px); }
+}
+
+.dial-track {
+    display: none;
+}
+
+.dial-track-1 { animation-delay: 0.0s, 0.0s; }
+.dial-track-2 { animation-delay: 0.7s, 0.3s; }
+.dial-track-3 { animation-delay: 1.4s, 0.6s; }
+.dial-track-4 { animation-delay: 2.1s, 0.9s; }
+.dial-track-0 { animation-delay: 2.8s, 1.2s; }
+
+.dial-rim {
+    display: none;
+}
+
+.dial-rim-soft {
+    display: none;
+}
+
+.dial-allterms-text {
+    fill: rgba(20, 18, 16, 0.42);
+    font-family: var(--zh);
+    font-size: var(--ring-text-size);
+    letter-spacing: 0.22em;
+    opacity: 0.75;
+}
+
+.dial-outer-en {
+    fill: rgba(20, 18, 16, 0.35);
+    font-size: var(--ring-text-size-en);
+    letter-spacing: 0.12em;
+    pointer-events: none;
+}
+
+.dial-allterms-text:hover {
+    opacity: 0.92;
+}
+
+.dial-fill {
+    display: none;
+}
+
+.dial-fill-hou-track,
+.dial-fill-hou {
+    stroke-dashoffset: 10;
+}
+
+.dial-fill-year-track,
+.dial-fill-year {
+    display: block;
+    stroke-dashoffset: 12;
+    stroke-linecap: butt;
+}
+
+.dial-year-box-track {
+    display: none;
+}
+
+.dial-year-box-fill {
+    fill: color-mix(in srgb, var(--term-fill) 92%, rgba(255, 255, 255, 0.08));
+    /* stroke: rgba(20, 18, 16, 0.72); */
+    stroke-width: 1;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 4px #ffffff);
+}
+
+.dial-fill-hou-track {
+    stroke: color-mix(in srgb, var(--term-fill) 85%, rgba(20, 18, 16, 0.60));
+}
+
+.dial-fill-hou {
+    stroke: var(--term-fill);
+}
+
+.dial-fill-year-track {
+    stroke: rgba(20, 18, 16, 0.3);
+    stroke-width: 2.2;
+}
+
+.dial-fill-year {
+    stroke: rgba(20, 18, 16, 0.82);
+    stroke-width: 2.6;
+    filter: drop-shadow(0 0 4px rgba(20, 18, 16, 0.22));
+}
+
+.dial-undertext {
+    display: none;
+}
+
+.dial-undertext-lon {
+    opacity: 0.55;
+}
+
+.dial-undertext-hou {
+    opacity: 0.45;
+}
+
+.dial-hit {
+    fill: none;
+    stroke: rgba(0, 0, 0, 0);
+    pointer-events: stroke;
+}
+
+.dial-hit-hou {
+    stroke-width: 30;
+}
+
+.dial-text {
+    fill: rgba(20, 18, 16, 0.55);
+    pointer-events: none;
+}
+
+.dial-text.en {
+    font-family: var(--en), var(--zh);
+    letter-spacing: 0.08em;
+    font-size: var(--ring-text-size-en);
+}
+
+.dial-text-date { font-size: var(--ring-text-size-en); }
+.dial-text-lon { font-size: var(--ring-text-size-en); }
+.dial-text-daynight { font-size: var(--ring-text-size-en); }
+
+.dial-text-hou {
+    pointer-events: none;
+}
+
+
+.hou-slice {
+    fill: var(--term-fill);
+    opacity: 0.12;
+    transition: opacity 180ms ease;
+    pointer-events: none;
+}
+
+.hou-slice.active {
+    opacity: 0.95;
+    filter: drop-shadow(0 0 16px rgba(120, 190, 160, 0.7));
+}
+
+.dial-sep {
+    opacity: 0.55;
+    letter-spacing: 0.06em;
+}
+
+.dial-inline-zh {
+    font-family: var(--zh);
+    font-size: var(--ring-text-size);
+    letter-spacing: 0.12em;
+}
+
+.dial-center-btn {
+    cursor: pointer;
+    outline: none;
+}
+
+.dial-center-btn:focus-visible .dial-core {
+    stroke: rgba(20, 18, 16, 0.35);
+    stroke-width: 1.2;
+}
+
+.dial-core {
+    fill: color-mix(in srgb, var(--term-base) 50%, rgba(20, 18, 16, 0.10));
+    filter: url(#dialBlur);
+    transition: transform 160ms ease, fill 160ms ease;
+    transform-origin: 200px 200px;
+}
+
+.dial-center-btn:hover .dial-core {
+    fill: color-mix(in srgb, var(--term-base) 58%, rgba(20, 18, 16, 0.10));
+}
+
+.dial-center-btn:active .dial-core {
+    transform: scale(0.985);
+}
+
+.dial-center-term {
+    font-family: var(--en);
+    font-size: 12px;
+    fill: rgba(246, 241, 234, 0.92);
+    letter-spacing: 0.10em;
+    pointer-events: none;
+}
+
+.dial-center-term-zh {
+    font-family: var(--zh);
+    font-size: 14px;
+    fill: rgba(246, 241, 234, 0.90);
+    letter-spacing: 0.18em;
+    pointer-events: none;
+}
+
+.dial-center-hint {
+    font-family: var(--en);
+    font-size: 10px;
+    fill: rgba(246, 241, 234, 0.70);
+    letter-spacing: 0.18em;
+    pointer-events: none;
+}

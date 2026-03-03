@@ -1,0 +1,504 @@
+.term-center-content {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(760px, 68vw);
+    min-height: 280px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.term-center-content .term-note,
+.term-center-content .term-poem,
+.term-center-content .term-phases,
+.term-center-content .term-ritual {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.term-center-content .term-note.is-visible,
+.term-center-content .term-poem.is-visible,
+.term-center-content .term-phases.is-visible,
+.term-center-content .term-ritual.is-visible {
+    pointer-events: auto;
+}
+
+.term-center-content .term-note {
+    display: inline-block;
+    width: auto;
+    max-width: none;
+    min-width: 0;
+    padding: 10px 14px;
+    box-sizing: border-box;
+}
+
+.term-center-content .term-note:hover {
+    transform: translate(-50%, -50%);
+}
+
+.term-center-content .term-phases {
+    width: 461px;
+}
+
+.term-center-content .term-poem {
+    left: 50%;
+    top: 50%;
+}
+
+.term-center-content .term-poem:hover {
+    transform: translate(-50%, -50%);
+}
+
+.term-center-content .term-ritual {
+    width: 445.5px;
+}
+
+.term-note {
+    position: absolute;
+    right: 674px;
+    bottom: 433px;
+    display: flex;
+    padding: 4px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 178px;
+    color: #54504C;
+    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: -0.48px;
+    border: 0.5px solid #54504C;
+    background: transparent;
+    opacity: 0;
+    pointer-events: none;
+    text-align: left;
+    transition: opacity 180ms ease, background-color 160ms ease, transform 220ms ease;
+}
+
+.term-note-en {
+    text-align: left;
+    display: inline-block;
+    width: 19ch;
+    max-width: 19ch;
+    transition: transform 220ms ease;
+}
+
+.term-note-en-text {
+    display: inline;
+    text-wrap: pretty;
+}
+
+.term-note:hover {
+    background: #ffffff;
+    transform: translateX(-10px);
+}
+
+.term-note.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.term-poem {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    padding: 12px 10px;
+    border: 0.5px solid #54504c;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease, background-color 160ms ease, transform 220ms ease;
+    background: transparent;
+}
+
+.term-poem.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.term-poem-verse {
+    align-self: stretch;
+    color: #54504c;
+    font-family: "FZZJ-YZDKJW-Regular", "Noto Serif SC", Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: normal;
+    margin-top: -1px;
+    text-align: center;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+}
+
+.term-poem-author {
+    color: #54504c;
+    font-family: "FZFangSong-Z02S", "FZFangSong-Z02S-Regular", Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: normal;
+    margin-top: 2px;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+}
+
+.term-poem-title {
+    color: #54504c;
+    font-family: "FZFangSong-Z02S", "FZFangSong-Z02S-Regular", Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: normal;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+}
+
+.term-poem-note {
+    position: absolute;
+    left: calc(100% + 18px);
+    top: 8px;
+    width: 260px;
+    color: #54504C;
+    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: -0.48px;
+    line-height: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 220ms ease;
+}
+
+.term-poem:hover {
+    background: #ffffff;
+    transform: translate(-50%, -50%) translateX(-10px);
+}
+
+.term-poem:hover .term-poem-note,
+.term-poem:focus-within .term-poem-note {
+    opacity: 1;
+}
+
+.term-phases {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 461px;
+    min-height: 190px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+}
+
+.term-phases.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.term-phases-row {
+    border: 1px solid #54504c;
+    height: 26px;
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+    transition: background-color 160ms ease, transform 220ms ease;
+}
+
+.term-phases-row-1 {
+    width: 300px;
+    background: transparent;
+}
+
+.term-phases-row-2 {
+    width: 300px;
+}
+
+.term-phases-row-3 {
+    width: 410px;
+}
+
+.term-phases-row-inner {
+    display: flex;
+    gap: 7px;
+    position: relative;
+    left: 4px;
+    top: 3px;
+}
+
+.term-phases-zh {
+    color: #54504c;
+    font-family: "FZZJ-YZDKJW-Regular", "FZZJ-YZDKJW", "Noto Serif SC", Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 18px;
+    white-space: nowrap;
+}
+
+.term-phases-en {
+    color: #54504c;
+    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16.2px;
+    letter-spacing: -0.54px;
+    white-space: nowrap;
+}
+
+.term-phases-row-2 .term-phases-en {
+    position: absolute;
+    left: 72px;
+    top: 5px;
+    width: 298px;
+}
+
+.term-phases-row-2 .term-phases-zh {
+    position: absolute;
+    left: 4px;
+    top: 3px;
+}
+
+.term-phases-row-3 .term-phases-zh {
+    position: absolute;
+    left: 4px;
+    top: 3px;
+}
+
+.term-phases-row-3 .term-phases-en {
+    position: absolute;
+    left: 72px;
+    top: 5px;
+    letter-spacing: 0.18px;
+    line-height: 17px;
+}
+
+.term-phases-hover-note {
+    position: absolute;
+    left: 4px;
+    top: 42px;
+    width: 420px;
+    color: #54504c;
+    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: -0.54px;
+    background: transparent;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+    transform: scaleY(0.7);
+    transform-origin: top left;
+    transition: opacity 200ms ease, transform 220ms ease;
+}
+
+.term-phases-note {
+    position: absolute;
+    left: 4px;
+    top: 42px;
+    width: 420px;
+    color: #54504c;
+    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: -0.54px;
+    background: transparent;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+    transform: scaleY(0.7);
+    transform-origin: top left;
+    transition: opacity 200ms ease, transform 220ms ease;
+}
+
+.term-phases-row-1:hover + .term-phases-note,
+.term-phases-row-1:focus-within + .term-phases-note {
+    opacity: 1;
+    transform: scaleY(1);
+    pointer-events: auto;
+}
+
+.term-phases-row-1:hover ~ .term-phases-row-2,
+.term-phases-row-1:focus-within ~ .term-phases-row-2,
+.term-phases-row-1:hover ~ .term-phases-row-3,
+.term-phases-row-1:focus-within ~ .term-phases-row-3 {
+    transform: translateY(52px);
+}
+
+.term-phases-row-1:hover,
+.term-phases-row-1:focus-within {
+    background: #ffffff;
+}
+
+.term-phases-row-2:hover,
+.term-phases-row-2:focus-within,
+.term-phases-row-3:hover,
+.term-phases-row-3:focus-within {
+    background: #ffffff;
+    overflow: visible;
+    z-index: 2;
+}
+
+.term-phases-row-2:hover .term-phases-hover-note,
+.term-phases-row-2:focus-within .term-phases-hover-note,
+.term-phases-row-3:hover .term-phases-hover-note,
+.term-phases-row-3:focus-within .term-phases-hover-note {
+    opacity: 1;
+    transform: scaleY(1);
+}
+
+.term-phases-row-2:hover ~ .term-phases-row-3,
+.term-phases-row-2:focus-within ~ .term-phases-row-3 {
+    transform: translateY(52px);
+}
+
+.term-ritual {
+    position: absolute;
+    left: 533px;
+    top: 346px;
+    display: flex;
+    width: 445.5px;
+    justify-content: space-between;
+    align-items: flex-start;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+}
+
+.term-ritual.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.term-ritual-col {
+    display: flex;
+    width: 125px;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.term-ritual-trigger {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    min-height: 18px;
+    overflow: visible;
+}
+
+.term-ritual-marker {
+    width: 18px;
+    height: 18px;
+    border: 1px solid #54504c;
+    background: transparent;
+    transition: opacity 180ms ease, transform 200ms ease;
+}
+
+.term-ritual-artboard {
+    width: 125px;
+    height: 125px;
+    aspect-ratio: 1 / 1;
+    align-self: stretch;
+    background: transparent;
+}
+
+.term-ritual-note {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    width: 260px;
+    padding: 0 8px;
+    border: 1px solid transparent;
+    color: #54504c;
+    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: -0.48px;
+    background: transparent;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    pointer-events: none;
+    transform: translateX(-50%) scaleY(0.92);
+    transform-origin: top center;
+    transition: opacity 200ms ease, max-height 240ms ease, transform 240ms ease, padding 200ms ease, border-color 200ms ease, background 200ms ease;
+}
+
+.term-ritual-trigger:hover .term-ritual-note,
+.term-ritual-trigger:focus-within .term-ritual-note {
+    opacity: 1;
+    max-height: 160px;
+    padding: 6px 8px;
+    border-color: #54504c;
+    background: #ffffff;
+    transform: translateX(-50%) scaleY(1);
+    pointer-events: auto;
+}
+
+.term-ritual-trigger:hover .term-ritual-marker,
+.term-ritual-trigger:focus-within .term-ritual-marker {
+    opacity: 0.35;
+    transform: scale(0.86);
+}
+
+.term-note-zh {
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%) translateX(8px);
+    width: 178px;
+    color: #54504C;
+    font-family: "FZZJ-YZDKJW", "FZZJ-YZDKJW-Regular", "Noto Serif SC", Helvetica, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 28px;
+    opacity: 0;
+    filter: blur(6px);
+    pointer-events: none;
+    transition: opacity 240ms ease, filter 260ms ease, transform 260ms ease;
+}
+
+.term-note:hover .term-note-zh,
+.term-note:focus-within .term-note-zh {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(-50%) translateX(0);
+}
+
+.term-note:hover .term-note-en,
+.term-note:focus-within .term-note-en {
+    transform: translateX(0);
+}
+
+/* TEMP: disable all term-nav UI/interactions */
+.term-term-nav,
+.term-term-nav-visual,
+.term-term-nav-ellipse,
+.term-term-nav-pop {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}

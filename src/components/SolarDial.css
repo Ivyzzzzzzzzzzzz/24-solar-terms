@@ -1,0 +1,176 @@
+/* SolarDial component styles */
+.dial-svg {
+  width: 100%;
+  height: 100%;
+  max-width: 600px;
+  max-height: 600px;
+  margin: 0 auto;
+}
+
+.dial-ring {
+  transform-origin: 200px 200px;
+  cursor: default;
+  transition: transform 0.2s ease-out;
+}
+
+.dial-svg.is-dragging .dial-ring {
+  transition: none !important;
+}
+
+.dial-ring:active {
+  cursor: grabbing;
+}
+
+.dial-ring-static {
+  cursor: default;
+}
+
+.dial-ring-outer {
+  cursor: grab;
+}
+
+.dial-ring-outer:active {
+  cursor: grabbing;
+}
+
+.dial-halo {
+  fill: none;
+  stroke: var(--term-fill);
+  stroke-width: 18;
+  opacity: 0.18;
+}
+
+.dial-rim-soft {
+  opacity: 0.6;
+}
+
+.dial-track {
+  fill: none;
+  stroke: var(--term-track);
+  stroke-width: 1.6;
+}
+
+.dial-track-0 { stroke-width: 1.4; }
+.dial-track-1 { stroke-width: 1.2; }
+.dial-track-2 { stroke-width: 1; }
+.dial-track-3 { stroke-width: 0.9; }
+.dial-track-4 { stroke-width: 1.2; }
+
+.dial-rim {
+  fill: none;
+  stroke: var(--term-rim);
+  stroke-width: 0.8;
+}
+
+.dial-fill {
+  fill: none;
+  stroke-width: 3.2;
+}
+
+.dial-fill-day {
+  stroke: var(--term-fill);
+}
+
+.dial-fill-night {
+  stroke: #d0c9be;
+}
+
+.dial-text {
+  font-size: var(--ring-text-size);
+  fill: var(--term-text);
+  letter-spacing: 0.3px;
+}
+
+.dial-text .dial-inline-zh {
+  font-family: var(--zh);
+}
+
+.dial-sep {
+  opacity: 0.6;
+}
+
+.dial-tick {
+  stroke: var(--term-text);
+  stroke-width: 0.8;
+  opacity: 0.2;
+}
+
+.dial-tick.major {
+  opacity: 0.5;
+  stroke-width: 1.1;
+}
+
+.dial-center-btn {
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+}
+
+.dial-center-btn:focus-visible .dial-core {
+  stroke: rgba(20, 18, 16, 0.35);
+  stroke-width: 1.2;
+}
+
+.dial-core {
+  fill: color-mix(in srgb, var(--term-base) 50%, rgba(20, 18, 16, 0.10));
+  filter: url(#dialBlur);
+  transition: transform 160ms ease, fill 160ms ease;
+  transform-origin: 200px 200px;
+}
+
+.dial-center-btn:hover .dial-core {
+  fill: color-mix(in srgb, var(--term-base) 58%, rgba(20, 18, 16, 0.10));
+}
+
+.dial-center-btn:active .dial-core {
+  transform: scale(0.985);
+}
+
+.dial-center-term {
+  font-family: var(--en);
+  font-size: 12px;
+  fill: rgba(246, 241, 234, 0.92);
+  letter-spacing: 0.10em;
+  pointer-events: none;
+}
+
+.dial-center-term-zh {
+  font-family: var(--zh);
+  font-size: 14px;
+  fill: rgba(246, 241, 234, 0.90);
+  letter-spacing: 0.18em;
+  pointer-events: none;
+}
+
+.dial-center-hint {
+  font-family: var(--en);
+  font-size: 10px;
+  fill: rgba(246, 241, 234, 0.70);
+  letter-spacing: 0.18em;
+  pointer-events: none;
+}
+
+.dial-allterms-text {
+  cursor: grab;
+  user-select: none;
+  transition: font-weight 0.2s;
+  font-size: var(--ring-text-size);
+  fill: var(--term-text);
+}
+
+.dial-allterms-text:hover {
+  font-weight: bold;
+}
+
+.outer-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 11px;
+  pointer-events: none;
+  opacity: 0;
+}
