@@ -118,6 +118,8 @@ const SolarDial = ({ onTermChange }) => {
   const rgbStr = (c) => `rgb(${c.r}, ${c.g}, ${c.b})`;
 
   const setTermTheme = (term) => {
+    if (typeof document === 'undefined') return;
+
     const paper = { r: 246, g: 241, b: 234 };
     const entry = TERM_COLORS[term.id] || { base: '#9aa6b2' };
     const base = hexToRgb(entry.base);
@@ -491,7 +493,6 @@ const SolarDial = ({ onTermChange }) => {
   const yearBoxTrackPath = annularGuidePath(200, 200, 98, 86, 0, 359.9);
   const yearBoxProgressEnd = -90 + (yearRingProgress * 360);
   const yearBoxProgressPath = annularGuidePath(200, 200, 98, 86, -90, yearBoxProgressEnd);
-  const yearBoxBridgePath = annularGuidePath(200, 200, 102, 62, -90, yearBoxProgressEnd);
   const outerSnapGuidePath = annularGuidePath(200, 200, 186, 166, -10.5, 10.5);
   const enWords = (term?.en || 'Winter Solstice').split(/\s+/);
   const enStartY = -24 - (Math.max(1, enWords.length) - 1) * 5.5;
