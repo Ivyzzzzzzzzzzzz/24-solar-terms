@@ -1,10 +1,12 @@
 import React, { useEffect, useRef } from 'react';
+import { ensureP5Global } from '../lib';
 
 const P5Wrapper = () => {
   const mountRef = useRef(null);
   const sketchRef = useRef(null);
 
   useEffect(() => {
+    let alive = true;
     let trail = [];
     let maxTrailLength = 15;
     let pmouseX = 0;
@@ -104,11 +106,17 @@ const P5Wrapper = () => {
       };
     };
 
-    if (window.p5 && mountRef.current) {
-      sketchRef.current = new window.p5(sketch, mountRef.current);
-    }
+    ensureP5Global()
+      .then((P5) => {
+        if (!alive || !mountRef.current) return;
+        sketchRef.current = new P5(sketch, mountRef.current);
+      })
+      .catch(() => {
+        // Keep landing resilient if p5 fails to load.
+      });
 
     return () => {
+      alive = false;
       if (sketchRef.current) {
         sketchRef.current.remove();
       }

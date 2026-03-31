@@ -33,12 +33,20 @@
 }
 
 .landing-title {
-    font-family: "Cutive Mono", "Cutive Mono-Regular", Helvetica, sans-serif;
-    font-size: 14px;
+    font-family: "Stoke", "Stoke-Light", Helvetica, sans-serif;
+    font-size: 20px;
     letter-spacing: 0.28em;
-    text-transform: uppercase;
     color: rgba(84, 80, 76, 0.8);
     margin: 0;
+}
+
+.landing-title-zh {
+    font-family: "FZZJ-YZDKJW", "FZZJ-YZDKJW-Regular", "FZFangSong-Z02S", "FangSong", "Songti SC", serif;
+    font-size: 26px;
+    letter-spacing: 0.2em;
+    color: rgba(84, 80, 76, 0.85);
+    writing-mode: horizontal-tb;
+    transform: none;
 }
 
 .landing-title-wrap {
@@ -51,6 +59,23 @@
     gap: 8px;
 }
 
+.landing-title-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.landing-title-link:focus-visible {
+    outline: 2px solid rgba(84, 80, 76, 0.35);
+    outline-offset: 6px;
+}
+
+.landing-title-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+}
+
 .landing-meta {
     display: flex;
     flex-direction: column;
@@ -61,7 +86,7 @@
 }
 
 .landing-meta-year {
-    font-family: "Cutive Mono", "Cutive Mono-Regular", Helvetica, sans-serif;
+    font-family: "Roboto Mono", "Roboto Mono", Helvetica, sans-serif;
     font-size: 16px;
     letter-spacing: 0.08em;
     line-height: 1;
@@ -70,25 +95,28 @@
 .landing-meta-date {
     display: inline-flex;
     align-items: center;
+    gap: 6px;
     min-height: 22px;
-    padding: 3px 8px;
-    border: 1px solid rgba(84, 80, 76, 0.22);
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.65) inset, 0 1px 4px rgba(20, 18, 16, 0.08);
     transform-origin: top center;
     backface-visibility: hidden;
     animation: landingFlipIn 440ms cubic-bezier(0.24, 0.72, 0.24, 1);
 }
 
 .landing-meta-date-en {
-    font-family: "Cutive Mono", "Cutive Mono-Regular", Helvetica, sans-serif;
+    font-family: "Roboto Mono", "Roboto Mono", Helvetica, sans-serif;
     font-size: 12px;
     letter-spacing: 0.06em;
     line-height: 1;
 }
 
 .landing-meta-date-zh {
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1;
+}
+
+.landing-meta-date-sep {
+    font-size: 11px;
+    opacity: 0.6;
 }
 
 @keyframes landingFlipIn {
@@ -176,7 +204,7 @@
 
 .landing-dial {
     position: relative;
-    width: min(82vmin, 640px);
+    width: min(84vmin, 660px);
     aspect-ratio: 1 / 1;
 }
 

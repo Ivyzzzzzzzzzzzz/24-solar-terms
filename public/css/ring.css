@@ -54,14 +54,14 @@
     --almanac-track: 0.14em;
     --almanac-leading: 1.55;
     --almanac-meta-size: 12px;
-    --ring-text-size: 10px;
-    --ring-text-size-en: 9px;
+    --ring-text-size: calc(11px + 0.5pt);
+    --ring-text-size-en: calc(10px + 0pt);
 
     --term-base: #929eaa;
     --term-track: rgba(20, 18, 16, 0.08);
     --term-fill: rgba(20, 18, 16, 0.20);
     --term-rim: rgba(20, 18, 16, 0.14);
-    --term-text: rgba(20, 18, 16, 0.50);
+    --term-text: rgba(20, 18, 16, 0.72);
 }
 
 body {
@@ -134,7 +134,7 @@ body {
     background: rgba(246, 241, 234, 0.86);
     border: 1px solid rgba(20, 18, 16, 0.14);
     box-shadow: 0 18px 28px rgba(0, 0, 0, 0.08);
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: 0.10em;
     color: rgba(20, 18, 16, 0.70);
     opacity: 0;
@@ -206,7 +206,7 @@ body {
 .outer-snap-highlight {
     fill: color-mix(in srgb, var(--term-fill) 98%, rgba(20, 18, 16, 0.02));
     stroke: color-mix(in srgb, var(--term-rim) 48%, rgba(20, 18, 16, 0.08));
-    stroke-width: 0.9;
+    stroke-width: 0;
     stroke-linecap: round;
     stroke-dasharray: 3.2 4.8;
     opacity: 1;
@@ -328,7 +328,7 @@ body {
     /* stroke: rgba(20, 18, 16, 0.72); */
     stroke-width: 1;
     stroke-linejoin: round;
-    filter: drop-shadow(0 0 4px #ffffff);
+    filter: drop-shadow(0 0 4px var(--term-fill));
 }
 
 .dial-fill-hou-track {
@@ -373,7 +373,7 @@ body {
 }
 
 .dial-text {
-    fill: rgba(20, 18, 16, 0.55);
+    fill: rgba(20, 18, 16, 0.78);
     pointer-events: none;
 }
 
@@ -425,15 +425,39 @@ body {
     stroke-width: 1.2;
 }
 
+.dial-core-stop-inner {
+    stop-color: color-mix(in srgb, var(--term-base) 42%, rgba(20, 18, 16, 0.36));
+}
+
+.dial-core-stop-mid {
+    stop-color: color-mix(in srgb, var(--term-base) 52%, rgba(20, 18, 16, 0.24));
+}
+
+.dial-core-stop-outer {
+    stop-color: color-mix(in srgb, var(--term-base) 60%, rgba(20, 18, 16, 0.14));
+}
+
+.dial-core-stop-hover-inner {
+    stop-color: color-mix(in srgb, var(--term-base) 40%, rgba(20, 18, 16, 0.40));
+}
+
+.dial-core-stop-hover-mid {
+    stop-color: color-mix(in srgb, var(--term-base) 50%, rgba(20, 18, 16, 0.28));
+}
+
+.dial-core-stop-hover-outer {
+    stop-color: color-mix(in srgb, var(--term-base) 58%, rgba(20, 18, 16, 0.16));
+}
+
 .dial-core {
-    fill: color-mix(in srgb, var(--term-base) 50%, rgba(20, 18, 16, 0.10));
+    fill: url(#dialCoreGradient);
     filter: url(#dialBlur);
     transition: transform 160ms ease, fill 160ms ease;
     transform-origin: 200px 200px;
 }
 
 .dial-center-btn:hover .dial-core {
-    fill: color-mix(in srgb, var(--term-base) 58%, rgba(20, 18, 16, 0.10));
+    fill: url(#dialCoreGradientHover);
 }
 
 .dial-center-btn:active .dial-core {
@@ -441,16 +465,17 @@ body {
 }
 
 .dial-center-term {
-    font-family: var(--en);
-    font-size: 12px;
+    font-family: "Stoke", "Stoke-Light", Helvetica, sans-serif;
+    font-size: 11px;
+    text-align: center;
     fill: rgba(246, 241, 234, 0.92);
     letter-spacing: 0.10em;
     pointer-events: none;
 }
 
 .dial-center-term-zh {
-    font-family: var(--zh);
-    font-size: 14px;
+    font-family: "FZZJ-YZDKJW", "FZZJ-YZDKJW-Regular", "FZFangSong-Z02S", "FangSong", "Songti SC", serif;
+    font-size: 15px;
     fill: rgba(246, 241, 234, 0.90);
     letter-spacing: 0.18em;
     pointer-events: none;
@@ -458,8 +483,16 @@ body {
 
 .dial-center-hint {
     font-family: var(--en);
-    font-size: 10px;
+    font-size: 11px;
     fill: rgba(246, 241, 234, 0.70);
     letter-spacing: 0.18em;
     pointer-events: none;
+}
+
+.dial-center-term.en {
+    font-family: "Stoke", "Stoke-Light", Helvetica, sans-serif;
+}
+
+.dial-center-term-zh.zh {
+    font-family: "FZZJ-YZDKJW", "FZZJ-YZDKJW-Regular", "FZFangSong-Z02S", "FangSong", "Songti SC", serif;
 }

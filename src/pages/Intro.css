@@ -1,0 +1,127 @@
+.intro-page {
+  min-height: 100vh;
+  --landing-pad-top: 96px;
+  --landing-pad-x: 136px;
+  padding: var(--landing-pad-top) var(--landing-pad-x);
+  background: transparent;
+  color: rgba(20, 18, 16, 0.9);
+  position: relative;
+  overflow: hidden;
+}
+
+.intro-page::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 108px;
+  height: 108px;
+  background: #ffffff;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  border-right: 1px solid rgba(84, 80, 76, 0.12);
+  border-bottom: 1px solid rgba(84, 80, 76, 0.12);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.intro-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.intro-back {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 108px;
+  height: 108px;
+  z-index: 6;
+  display: block;
+  text-decoration: none;
+}
+
+.intro-back-label {
+  position: absolute;
+  top: 42px;
+  left: 18px;
+  display: inline-block;
+  font-family: "Roboto Mono", "Roboto Mono Regular", monospace;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(84, 80, 76, 0.9);
+  transform: rotate(-45deg);
+  transform-origin: top left;
+  line-height: 1;
+}
+
+.intro-back:focus-visible {
+  outline: 2px solid rgba(84, 80, 76, 0.35);
+  outline-offset: 4px;
+}
+
+.intro-title {
+  margin-left: auto;
+  text-align: right;
+}
+
+.intro-title-zh {
+  font-family: "FZZJ-YZDKJW", "FZZJ-YZDKJW-Regular", "FZFangSong-Z02S", "FangSong", "Songti SC", serif;
+  font-size: 28px;
+  letter-spacing: 0.2em;
+}
+
+.intro-title-en {
+  font-family: "Stoke", "Stoke-Light", Helvetica, sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.28em;
+  color: rgba(84, 80, 76, 0.85);
+  margin-top: 6px;
+}
+
+.intro-content {
+  margin-top: 48px;
+  max-width: 640px;
+  font-family: "Stoke", "Stoke-Light", Helvetica, sans-serif;
+  font-size: 12pt;
+  line-height: 1.8;
+  position: relative;
+  z-index: 2;
+}
+
+.intro-lead {
+  margin-bottom: 18px;
+}
+
+.intro-p5 {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.intro-p5 canvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+
+@media (max-width: 860px) {
+  .intro-page {
+    padding: 56px 32px;
+  }
+
+  .intro-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .intro-title {
+    margin-left: 0;
+    text-align: left;
+  }
+}

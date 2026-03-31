@@ -9,6 +9,10 @@
     pointer-events: none;
 }
 
+.term-page {
+    --term-detail-surface: var(--term-bg-color, rgb(246, 241, 232));
+}
+
 .term-center-content .term-note,
 .term-center-content .term-poem,
 .term-center-content .term-phases,
@@ -70,14 +74,14 @@
     gap: 10px;
     width: 178px;
     color: #54504C;
-    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-family: "Roboto Mono", Helvetica, sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px;
+    line-height: 22px;
     letter-spacing: -0.48px;
     border: 0.5px solid #54504C;
-    background: transparent;
+    background: var(--term-detail-surface);
     opacity: 0;
     pointer-events: none;
     text-align: left;
@@ -98,7 +102,7 @@
 }
 
 .term-note:hover {
-    background: #ffffff;
+    background: var(--term-detail-surface);
     transform: translateX(-10px);
 }
 
@@ -121,7 +125,7 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 180ms ease, background-color 160ms ease, transform 220ms ease;
-    background: transparent;
+    background: var(--term-detail-surface);
 }
 
 .term-poem.is-visible {
@@ -172,18 +176,18 @@
     top: 8px;
     width: 260px;
     color: #54504C;
-    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-family: "Roboto Mono", Helvetica, sans-serif;
     font-size: 16px;
     font-weight: 400;
     letter-spacing: -0.48px;
-    line-height: 20px;
+    line-height: 22px;
     opacity: 0;
     pointer-events: none;
     transition: opacity 220ms ease;
 }
 
 .term-poem:hover {
-    background: #ffffff;
+    background: var(--term-detail-surface);
     transform: translate(-50%, -50%) translateX(-10px);
 }
 
@@ -217,13 +221,13 @@
     height: 26px;
     position: relative;
     overflow: hidden;
-    background: transparent;
+    background: var(--term-detail-surface);
     transition: background-color 160ms ease, transform 220ms ease;
 }
 
 .term-phases-row-1 {
     width: 300px;
-    background: transparent;
+    background: var(--term-detail-surface);
 }
 
 .term-phases-row-2 {
@@ -253,7 +257,7 @@
 
 .term-phases-en {
     color: #54504c;
-    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-family: "Roboto Mono", Helvetica, sans-serif;
     font-size: 16px;
     font-weight: 400;
     line-height: 16.2px;
@@ -294,10 +298,10 @@
     top: 42px;
     width: 420px;
     color: #54504c;
-    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-family: "Roboto Mono", Helvetica, sans-serif;
     font-size: 16px;
     font-weight: 400;
-    line-height: 16px;
+    line-height: 18px;
     letter-spacing: -0.54px;
     background: transparent;
     opacity: 0;
@@ -314,10 +318,10 @@
     top: 42px;
     width: 420px;
     color: #54504c;
-    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-family: "Roboto Mono", Helvetica, sans-serif;
     font-size: 16px;
     font-weight: 400;
-    line-height: 16px;
+    line-height: 18px;
     letter-spacing: -0.54px;
     background: transparent;
     opacity: 0;
@@ -344,14 +348,14 @@
 
 .term-phases-row-1:hover,
 .term-phases-row-1:focus-within {
-    background: #ffffff;
+    background: var(--term-detail-surface);
 }
 
 .term-phases-row-2:hover,
 .term-phases-row-2:focus-within,
 .term-phases-row-3:hover,
 .term-phases-row-3:focus-within {
-    background: #ffffff;
+    background: var(--term-detail-surface);
     overflow: visible;
     z-index: 2;
 }
@@ -430,12 +434,12 @@
     padding: 0 8px;
     border: 1px solid transparent;
     color: #54504c;
-    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-family: "Roboto Mono", Helvetica, sans-serif;
     font-size: 16px;
     font-weight: 400;
-    line-height: 20px;
+    line-height: 22px;
     letter-spacing: -0.48px;
-    background: transparent;
+    background: var(--term-detail-surface);
     opacity: 0;
     max-height: 0;
     overflow: hidden;
@@ -451,7 +455,7 @@
     max-height: 160px;
     padding: 6px 8px;
     border-color: #54504c;
-    background: #ffffff;
+    background: var(--term-detail-surface);
     transform: translateX(-50%) scaleY(1);
     pointer-events: auto;
 }

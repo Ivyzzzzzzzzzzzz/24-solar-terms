@@ -2,7 +2,7 @@ import React from 'react';
 
 const TermMenuRing = ({ menuItems, menuRotation, menuSelectorPath, activeMenu, alignMenuToTop }) => {
   return (
-    <div className="term-menu-ring" aria-label="Auto rotating term menu">
+    <div className="term-menu-ring" aria-label="Term menu">
       <svg className="term-menu-selector-svg" viewBox="0 0 168 168" aria-hidden="true">
         <path className="term-menu-selector-box" d={menuSelectorPath} />
       </svg>
@@ -16,7 +16,7 @@ const TermMenuRing = ({ menuItems, menuRotation, menuSelectorPath, activeMenu, a
 
           {menuItems.map((item, index) => {
             const isActive = activeMenu === item.key;
-            const labelOffset = 50 + (index * 12.5);
+            const labelOffset = ((50 - (index * 12.5)) + 100) % 100;
             return (
               <text
                 key={item.key}

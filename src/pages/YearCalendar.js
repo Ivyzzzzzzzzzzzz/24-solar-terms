@@ -1,10 +1,11 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { TERM_LIST, TERM_COLORS } from '../data';
-import { BackCorner } from '../components';
+import { useAmbientAudio } from '../audio/AmbientAudioProvider';
+import { TERM_LIST, TERM_COLORS, getCurrentTermId } from '../data';
 import './YearCalendar.css';
 
 const INITIAL_YEAR = 2026;
+const GRID_COLS = 22;
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const MONTH_INDEX = {
@@ -23,6 +24,7 @@ const MONTH_INDEX = {
 };
 
 const keyFromDate = (year, month, day) => `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+const getDayOfYear = (year, month, day) => Math.round((new Date(year, month, day) - new Date(year, 0, 1)) / 86400000) + 1;
 
 const parseTermDate = (dateEn) => {
   if (!dateEn) return null;
@@ -45,11 +47,28 @@ const mix = (a, b, t) => ({
   b: Math.round(a.b + (b.b - a.b) * t)
 });
 
-const rgbStr = (c) => `rgb(${c.r}, ${c.g}, ${c.b})`;
+const averageColors = (colors, fallback) => {
+  if (!colors.length) return fallback;
 
+  const totals = colors.reduce((acc, color) => ({
+    r: acc.r + color.r,
+    g: acc.g + color.g,
+    b: acc.b + color.b
+  }), { r: 0, g: 0, b: 0 });
+
+  return {
+    r: Math.round(totals.r / colors.length),
+    g: Math.round(totals.g / colors.length),
+    b: Math.round(totals.b / colors.length)
+  };
+};
+
+const rgbStr = (c) => `rgb(${c.r}, ${c.g}, ${c.b})`;
+const rgbChannels = (c) => `${c.r} ${c.g} ${c.b}`;
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
 
 const YearCalendar = () => {
+  const { setActiveTermId, selectTermId } = useAmbientAudio();
   const [year, setYear] = useState(INITIAL_YEAR);
   const [isTextOn, setIsTextOn] = useState(true);
   const [hoveredTerm, setHoveredTerm] = useState(null);
@@ -58,7 +77,18 @@ const YearCalendar = () => {
     const d = new Date();
     return { year: d.getFullYear(), month: d.getMonth(), day: d.getDate() };
   }, []);
-
+  const fallbackOrbTermIndex = useMemo(() => {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 1);
+    const doy = Math.floor((now - start) / 86400000) + 1;
+    const sorted = [...TERM_LIST].sort((a, b) => a.doy - b.doy);
+    let active = sorted[sorted.length - 1];
+    for (const item of sorted) {
+      if (doy >= item.doy) active = item;
+      else break;
+    }
+    return Math.max(0, TERM_LIST.findIndex((term) => term.id === active.id));
+  }, []);
   const shiftYear = (delta) => {
     setYear((prev) => Math.max(1900, Math.min(2100, prev + delta)));
   };
@@ -74,8 +104,9 @@ const YearCalendar = () => {
     else if (e.deltaY < 0) shiftYear(-1);
   };
 
-  const termFillRgbById = useMemo(() => {
+  const termPaletteById = useMemo(() => {
     const paper = { r: 246, g: 241, b: 234 };
+    const ink = { r: 20, g: 18, b: 16 };
     const map = {};
 
     TERM_LIST.forEach((term) => {
@@ -83,13 +114,32 @@ const YearCalendar = () => {
       const base = hexToRgb(entry.base);
       const sum = (term.dayH + term.nightH) || 24;
       const dayBias = clamp01(term.dayH / sum);
-      const lightT = 0.48 + 0.36 * dayBias;
+      const lightT = 0.48 + (0.36 * dayBias);
+      const track = mix(base, paper, Math.min(0.94, lightT + 0.22));
       const fill = mix(base, paper, Math.min(0.88, lightT + 0.1));
-      map[term.id] = fill;
+      const mid = mix(base, fill, 0.42);
+      const rim = mix(base, paper, 0.78);
+      const text = mix(base, ink, 0.8);
+      map[term.id] = {
+        base: entry.base,
+        track,
+        fill,
+        mid,
+        rim,
+        text
+      };
     });
 
     return map;
   }, []);
+
+  const termFillRgbById = useMemo(() => {
+    const map = {};
+    TERM_LIST.forEach((term) => {
+      map[term.id] = termPaletteById[term.id]?.fill;
+    });
+    return map;
+  }, [termPaletteById]);
 
   const termFillById = useMemo(() => {
     const map = {};
@@ -99,80 +149,41 @@ const YearCalendar = () => {
     return map;
   }, [termFillRgbById]);
 
-  const dayGradientFillByDoy = useMemo(() => {
-    const DAYS_IN_YEAR = 365;
-    const paper = { r: 246, g: 241, b: 234 };
-    const termsByDoy = [...TERM_LIST].sort((a, b) => a.doy - b.doy);
-    const map = {};
-
-    for (let doy = 1; doy <= DAYS_IN_YEAR; doy++) {
-      let nextIdx = termsByDoy.findIndex((t) => doy < t.doy);
-      if (nextIdx === -1) nextIdx = 0;
-      const prevIdx = (nextIdx - 1 + termsByDoy.length) % termsByDoy.length;
-
-      const prevTerm = termsByDoy[prevIdx];
-      const nextTerm = termsByDoy[nextIdx];
-      const prevDoy = prevTerm.doy;
-      const nextDoy = nextTerm.doy;
-
-      const span = nextDoy > prevDoy ? nextDoy - prevDoy : (DAYS_IN_YEAR - prevDoy) + nextDoy;
-      const offset = doy >= prevDoy ? doy - prevDoy : (DAYS_IN_YEAR - prevDoy) + doy;
-      const t = span === 0 ? 0 : clamp01(offset / span);
-
-      const prevFill = termFillRgbById[prevTerm.id] || paper;
-      const nextFill = termFillRgbById[nextTerm.id] || paper;
-      const gradientBase = mix(prevFill, nextFill, t);
-      const softened = mix(gradientBase, paper, 0.52);
-
-      map[doy] = rgbStr(softened);
-    }
-
-    return map;
-  }, [termFillRgbById]);
-
-  const dayPulseMetaByDoy = useMemo(() => {
-    const DAYS_IN_YEAR = 365;
-    const PULSE_CYCLE_SEC = 3.8;
-    const termsByDoy = [...TERM_LIST].sort((a, b) => a.doy - b.doy);
-    const map = {};
-
-    for (let doy = 1; doy <= DAYS_IN_YEAR; doy++) {
-      let nextIdx = termsByDoy.findIndex((t) => doy < t.doy);
-      if (nextIdx === -1) nextIdx = 0;
-      const prevIdx = (nextIdx - 1 + termsByDoy.length) % termsByDoy.length;
-
-      const prevTerm = termsByDoy[prevIdx];
-      const nextTerm = termsByDoy[nextIdx];
-      const prevDoy = prevTerm.doy;
-      const nextDoy = nextTerm.doy;
-
-      const span = nextDoy > prevDoy ? nextDoy - prevDoy : (DAYS_IN_YEAR - prevDoy) + nextDoy;
-      const offset = doy >= prevDoy ? doy - prevDoy : (DAYS_IN_YEAR - prevDoy) + doy;
-
-      const progress = clamp01(offset / Math.max(1, span - 1));
-      const strength = 0.32 + (0.68 * (1 - progress));
-      const termPhaseOffset = (prevIdx / termsByDoy.length) * PULSE_CYCLE_SEC;
-      const delay = termPhaseOffset + (2.6 * progress);
-
-      map[doy] = {
-        strength,
-        delay,
-        termId: prevTerm.id
-      };
-    }
-
-    return map;
-  }, []);
-
-  const termByDateKey = useMemo(() => {
+  const termMidById = useMemo(() => {
     const map = {};
     TERM_LIST.forEach((term) => {
-      const parsed = parseTermDate(term.dateEn);
-      if (!parsed) return;
-      map[keyFromDate(year, parsed.month, parsed.day)] = term;
+      map[term.id] = rgbStr(termPaletteById[term.id]?.mid || { r: 216, g: 212, b: 206 });
     });
     return map;
-  }, [year]);
+  }, [termPaletteById]);
+
+  const termRimById = useMemo(() => {
+    const map = {};
+    TERM_LIST.forEach((term) => {
+      map[term.id] = rgbStr(termPaletteById[term.id]?.rim || { r: 154, g: 166, b: 178 });
+    });
+    return map;
+  }, [termPaletteById]);
+
+  const termTextById = useMemo(() => {
+    const map = {};
+    TERM_LIST.forEach((term) => {
+      map[term.id] = rgbStr(termPaletteById[term.id]?.text || { r: 20, g: 18, b: 16 });
+    });
+    return map;
+  }, [termPaletteById]);
+
+  const orbPaletteStyle = useMemo(() => {
+    const baseIndex = hoveredTerm
+      ? Math.max(0, TERM_LIST.findIndex((term) => term.id === hoveredTerm.id))
+      : fallbackOrbTermIndex;
+    const term = TERM_LIST[baseIndex];
+    const baseRgb = rgbChannels(hexToRgb((TERM_COLORS[term?.id] || { base: '#9aa6b2' }).base));
+
+    return {
+      '--year-orb-color-base-rgb': baseRgb
+    };
+  }, [fallbackOrbTermIndex, hoveredTerm]);
 
   const dayStream = useMemo(() => {
     const days = [];
@@ -189,32 +200,138 @@ const YearCalendar = () => {
     return days;
   }, [year]);
 
+  const scheduledTerms = useMemo(() => (
+    TERM_LIST
+      .map((term) => {
+        const parsed = parseTermDate(term.dateEn);
+        if (!parsed) return null;
+        return {
+          ...term,
+          month: parsed.month,
+          day: parsed.day,
+          doy: getDayOfYear(year, parsed.month, parsed.day)
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.doy - b.doy)
+  ), [year]);
+
+  const termByDateKey = useMemo(() => {
+    const map = {};
+    scheduledTerms.forEach((term) => {
+      map[keyFromDate(year, term.month, term.day)] = term;
+    });
+    return map;
+  }, [scheduledTerms, year]);
+
+  const totalRows = useMemo(() => Math.ceil(dayStream.length / GRID_COLS), [dayStream.length]);
+
+  const termMotionById = useMemo(() => {
+    const map = {};
+
+    scheduledTerms.forEach((term, index) => {
+      const dayBias = clamp01(term.dayH / 24);
+      const phaseSeed = ((term.doy * 17 + index * 29) % 97) / 97;
+      const cadence = 0.84 + (phaseSeed * 0.44);
+
+      map[term.id] = {
+        '--year-aura-duration': `${(17.2 + (cadence * 4.3) + (dayBias * 1.35)).toFixed(2)}s`,
+        '--year-aura-delay': `${(-(index * 1.34 + phaseSeed * 6.2)).toFixed(2)}s`,
+        '--year-aura-soft-duration': `${(23.4 + (cadence * 5.1) + (dayBias * 1.7)).toFixed(2)}s`,
+        '--year-aura-soft-delay': `${(-(index * 1.08 + phaseSeed * 8.4)).toFixed(2)}s`,
+        '--year-aura-wave-duration': `${(19.6 + (cadence * 4.7) + (dayBias * 1.45)).toFixed(2)}s`,
+        '--year-aura-wave-delay': `${(-(index * 1.72 + phaseSeed * 9.1)).toFixed(2)}s`,
+        '--year-aura-scale-peak': '1.12',
+        '--year-aura-core-peak': '1.24',
+        '--year-aura-wave-peak': '1.56'
+      };
+    });
+
+    return map;
+  }, [scheduledTerms]);
+
+  const termAuraNodes = useMemo(() => {
+    const fallback = { r: 246, g: 241, b: 234 };
+
+    return scheduledTerms.map((term) => {
+      const palette = termPaletteById[term.id] || {};
+      const col = (term.doy - 1) % GRID_COLS;
+      const row = Math.floor((term.doy - 1) / GRID_COLS);
+      const centerX = ((col + 0.5) / GRID_COLS) * 100;
+      const centerY = ((row + 0.5) / Math.max(1, totalRows)) * 100;
+      const dayBias = clamp01(term.dayH / 24);
+      const radiusCells = 2.8;
+      const width = ((radiusCells * 2) / GRID_COLS) * 100;
+      const height = ((radiusCells * 2) / Math.max(1, totalRows)) * 100;
+
+      return {
+        id: term.id,
+        style: {
+          left: `${centerX.toFixed(4)}%`,
+          top: `${centerY.toFixed(4)}%`,
+          width: `${width.toFixed(4)}%`,
+          height: `${height.toFixed(4)}%`,
+          ...termMotionById[term.id],
+          '--year-aura-base': palette.base || '#9aa6b2',
+          '--year-aura-track': rgbStr(palette.track || fallback),
+          '--year-aura-fill': rgbStr(palette.fill || fallback),
+          '--year-aura-mid': rgbStr(palette.mid || fallback),
+          '--year-aura-opacity': (0.58 + (dayBias * 0.16)).toFixed(3),
+          '--year-aura-soft-opacity': (0.46 + (dayBias * 0.12)).toFixed(3),
+          '--year-aura-wave-opacity': (0.52 + (dayBias * 0.14)).toFixed(3),
+          '--year-aura-line-opacity': (0.82 + (dayBias * 0.15)).toFixed(3),
+          '--year-aura-line-thickness': `${(2.08 + (dayBias * 0.72)).toFixed(2)}%`,
+          '--year-aura-line-gap': `${(6.4 - (dayBias * 0.84)).toFixed(2)}%`,
+          '--year-aura-blur': `${(14 + (dayBias * 3.8)).toFixed(2)}px`
+        }
+      };
+    });
+  }, [scheduledTerms, termMotionById, termPaletteById, totalRows]);
+
+  const fieldWashStyle = useMemo(() => {
+    const paper = { r: 252, g: 252, b: 250 };
+    const fallback = { r: 246, g: 241, b: 234 };
+    const tracks = scheduledTerms.map((term) => termPaletteById[term.id]?.track).filter(Boolean);
+    const fills = scheduledTerms.map((term) => termPaletteById[term.id]?.fill).filter(Boolean);
+    const averageTrack = averageColors(tracks, fallback);
+    const averageFill = averageColors(fills, fallback);
+
+    return {
+      '--year-surface-base': rgbStr(mix(averageTrack, paper, 0.32)),
+      '--year-surface-ambient': rgbStr(mix(averageFill, averageTrack, 0.46))
+    };
+  }, [scheduledTerms, termPaletteById]);
+
+  useEffect(() => {
+    setActiveTermId(hoveredTerm?.id || getCurrentTermId());
+  }, [hoveredTerm, setActiveTermId]);
+
   return (
     <main className="year-calendar-page">
-      <BackCorner />
+      <Link className="year-calendar-back-link" to="/" aria-label="Back to landing">
+        <span className="year-calendar-back-link-label">Back</span>
+      </Link>
       <section
         className="year-calendar-grid is-year-scroll"
         aria-label={`Solar terms year calendar ${year}`}
         onWheel={handleYearWheel}
       >
-        <div className={`year-calendar-term-preview-en-top${hoveredTerm ? ' is-visible' : ''}`} aria-live="polite">
-          {hoveredTerm?.en || ''}
-        </div>
         <div className="year-calendar-home-col">
           <Link className="year-calendar-home-link-inline" to="/" aria-label="Back to landing page">
-            <img
-              className="year-calendar-home-icon-inline"
-              src="/assets/images/Ellipse%2025.svg"
-              alt=""
-              aria-hidden="true"
-            />
+            <span className="year-calendar-home-orb-inline" aria-hidden="true" style={orbPaletteStyle}>
+              <span className="year-calendar-home-orb-fluid">
+                <span className="year-calendar-home-orb-spectrum"></span>
+                <span className="year-calendar-home-orb-stream"></span>
+                <span className="year-calendar-home-orb-layer year-calendar-home-orb-layer-cool"></span>
+                <span className="year-calendar-home-orb-layer year-calendar-home-orb-layer-warm"></span>
+                <span className="year-calendar-home-orb-layer year-calendar-home-orb-layer-gold"></span>
+                <span className="year-calendar-home-orb-layer year-calendar-home-orb-layer-muted"></span>
+              </span>
+            </span>
           </Link>
         </div>
         <div className="year-calendar-year-col">
           <div className="year-calendar-year-switch-wrap" onWheel={handleYearWheel}>
-            <div className={`year-calendar-term-preview${hoveredTerm ? ' is-visible' : ''}`} aria-live="polite">
-              <span className="year-calendar-term-preview-zh">{hoveredTerm?.zh || ''}</span>
-            </div>
             <span className="year-calendar-year-arrow year-calendar-year-arrow-top" aria-hidden="true">↑</span>
             <button
               type="button"
@@ -228,28 +345,39 @@ const YearCalendar = () => {
             <span className="year-calendar-year-arrow year-calendar-year-arrow-bottom" aria-hidden="true">↓</span>
           </div>
         </div>
-        <div className="year-day-stream" role="list">
+        <div className="year-day-stream" role="list" style={fieldWashStyle}>
+          <div className="year-day-stream-field" aria-hidden="true">
+            {termAuraNodes.map((aura) => (
+              <span
+                key={aura.id}
+                className="year-term-aura"
+                style={aura.style}
+              ></span>
+            ))}
+          </div>
           {dayStream.map(({ month, day, doy, isMonthStart }) => {
             const dateKey = keyFromDate(year, month, day);
             const term = termByDateKey[dateKey];
             const isToday = year === today.year && month === today.month && day === today.day;
-            const dayFill = dayGradientFillByDoy[doy];
-            const pulse = dayPulseMetaByDoy[doy] || { strength: 0, delay: 0, termId: null };
-            const pulseColor = pulse.termId ? termFillById[pulse.termId] : dayFill;
-            const baseStyle = {
-              '--year-day-fill': dayFill,
-              '--year-pulse-strength': pulse.strength,
-              '--year-pulse-delay': `${pulse.delay}s`,
-              '--year-pulse-color': pulseColor
-            };
+            const todayTooltipEn = `Today is ${MONTHS[month]} ${day}, ${year}`;
+            const todayTooltipZh = `今天是${year}年${month + 1}月${day}日`;
             if (term) {
               return (
                 <Link
                   key={`${month}-${day}`}
                   to={`/term/${term.id}`}
-                  className={`year-day is-seasonal is-pulse is-term${isToday ? ' is-today' : ''}${isMonthStart ? ' is-month-start' : ''}`}
-                  style={{ ...baseStyle, '--year-term-fill': termFillById[term.id] }}
+                  className={`year-day is-term${isToday ? ' is-today' : ''}${isMonthStart ? ' is-month-start' : ''}`}
+                  style={{
+                    ...termMotionById[term.id],
+                    '--year-term-base': termPaletteById[term.id]?.base || termFillById[term.id],
+                    '--year-term-fill': termFillById[term.id],
+                    '--year-term-mid': termMidById[term.id],
+                    '--year-term-rim': termRimById[term.id],
+                    '--year-term-text': termTextById[term.id],
+                    '--year-term-focus-strength': (0.24 + (clamp01(term.dayH / 24) * 0.08)).toFixed(3)
+                  }}
                   aria-label={`${MONTHS[month]} ${day}, ${term.zh} ${term.en}`}
+                  onClick={() => selectTermId(term.id)}
                   onMouseEnter={() => setHoveredTerm(term)}
                   onMouseLeave={() => setHoveredTerm(null)}
                   onFocus={() => setHoveredTerm(term)}
@@ -257,17 +385,35 @@ const YearCalendar = () => {
                 >
                   {isTextOn && <span className="year-day-num">{String(day).padStart(2, '0')}</span>}
                   {isTextOn && isMonthStart && <span className="year-day-month">{MONTHS[month]}</span>}
+                  <span className="year-day-tooltip" aria-hidden="true">
+                    {isToday ? (
+                      <>
+                        <span className="year-day-tooltip-zh">{todayTooltipZh}</span>
+                        <span className="year-day-tooltip-en">{todayTooltipEn}</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="year-day-tooltip-zh">{term.zh}</span>
+                        <span className="year-day-tooltip-en">{term.en}</span>
+                      </>
+                    )}
+                  </span>
                 </Link>
               );
             }
             return (
               <span
                 key={`${month}-${day}`}
-                className={`year-day is-seasonal is-pulse${isToday ? ' is-today' : ''}${isMonthStart ? ' is-month-start' : ''}`}
-                style={baseStyle}
+                className={`year-day is-seasonal${isToday ? ' is-today' : ''}${isMonthStart ? ' is-month-start' : ''}`}
               >
                 {isTextOn && <span className="year-day-num">{String(day).padStart(2, '0')}</span>}
                 {isTextOn && isMonthStart && <span className="year-day-month">{MONTHS[month]}</span>}
+                {isToday && (
+                  <span className="year-day-tooltip" aria-hidden="true">
+                    <span className="year-day-tooltip-zh">{todayTooltipZh}</span>
+                    <span className="year-day-tooltip-en">{todayTooltipEn}</span>
+                  </span>
+                )}
               </span>
             );
           })}
@@ -280,8 +426,8 @@ const YearCalendar = () => {
             aria-pressed={!isTextOn}
             aria-label={isTextOn ? 'Turn text off' : 'Turn text on'}
           >
-            <span className="year-calendar-toggle-word">Text</span>
-            <span className="year-calendar-toggle-word-zh">日期</span>
+            <span className="year-calendar-toggle-word">See dates</span>
+            <span className="year-calendar-toggle-word-zh">显示日期</span>
           </button>
         </div>
       </section>

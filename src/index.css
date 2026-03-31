@@ -11,3 +11,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+@font-face {
+  font-family: "FZZJ-YZDKJW";
+  src: url("./assets/fonts/FZZJ-YZDKJW.TTF") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "FZZJ-YZDKJW-Regular";
+  src: url("./assets/fonts/FZZJ-YZDKJW.TTF") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}

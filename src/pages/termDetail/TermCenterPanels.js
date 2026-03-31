@@ -1,15 +1,31 @@
 import React from 'react';
 
-const TermCenterPanels = ({ activeMenu, content, phaseRows }) => {
+const TermCenterPanels = ({
+  activeMenu,
+  content,
+  phaseRows,
+  onContentMouseEnter,
+  onContentMouseLeave
+}) => {
   const getPhaseHoverText = (phase) => {
     const text = phase?.en || '';
     const splitIndex = text.indexOf(':');
     return splitIndex >= 0 ? text.slice(splitIndex + 1).trim() : text;
   };
 
+  const panelHoverProps = {
+    onMouseEnter: onContentMouseEnter,
+    onMouseLeave: onContentMouseLeave
+  };
+
   return (
     <div className="term-center-content">
-      <div className={`term-note ${activeMenu === 'note' ? 'is-visible' : ''}`} id="termNoteContent" aria-hidden={activeMenu !== 'note'}>
+      <div
+        className={`term-note ${activeMenu === 'note' ? 'is-visible' : ''}`}
+        id="termNoteContent"
+        aria-hidden={activeMenu !== 'note'}
+        {...panelHoverProps}
+      >
         <div className="term-note-en">
           <span className="term-note-en-text">
             {content.noteEn[0]}<br />
@@ -26,7 +42,12 @@ const TermCenterPanels = ({ activeMenu, content, phaseRows }) => {
         </div>
       </div>
 
-      <div className={`term-phases ${activeMenu === 'phases' ? 'is-visible' : ''}`} id="termPhasesContent" aria-hidden={activeMenu !== 'phases'}>
+      <div
+        className={`term-phases ${activeMenu === 'phases' ? 'is-visible' : ''}`}
+        id="termPhasesContent"
+        aria-hidden={activeMenu !== 'phases'}
+        {...panelHoverProps}
+      >
         {phaseRows[0] && (
           <>
             <div className="term-phases-row term-phases-row-1">
@@ -56,14 +77,24 @@ const TermCenterPanels = ({ activeMenu, content, phaseRows }) => {
         )}
       </div>
 
-      <div className={`term-poem ${activeMenu === 'poem' ? 'is-visible' : ''}`} id="termPoemContent" aria-hidden={activeMenu !== 'poem'}>
+      <div
+        className={`term-poem ${activeMenu === 'poem' ? 'is-visible' : ''}`}
+        id="termPoemContent"
+        aria-hidden={activeMenu !== 'poem'}
+        {...panelHoverProps}
+      >
         <div className="term-poem-verse">{content.poemVerse}</div>
         <div className="term-poem-author">{content.poemAuthor}</div>
         <div className="term-poem-title">{content.poemTitle}</div>
         <div className="term-poem-note">{content.poemNote}</div>
       </div>
 
-      <div className={`term-ritual ${activeMenu === 'ritual' ? 'is-visible' : ''}`} id="termRitualContent" aria-hidden={activeMenu !== 'ritual'}>
+      <div
+        className={`term-ritual ${activeMenu === 'ritual' ? 'is-visible' : ''}`}
+        id="termRitualContent"
+        aria-hidden={activeMenu !== 'ritual'}
+        {...panelHoverProps}
+      >
         <div className="term-ritual-col">
           <div
             className="term-ritual-artboard"

@@ -72,7 +72,7 @@
     position: absolute;
     top: 24px;
     left: 18px;
-    font-family: "Cutive Mono", "Cutive Mono-Regular", Helvetica, sans-serif;
+    font-family: "Roboto Mono", "Roboto Mono", Helvetica, sans-serif;
     font-size: 11px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -278,7 +278,7 @@
 }
 
 .term-term-nav-pop-title {
-    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-family: "Roboto Mono", Helvetica, sans-serif;
     font-size: 11px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -288,7 +288,7 @@
 
 .term-term-nav-pop-value,
 .term-term-nav-pop-next {
-    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-family: "Roboto Mono", Helvetica, sans-serif;
     font-size: 13px;
     line-height: 1.35;
 }
@@ -296,7 +296,7 @@
 .term-term-nav-pop-hint {
     margin-top: 5px;
     margin-bottom: 5px;
-    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-family: "Roboto Mono", Helvetica, sans-serif;
     font-size: 11px;
     line-height: 1.3;
     opacity: 0.78;
@@ -357,7 +357,7 @@
 
 .term-date-en {
     color: #54504c;
-    font-family: "Cutive Mono", "Cutive Mono-Regular", Helvetica, sans-serif;
+    font-family: "Roboto Mono", "Roboto Mono", Helvetica, sans-serif;
     font-size: 15px;
     font-weight: 400;
     letter-spacing: 1.05px;
@@ -397,7 +397,7 @@
 .term-summary-text {
     align-self: stretch;
     color: #54504c;
-    font-family: "Cutive Mono", "Cutive Mono-Regular", Helvetica, sans-serif;
+    font-family: "Roboto Mono", "Roboto Mono", Helvetica, sans-serif;
     font-size: 16px;
     font-weight: 400;
     height: 26px;
@@ -952,7 +952,7 @@
     gap: 10px;
     width: 178px;
     color: #54504C;
-    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-family: "Roboto Mono", Helvetica, sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -1054,7 +1054,7 @@
     top: 8px;
     width: 260px;
     color: #54504C;
-    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-family: "Roboto Mono", Helvetica, sans-serif;
     font-size: 16px;
     font-weight: 400;
     letter-spacing: -0.48px;
@@ -1135,7 +1135,7 @@
 
 .term-phases-en {
     color: #54504c;
-    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-family: "Roboto Mono", Helvetica, sans-serif;
     font-size: 16px;
     font-weight: 400;
     line-height: 16.2px;
@@ -1176,7 +1176,7 @@
     top: 42px;
     width: 420px;
     color: #54504c;
-    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-family: "Roboto Mono", Helvetica, sans-serif;
     font-size: 16px;
     font-weight: 400;
     line-height: 16px;
@@ -1270,7 +1270,7 @@
     padding: 0 8px;
     border: 1px solid transparent;
     color: #54504c;
-    font-family: "Cutive Mono", Helvetica, sans-serif;
+    font-family: "Roboto Mono", Helvetica, sans-serif;
     font-size: 16px;
     font-weight: 400;
     line-height: 20px;

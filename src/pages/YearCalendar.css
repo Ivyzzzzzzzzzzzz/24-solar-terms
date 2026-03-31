@@ -18,11 +18,58 @@
   overflow: hidden;
 }
 
+.year-calendar-page::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 108px;
+  height: 108px;
+  background: #ffffff;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  border-right: 1px solid rgba(84, 80, 76, 0.12);
+  border-bottom: 1px solid rgba(84, 80, 76, 0.12);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.year-calendar-back-link {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 108px;
+  height: 108px;
+  z-index: 6;
+  display: block;
+  text-decoration: none;
+}
+
+.year-calendar-back-link-label {
+  position: absolute;
+  top: 42px;
+  left: 18px;
+  display: inline-block;
+  font-family: "Roboto Mono", "Roboto Mono Regular", monospace;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(84, 80, 76, 0.9);
+  transform: rotate(-45deg);
+  transform-origin: top left;
+  line-height: 1;
+}
+
+.year-calendar-back-link:focus-visible {
+  outline: 2px solid rgba(84, 80, 76, 0.35);
+  outline-offset: 4px;
+}
+
 .term-back-corner {
   position: absolute;
   top: 0;
   left: 0;
   --fold-size: 110px;
+  --fold-progress: 0;
   width: var(--fold-size);
   height: var(--fold-size);
   text-decoration: none;
@@ -30,6 +77,31 @@
   display: block;
   color: #54504c;
   cursor: pointer;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.term-back-corner-underlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--fold-size);
+  height: var(--fold-size);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+  transform: translate(calc(var(--fold-progress) * 1.5px), calc(var(--fold-progress) * 1.5px));
+}
+
+.term-back-corner-underlay-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  border: 0;
+  pointer-events: none;
 }
 
 .term-back-corner::before {
@@ -39,38 +111,88 @@
   left: 0;
   width: var(--fold-size);
   height: var(--fold-size);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.92) 48%, transparent 48%);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.88) 52%, rgba(240, 235, 225, 0.82) 100%),
+    linear-gradient(145deg, rgba(0, 0, 0, 0.06) 0%, rgba(0, 0, 0, 0) 48%);
   border-right: 1px solid rgba(84, 80, 76, 0.3);
   border-bottom: 1px solid rgba(84, 80, 76, 0.3);
   transform-origin: top left;
-  transition: transform 200ms ease, box-shadow 200ms ease;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  transform:
+    translate(
+      calc(var(--fold-progress) * 8px),
+      calc(var(--fold-progress) * 8px)
+    )
+    rotateY(calc(var(--fold-progress) * -48deg))
+    rotateX(calc(var(--fold-progress) * 14deg));
+  transition:
+    transform 360ms cubic-bezier(0.22, 0.7, 0.25, 1),
+    box-shadow 360ms ease,
+    opacity 260ms ease;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.14);
+  opacity: calc(1 - (var(--fold-progress) * 0.2));
+  will-change: transform, box-shadow, opacity;
+  z-index: 2;
 }
 
-.term-back-corner.is-dragging::before {
+.term-back-corner::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--fold-size);
+  height: var(--fold-size);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  background: linear-gradient(135deg, rgba(70, 66, 62, 0.1) 0%, rgba(70, 66, 62, 0.24) 100%);
+  transform-origin: top left;
+  transform:
+    translate(
+      calc(var(--fold-progress) * 10px),
+      calc(var(--fold-progress) * 10px)
+    )
+    rotateY(calc(var(--fold-progress) * -12deg));
+  opacity: calc(var(--fold-progress) * 0.55);
+  filter: blur(0.25px);
+  transition: transform 360ms cubic-bezier(0.22, 0.7, 0.25, 1), opacity 260ms ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.term-back-corner.is-dragging::before,
+.term-back-corner.is-dragging::after {
   transition: none;
 }
 
 .term-back-corner.is-unfolding::before {
-  transition: transform 520ms ease;
-  transform: translate(6px, 6px);
-  box-shadow: 0 18px 32px rgba(0, 0, 0, 0.12);
+  transition: transform 560ms cubic-bezier(0.16, 0.8, 0.2, 1), box-shadow 560ms ease, opacity 520ms ease;
+  transform: translate(14px, 14px) rotateY(-58deg) rotateX(18deg) scale(1.02);
+  box-shadow: 0 26px 40px rgba(0, 0, 0, 0.2);
+  opacity: 0.78;
+}
+
+.term-back-corner.is-unfolding::after {
+  transition: transform 560ms cubic-bezier(0.16, 0.8, 0.2, 1), opacity 520ms ease;
+  transform: translate(18px, 18px) rotateY(-20deg) scale(1.04);
+  opacity: 0.62;
 }
 
 .term-back-corner-text {
   position: absolute;
   top: 24px;
   left: 18px;
-  font-family: "Cutive Mono", "Cutive Mono-Regular", Helvetica, sans-serif;
+  font-family: "Roboto Mono", "Roboto Mono", Helvetica, sans-serif;
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   pointer-events: none;
   transform: rotate(-45deg);
+  opacity: calc(1 - (var(--fold-progress) * 0.45));
+  transition: opacity 220ms ease;
+  z-index: 3;
 }
 
 .year-calendar-title {
-  font-family: "Cutive Mono", "Cutive Mono-Regular", Helvetica, sans-serif;
+  font-family: "Roboto Mono", "Roboto Mono", Helvetica, sans-serif;
   font-size: 18px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -128,7 +250,7 @@
 
 .year-calendar-grid {
   display: grid;
-  grid-template-columns: 28px 28px max-content 54px;
+  grid-template-columns: 34px 28px max-content 54px;
   column-gap: 10px;
   align-items: start;
   justify-content: center;
@@ -142,7 +264,7 @@
 .year-calendar-term-preview-en-top {
   position: absolute;
   top: -28px;
-  left: 76px;
+  left: 82px;
   transform: none;
   text-align: left;
   font-size: 18px;
@@ -174,13 +296,15 @@
 
 .year-calendar-home-link-inline {
   margin-top: 2px;
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  opacity: 0.72;
+  opacity: 0.92;
+  aspect-ratio: 1 / 1;
 }
 
 .year-calendar-home-link-inline:hover,
@@ -188,10 +312,603 @@
   opacity: 1;
 }
 
-.year-calendar-home-icon-inline {
-  width: 28px;
-  height: 26px;
+.year-calendar-home-link-inline:focus-visible {
+  outline: none;
+}
+
+.year-calendar-home-link-inline .term-grid-icon {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  border: 1px solid rgba(84, 80, 76, 0.6);
+  border-radius: 2px;
+  background: transparent;
+  animation: gridBreath 2.6s ease-in-out infinite;
+}
+
+.year-calendar-home-link-inline .term-grid-icon::before,
+.year-calendar-home-link-inline .term-grid-icon::after {
+  content: "";
+  position: absolute;
+  background: rgba(84, 80, 76, 0.55);
+  transition: background 160ms ease;
+}
+
+.year-calendar-home-link-inline .term-grid-icon::before {
+  width: 1px;
+  height: 100%;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+
+.year-calendar-home-link-inline .term-grid-icon::after {
+  height: 1px;
+  width: 100%;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.year-calendar-home-link-inline:hover .term-grid-icon,
+.year-calendar-home-link-inline:focus-visible .term-grid-icon {
+  border-color: rgba(84, 80, 76, 0.9);
+}
+
+.year-calendar-home-link-inline:hover .term-grid-icon::before,
+.year-calendar-home-link-inline:focus-visible .term-grid-icon::before,
+.year-calendar-home-link-inline:hover .term-grid-icon::after,
+.year-calendar-home-link-inline:focus-visible .term-grid-icon::after {
+  background: rgba(84, 80, 76, 0.85);
+}
+
+@keyframes gridBreath {
+  0%, 100% {
+    transform: scale(1);
+    border-color: rgba(84, 80, 76, 0.55);
+    box-shadow: 0 0 0 rgba(84, 80, 76, 0);
+  }
+  50% {
+    transform: scale(1.08);
+    border-color: rgba(84, 80, 76, 0.85);
+    box-shadow: 0 6px 14px rgba(84, 80, 76, 0.12);
+  }
+}
+
+.year-calendar-home-orb-inline {
+  position: relative;
+  width: 100%;
+  height: 100%;
   display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 999px;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 30% 26%, rgba(255, 255, 255, 0.28) 0 12%, rgba(255, 255, 255, 0.12) 24%, rgba(255, 255, 255, 0) 44%),
+    radial-gradient(circle at 72% 74%, color-mix(in srgb, rgb(var(--year-orb-color-base-rgb)) 18%, white 82%) 0 14%, rgba(255, 255, 255, 0) 42%),
+    radial-gradient(circle at 52% 46%, color-mix(in srgb, rgb(var(--year-orb-color-base-rgb)) 18%, white 82%) 0 56%, rgba(252, 249, 244, 0.78) 100%);
+  border: 0.8px solid rgba(20, 18, 16, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.year-calendar-home-orb-fluid {
+  position: absolute;
+  inset: -10%;
+  z-index: 0;
+  will-change: transform;
+  transform-origin: center;
+  animation: yearOrbFluidField 13s ease-in-out infinite;
+}
+
+.year-calendar-home-orb-spectrum {
+  position: absolute;
+  inset: -28%;
+  border-radius: 42%;
+  z-index: 0;
+  background:
+    radial-gradient(
+      circle at 28% 30%,
+      color-mix(in srgb, rgb(var(--year-orb-color-base-rgb)) 78%, white 22%) 0 18%,
+      rgb(var(--year-orb-color-base-rgb) / 0.34) 42%,
+      rgb(var(--year-orb-color-base-rgb) / 0) 74%
+    ),
+    radial-gradient(
+      circle at 72% 68%,
+      color-mix(in srgb, rgb(var(--year-orb-color-base-rgb)) 42%, white 58%) 0 14%,
+      rgb(var(--year-orb-color-base-rgb) / 0.18) 40%,
+      rgb(var(--year-orb-color-base-rgb) / 0) 70%
+    ),
+    radial-gradient(
+      circle at 48% 48%,
+      color-mix(in srgb, rgb(var(--year-orb-color-base-rgb)) 56%, black 44%) 0 16%,
+      rgb(var(--year-orb-color-base-rgb) / 0.16) 44%,
+      rgb(var(--year-orb-color-base-rgb) / 0) 78%
+    );
+  filter: blur(8px) saturate(142%) contrast(114%);
+  opacity: 0.82;
+  will-change: transform, opacity;
+  transform-origin: center;
+  animation:
+    yearOrbSpectrumWheel 15s ease-in-out infinite,
+    yearOrbSpectrumBloom 10.5s ease-in-out infinite;
+}
+
+.year-calendar-home-orb-stream {
+  position: absolute;
+  inset: -24%;
+  border-radius: 44% 56% 52% 48% / 38% 44% 56% 62%;
+  z-index: 1;
+  background:
+    radial-gradient(
+      ellipse at 26% 48%,
+      color-mix(in srgb, rgb(var(--year-orb-color-base-rgb)) 78%, white 22%) 0 14%,
+      rgb(var(--year-orb-color-base-rgb) / 0.42) 24%,
+      rgb(var(--year-orb-color-base-rgb) / 0) 58%
+    ),
+    radial-gradient(
+      ellipse at 76% 46%,
+      color-mix(in srgb, rgb(var(--year-orb-color-base-rgb)) 62%, black 38%) 0 12%,
+      rgb(var(--year-orb-color-base-rgb) / 0.4) 26%,
+      rgb(var(--year-orb-color-base-rgb) / 0) 56%
+    ),
+    linear-gradient(
+      132deg,
+      rgba(255, 255, 255, 0) 18%,
+      color-mix(in srgb, rgb(var(--year-orb-color-base-rgb)) 60%, white 40%) 42%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0) 68%
+    );
+  filter: blur(6px) saturate(146%) contrast(118%);
+  opacity: 0.78;
+  mix-blend-mode: soft-light;
+  will-change: transform, border-radius, opacity;
+  transform-origin: center;
+  animation:
+    yearOrbStreamCurrent 9.5s ease-in-out infinite,
+    yearOrbLayerPulseGold 7.4s ease-in-out infinite;
+}
+
+.year-calendar-home-orb-layer {
+  position: absolute;
+  border-radius: 46% 54% 58% 42% / 44% 40% 60% 56%;
+  filter: blur(5.6px) saturate(126%);
+  opacity: 0.68;
+  mix-blend-mode: normal;
+  will-change: transform, border-radius, opacity, filter;
+  transform-origin: center;
+}
+
+.year-calendar-home-orb-layer-cool {
+  left: -9px;
+  top: -7px;
+  width: 31px;
+  height: 30px;
+  z-index: 1;
+  filter: blur(5px) saturate(132%) contrast(126%);
+  mix-blend-mode: multiply;
+  background:
+    radial-gradient(
+      circle at 34% 34%,
+      color-mix(in srgb, rgb(var(--year-orb-color-base-rgb)) 70%, black 30%) 0 18%,
+      color-mix(in srgb, rgb(var(--year-orb-color-base-rgb)) 58%, black 42%) 42%,
+      rgba(26, 20, 16, 0.22) 58%,
+      rgba(26, 20, 16, 0) 78%
+    ),
+    radial-gradient(
+      circle at 78% 62%,
+      rgb(var(--year-orb-color-base-rgb) / 0.34) 0 14%,
+      transparent 60%
+    );
+  animation:
+    yearOrbFluidBlobCool 22s ease-in-out infinite,
+    yearOrbLayerPulseCool 8.4s ease-in-out infinite;
+}
+
+.year-calendar-home-orb-layer-warm {
+  left: 8px;
+  top: -7px;
+  width: 30px;
+  height: 31px;
+  z-index: 2;
+  filter: blur(4.6px) saturate(144%) contrast(114%);
+  background:
+    radial-gradient(
+      circle at 44% 34%,
+      rgb(var(--year-orb-color-base-rgb) / 1) 0 20%,
+      rgb(var(--year-orb-color-base-rgb) / 0.88) 42%,
+      rgb(var(--year-orb-color-base-rgb) / 0.24) 60%,
+      rgb(var(--year-orb-color-base-rgb) / 0) 78%
+    ),
+    radial-gradient(
+      circle at 26% 72%,
+      color-mix(in srgb, rgb(var(--year-orb-color-base-rgb)) 74%, white 26%) 0 18%,
+      transparent 62%
+    );
+  animation:
+    yearOrbFluidBlobWarm 19s ease-in-out infinite,
+    yearOrbLayerPulseWarm 9.2s ease-in-out infinite;
+  animation-delay: -5s, -1.2s;
+}
+
+.year-calendar-home-orb-layer-gold {
+  left: 8px;
+  top: 10px;
+  width: 31px;
+  height: 30px;
+  z-index: 3;
+  filter: blur(5.8px) saturate(122%) brightness(1.08);
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(
+      circle at 40% 42%,
+      color-mix(in srgb, rgb(var(--year-orb-color-base-rgb)) 58%, white 42%) 0 18%,
+      color-mix(in srgb, rgb(var(--year-orb-color-base-rgb)) 34%, white 66%) 42%,
+      rgba(255, 255, 255, 0.3) 58%,
+      rgba(255, 255, 255, 0) 74%
+    ),
+    radial-gradient(
+      circle at 74% 28%,
+      rgba(255, 255, 255, 0.48) 0 14%,
+      transparent 62%
+    );
+  animation:
+    yearOrbFluidBlobGold 24s ease-in-out infinite,
+    yearOrbLayerPulseGold 8.8s ease-in-out infinite;
+  animation-delay: -8s, -2.3s;
+}
+
+.year-calendar-home-orb-layer-muted {
+  left: -9px;
+  top: 9px;
+  width: 32px;
+  height: 30px;
+  z-index: 0;
+  filter: blur(7.2px) saturate(110%) brightness(1.08);
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(
+      circle at 48% 46%,
+      rgba(255, 255, 255, 0.72) 0 18%,
+      color-mix(in srgb, rgb(var(--year-orb-color-base-rgb)) 28%, white 72%) 40%,
+      rgba(255, 255, 255, 0) 74%
+    ),
+    radial-gradient(
+      circle at 30% 24%,
+      rgb(var(--year-orb-color-base-rgb) / 0.2) 0 16%,
+      transparent 60%
+    );
+  animation:
+    yearOrbFluidBlobMuted 21s ease-in-out infinite,
+    yearOrbLayerPulseMuted 9.6s ease-in-out infinite;
+  animation-delay: -11s, -3.1s;
+}
+
+.year-calendar-home-orb-inline::before,
+.year-calendar-home-orb-inline::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.year-calendar-home-orb-inline::before {
+  z-index: 4;
+  background:
+    radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.54) 0 12%, rgba(255, 255, 255, 0.16) 24%, rgba(255, 255, 255, 0) 42%),
+    radial-gradient(circle at 70% 70%, color-mix(in srgb, rgb(var(--year-orb-color-base-rgb)) 18%, white 82%) 0 16%, rgba(255, 255, 255, 0) 44%),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.12) 0 52%, rgba(255, 255, 255, 0) 84%);
+  opacity: 0.42;
+  mix-blend-mode: screen;
+}
+
+.year-calendar-home-orb-inline::after {
+  border: 0.8px solid rgba(20, 18, 16, 0.12);
+  box-shadow: inset 0 0 0 0.35px rgba(255, 255, 255, 0.2);
+  opacity: 1;
+  z-index: 5;
+}
+
+.year-calendar-home-link-inline:hover .year-calendar-home-orb-inline,
+.year-calendar-home-link-inline:focus-visible .year-calendar-home-orb-inline {
+  transform: scale(1.04);
+  border-color: rgba(20, 18, 16, 0.2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    0 6px 14px rgba(20, 18, 16, 0.12);
+}
+
+@keyframes yearOrbSpectrumWheel {
+  0% {
+    transform: translate(-4px, -2px) scale(1.02) rotate(-4deg);
+  }
+  25% {
+    transform: translate(3px, -6px) scale(1.14, 1.02) rotate(32deg);
+  }
+  50% {
+    transform: translate(5px, 4px) scale(1.08, 1.18) rotate(-24deg);
+  }
+  75% {
+    transform: translate(-6px, 2px) scale(1.16, 1.04) rotate(18deg);
+  }
+  100% {
+    transform: translate(-4px, -2px) scale(1.02) rotate(-4deg);
+  }
+}
+
+@keyframes yearOrbFluidField {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1) rotate(0deg);
+  }
+  25% {
+    transform: translate(-2px, 1px) scale(1.06, 1.02) rotate(-8deg);
+  }
+  50% {
+    transform: translate(2px, -2px) scale(1.02, 1.08) rotate(6deg);
+  }
+  75% {
+    transform: translate(-1px, 2px) scale(1.08, 1.03) rotate(-4deg);
+  }
+}
+
+@keyframes yearOrbSpectrumBloom {
+  0%, 100% {
+    opacity: 0.74;
+  }
+  50% {
+    opacity: 0.92;
+  }
+}
+
+@keyframes yearOrbStreamCurrent {
+  0%, 100% {
+    transform: translate(-6px, -3px) scale(1.02, 0.94) rotate(-16deg);
+    border-radius: 44% 56% 52% 48% / 38% 44% 56% 62%;
+    opacity: 0.68;
+  }
+  25% {
+    transform: translate(6px, -7px) scale(1.16, 0.88) rotate(12deg);
+    border-radius: 52% 48% 60% 40% / 44% 38% 62% 56%;
+    opacity: 0.88;
+  }
+  50% {
+    transform: translate(8px, 5px) scale(0.94, 1.18) rotate(28deg);
+    border-radius: 40% 60% 46% 54% / 60% 42% 58% 40%;
+    opacity: 0.8;
+  }
+  75% {
+    transform: translate(-7px, 8px) scale(1.18, 0.94) rotate(-10deg);
+    border-radius: 58% 42% 54% 46% / 46% 60% 40% 54%;
+    opacity: 0.9;
+  }
+}
+
+@keyframes yearOrbFluidBlobCool {
+  0%, 100% {
+    transform: translate(-1px, -1px) scale(1.02, 1.02) rotate(-10deg);
+    border-radius: 46% 54% 58% 42% / 44% 40% 60% 56%;
+  }
+  25% {
+    transform: translate(6px, -6px) scale(1.18, 0.9) rotate(4deg);
+    border-radius: 52% 48% 56% 44% / 40% 46% 54% 60%;
+  }
+  50% {
+    transform: translate(11px, 1px) scale(0.92, 1.16) rotate(14deg);
+    border-radius: 40% 60% 48% 52% / 54% 42% 58% 46%;
+  }
+  75% {
+    transform: translate(5px, 9px) scale(1.1, 0.98) rotate(6deg);
+    border-radius: 48% 52% 62% 38% / 56% 44% 56% 44%;
+  }
+}
+
+@keyframes yearOrbFluidBlobWarm {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1.04, 1.08) rotate(6deg);
+    border-radius: 54% 46% 54% 46% / 44% 56% 42% 58%;
+  }
+  25% {
+    transform: translate(-5px, 4px) scale(1.16, 0.92) rotate(-6deg);
+    border-radius: 46% 54% 58% 42% / 54% 44% 56% 46%;
+  }
+  50% {
+    transform: translate(-10px, 8px) scale(0.94, 1.18) rotate(-14deg);
+    border-radius: 60% 40% 46% 54% / 40% 60% 48% 52%;
+  }
+  75% {
+    transform: translate(-3px, -3px) scale(1.1, 1.04) rotate(-4deg);
+    border-radius: 50% 50% 42% 58% / 46% 54% 58% 42%;
+  }
+}
+
+@keyframes yearOrbFluidBlobGold {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1.04, 1.02) rotate(-6deg);
+    border-radius: 46% 54% 48% 52% / 58% 42% 54% 46%;
+  }
+  25% {
+    transform: translate(-4px, -7px) scale(1.14, 0.94) rotate(6deg);
+    border-radius: 56% 44% 54% 46% / 46% 54% 42% 58%;
+  }
+  50% {
+    transform: translate(-8px, 3px) scale(0.96, 1.18) rotate(15deg);
+    border-radius: 42% 58% 60% 40% / 52% 48% 58% 42%;
+  }
+  75% {
+    transform: translate(4px, 8px) scale(1.12, 0.98) rotate(4deg);
+    border-radius: 52% 48% 44% 56% / 48% 52% 60% 40%;
+  }
+}
+
+@keyframes yearOrbFluidBlobMuted {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1.08, 1.02) rotate(4deg);
+    border-radius: 50% 50% 56% 44% / 46% 54% 52% 48%;
+  }
+  25% {
+    transform: translate(5px, -7px) scale(0.96, 1.14) rotate(-6deg);
+    border-radius: 42% 58% 50% 50% / 56% 44% 56% 44%;
+  }
+  50% {
+    transform: translate(10px, 4px) scale(1.14, 0.94) rotate(-12deg);
+    border-radius: 58% 42% 46% 54% / 42% 58% 48% 52%;
+  }
+  75% {
+    transform: translate(3px, 8px) scale(1.06, 1.1) rotate(-3deg);
+    border-radius: 46% 54% 60% 40% / 52% 48% 58% 42%;
+  }
+}
+
+@keyframes yearOrbLayerPulseCool {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.72;
+  }
+}
+
+@keyframes yearOrbLayerPulseWarm {
+  0%, 100% {
+    opacity: 0.72;
+  }
+  50% {
+    opacity: 0.92;
+  }
+}
+
+@keyframes yearOrbLayerPulseGold {
+  0%, 100% {
+    opacity: 0.56;
+  }
+  50% {
+    opacity: 0.78;
+  }
+}
+
+@keyframes yearOrbLayerPulseMuted {
+  0%, 100% {
+    opacity: 0.34;
+  }
+  50% {
+    opacity: 0.56;
+  }
+}
+
+@keyframes yearCalendarAuraPulse {
+  0%, 12% {
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: calc(var(--year-aura-opacity, 0.58) * 0.44);
+    filter: blur(calc(var(--year-aura-blur, 14px) * 1)) saturate(114%);
+  }
+  48% {
+    transform: translate(-50%, -50%) scale(var(--year-aura-scale-peak, 1.42));
+    opacity: calc(var(--year-aura-opacity, 0.58) * 1.42);
+    filter: blur(calc(var(--year-aura-blur, 14px) * 1.34)) saturate(118%);
+  }
+  74% {
+    transform: translate(-50%, -50%) scale(0.64);
+    opacity: calc(var(--year-aura-opacity, 0.58) * 0.86);
+    filter: blur(calc(var(--year-aura-blur, 14px) * 1.16)) saturate(116%);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: calc(var(--year-aura-opacity, 0.58) * 0.44);
+    filter: blur(calc(var(--year-aura-blur, 14px) * 1)) saturate(114%);
+  }
+}
+
+@keyframes yearCalendarAuraCorePulse {
+  0%, 14% {
+    transform: scale(0.12);
+    opacity: calc(var(--year-aura-soft-opacity, 0.46) * 0.3);
+    filter: blur(calc(var(--year-aura-blur, 14px) * 1.04));
+  }
+  50% {
+    transform: scale(var(--year-aura-core-peak, 1.56));
+    opacity: calc(var(--year-aura-soft-opacity, 0.46) * 1.46);
+    filter: blur(calc(var(--year-aura-blur, 14px) * 1.24));
+  }
+  80% {
+    transform: scale(0.52);
+    opacity: calc(var(--year-aura-soft-opacity, 0.46) * 0.74);
+    filter: blur(calc(var(--year-aura-blur, 14px) * 1.12));
+  }
+  100% {
+    transform: scale(0.12);
+    opacity: calc(var(--year-aura-soft-opacity, 0.46) * 0.3);
+    filter: blur(calc(var(--year-aura-blur, 14px) * 1.04));
+  }
+}
+
+@keyframes yearCalendarAuraWavePulse {
+  0%, 20% {
+    transform: scale(0.16);
+    opacity: calc(var(--year-aura-wave-opacity, 0.52) * 0.24);
+    filter: blur(calc(var(--year-aura-blur, 14px) * 0.9));
+  }
+  58% {
+    transform: scale(var(--year-aura-wave-peak, 2.08));
+    opacity: calc(var(--year-aura-wave-opacity, 0.52) * 1.78);
+    filter: blur(calc(var(--year-aura-blur, 14px) * 1.08));
+  }
+  84% {
+    transform: scale(0.48);
+    opacity: calc(var(--year-aura-wave-opacity, 0.52) * 0.54);
+    filter: blur(calc(var(--year-aura-blur, 14px) * 0.96));
+  }
+  100% {
+    transform: scale(0.16);
+    opacity: calc(var(--year-aura-wave-opacity, 0.52) * 0.24);
+    filter: blur(calc(var(--year-aura-blur, 14px) * 0.9));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .year-calendar-home-orb-fluid,
+  .year-calendar-home-orb-spectrum,
+  .year-calendar-home-orb-stream,
+  .year-calendar-home-orb-layer {
+    animation: none;
+    transform: none;
+  }
+
+  .year-calendar-home-orb-spectrum {
+    opacity: 0.78;
+  }
+
+  .year-calendar-home-orb-layer-cool {
+    opacity: 0.6;
+  }
+
+  .year-calendar-home-orb-layer-warm,
+  .year-calendar-home-orb-layer-gold,
+  .year-calendar-home-orb-layer-muted {
+    opacity: 0.68;
+  }
+
+  .year-term-aura,
+  .year-term-aura::before,
+  .year-term-aura::after {
+    animation: none;
+  }
+
+  .year-term-aura {
+    transform: translate(-50%, -50%);
+    opacity: calc(var(--year-aura-opacity, 0.44) * 0.92);
+  }
+
+  .year-term-aura::before {
+    transform: none;
+    opacity: calc(var(--year-aura-soft-opacity, 0.2) * 1.06);
+  }
+
+  .year-term-aura::after {
+    transform: scale(1);
+    opacity: calc(var(--year-aura-wave-opacity, 0.2) * 0.72);
+  }
 }
 
 .year-calendar-year-col {
@@ -208,6 +925,7 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
+  transform: translateX(-41px);
 }
 
 .year-calendar-term-preview {
@@ -292,11 +1010,12 @@
   margin-top: 2px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  text-align: left;
   gap: 6px;
   color: rgba(20, 18, 16, 0.62);
   cursor: pointer;
-  font-family: "Cutive Mono", "Cutive Mono-Regular", Helvetica, sans-serif;
+  font-family: "Roboto Mono", "Roboto Mono", Helvetica, sans-serif;
 }
 
 .year-calendar-toggle-state {
@@ -309,12 +1028,12 @@
   font-size: 16px;
   letter-spacing: 0.08em;
   line-height: 1;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .year-calendar-toggle-word-zh {
-  font-size: 14px;
-  line-height: 1;
+  font-size: 18px;
+  line-height: 1.2;
   letter-spacing: 0.02em;
   font-family: "FZFangSong-Z02S", "FangSong", "Songti SC", serif;
 }
@@ -328,6 +1047,8 @@
 
 .year-day-stream {
   display: grid;
+  position: relative;
+  isolation: isolate;
   grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
   grid-auto-rows: auto;
   column-gap: 0;
@@ -335,7 +1056,95 @@
   justify-content: start;
   width: min(92vw, calc(980px * var(--grid-scale)));
   height: auto;
-  /* background: rgba(255, 255, 255, 0.35); */
+  background: transparent;
+  overflow: visible;
+}
+
+.year-day-stream-field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  opacity: 1;
+  mix-blend-mode: normal;
+  filter: blur(0.8px) saturate(118%) contrast(108%);
+}
+
+.year-term-aura {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      var(--year-aura-base, #9aa6b2) 0%,
+      color-mix(in srgb, var(--year-aura-base, #9aa6b2) 92%, var(--year-aura-fill, #ece6de) 8%) 13%,
+      color-mix(in srgb, var(--year-aura-fill, #ece6de) 82%, var(--year-aura-mid, #e7e2db) 18%) 34%,
+      color-mix(in srgb, var(--year-aura-track, #f6f1ea) 52%, rgba(255, 255, 255, 0.48) 48%) 68%,
+      transparent 100%
+    );
+  opacity: var(--year-aura-opacity, 0.58);
+  filter: blur(calc(var(--year-aura-blur, 14px) * 0.98)) saturate(116%);
+  animation: yearCalendarAuraPulse var(--year-aura-duration, 12.6s) cubic-bezier(0.33, 0.02, 0.2, 1) infinite;
+  animation-delay: var(--year-aura-delay, 0s);
+  will-change: transform, opacity, filter;
+}
+
+.year-term-aura::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      color-mix(in srgb, var(--year-aura-base, #9aa6b2) 72%, rgba(255, 255, 255, 0.18) 28%) 0%,
+      color-mix(in srgb, var(--year-aura-fill, #ece6de) 64%, var(--year-aura-base, #9aa6b2) 36%) 30%,
+      color-mix(in srgb, var(--year-aura-mid, #e7e2db) 38%, rgba(255, 255, 255, 0.58) 62%) 60%,
+      transparent 100%
+    );
+  opacity: var(--year-aura-soft-opacity, 0.46);
+  filter: blur(calc(var(--year-aura-blur, 14px) * 0.94));
+  animation: yearCalendarAuraCorePulse var(--year-aura-soft-duration, 14.4s) cubic-bezier(0.33, 0.02, 0.2, 1) infinite;
+  animation-delay: var(--year-aura-soft-delay, 0s);
+  will-change: transform, opacity, filter;
+}
+
+.year-term-aura::after {
+  content: "";
+  position: absolute;
+  inset: -34%;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      transparent 0 18%,
+      color-mix(in srgb, var(--year-aura-base, #9aa6b2) 46%, transparent) 48%,
+      transparent 92%
+    ),
+    repeating-radial-gradient(
+      circle at 50% 50%,
+      transparent 0 calc(var(--year-aura-line-gap, 8.7%) - var(--year-aura-line-thickness, 1.16%)),
+      color-mix(in srgb, var(--year-aura-base, #9aa6b2) 100%, transparent) calc(var(--year-aura-line-gap, 8.7%) - var(--year-aura-line-thickness, 1.16%)) var(--year-aura-line-gap, 8.7%)
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      transparent 0 20%,
+      color-mix(in srgb, var(--year-aura-base, #9aa6b2) 74%, rgba(255, 255, 255, 0.26) 26%) 34%,
+      transparent 56%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      transparent 0 40%,
+      color-mix(in srgb, var(--year-aura-fill, #ece6de) 68%, rgba(255, 255, 255, 0.32) 32%) 58%,
+      transparent 82%
+    );
+  opacity: calc(var(--year-aura-wave-opacity, 0.52) * var(--year-aura-line-opacity, 0.82));
+  filter: blur(calc(var(--year-aura-blur, 14px) * 0.84));
+  animation: yearCalendarAuraWavePulse var(--year-aura-wave-duration, 12.8s) cubic-bezier(0.33, 0.02, 0.2, 1) infinite;
+  animation-delay: var(--year-aura-wave-delay, 0s);
+  will-change: transform, opacity, filter;
 }
 
 .year-day {
@@ -355,12 +1164,11 @@
   color: rgba(20, 18, 16, 0.38);
   text-decoration: none;
   position: relative;
+  z-index: 2;
+  overflow: visible;
+  isolation: isolate;
   background: transparent;
   /* box-shadow: inset 0 0 0 1px rgba(20, 18, 16, 0.08); */
-}
-
-.year-day.is-seasonal {
-  background: var(--year-day-fill, transparent);
 }
 
 .year-day.is-today {
@@ -368,39 +1176,110 @@
   outline-offset: -1px;
 }
 
+.year-day.is-seasonal {
+  color: rgba(20, 18, 16, 0.38);
+}
+
 .year-day.is-term {
-  color: rgba(20, 18, 16, 0.86);
-  background: var(--year-day-fill, var(--year-term-fill, color-mix(in srgb, var(--term-fill) 78%, #f6f1ea 22%)));
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--year-term-fill, #9aa6b2) 72%, rgba(255, 255, 255, 0.28) 28%),
-    0 0 8px color-mix(in srgb, var(--year-term-fill, #9aa6b2) 34%, rgba(255, 255, 255, 0.66) 66%);
+  color: var(--year-term-text, rgba(20, 18, 16, 0.86));
+  z-index: 3;
 }
 
-.year-day.is-term:hover,
 .year-day.is-term:focus-visible {
-  background: #ffffff;
+  outline: 1px solid color-mix(in srgb, var(--year-term-rim, rgba(20, 18, 16, 0.12)) 64%, rgba(255, 255, 255, 0.92) 36%);
+  outline-offset: -1px;
 }
 
-.year-day.is-pulse {
-  animation: yearTermPulse 3.8s ease-in-out infinite;
-  animation-delay: var(--year-pulse-delay, 0s);
-  will-change: filter;
+.year-day-tooltip {
+  display: flex;
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: max-content;
+  padding: 8px 10px;
+  border: 1px solid rgba(84, 80, 76, 0.22);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8px 18px rgba(20, 18, 16, 0.08);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 6px);
+  transition: opacity 130ms ease, transform 130ms ease;
+  z-index: 8;
 }
 
-@keyframes yearTermPulse {
-  0%,
-  100% {
-    filter: saturate(calc(1 + (var(--year-pulse-strength, 0) * 0.08))) brightness(calc(1 + (var(--year-pulse-strength, 0) * 0.03)));
-  }
-  50% {
-    filter: saturate(calc(1 + (var(--year-pulse-strength, 0) * 0.2))) brightness(calc(1 + (var(--year-pulse-strength, 0) * 0.08)));
-  }
+.year-day-tooltip::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.96);
+  border-right: 1px solid rgba(84, 80, 76, 0.18);
+  border-bottom: 1px solid rgba(84, 80, 76, 0.18);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.year-day.is-term:hover .year-day-tooltip,
+.year-day.is-term:focus-visible .year-day-tooltip,
+.year-day.is-today:hover .year-day-tooltip {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.year-day-stream > .year-day:nth-child(-n + 44) .year-day-tooltip {
+  top: calc(100% + 10px);
+  bottom: auto;
+  transform: translate(-50%, -6px);
+}
+
+.year-day-stream > .year-day:nth-child(-n + 44) .year-day-tooltip::after {
+  top: auto;
+  bottom: 100%;
+  border-right: none;
+  border-bottom: none;
+  border-left: 1px solid rgba(84, 80, 76, 0.18);
+  border-top: 1px solid rgba(84, 80, 76, 0.18);
+  transform: translate(-50%, 50%) rotate(45deg);
+}
+
+.year-day-stream > .year-day:nth-child(-n + 44).is-term:hover .year-day-tooltip,
+.year-day-stream > .year-day:nth-child(-n + 44).is-term:focus-visible .year-day-tooltip,
+.year-day-stream > .year-day:nth-child(-n + 44).is-today:hover .year-day-tooltip {
+  transform: translate(-50%, 0);
+}
+
+.year-day-tooltip-zh {
+  color: rgba(20, 18, 16, 0.9);
+  font-family: "FZZJ-YZDKJW-Regular", "FZZJ-YZDKJW", serif;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.year-day-tooltip-en {
+  color: rgba(20, 18, 16, 0.72);
+  font-family: "Stoke", "Stoke-Light", Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 1.25;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
 }
 
 .year-day-num {
-  font-family: "IBM Plex Mono", "Cutive Mono", monospace;
+  font-family: "IBM Plex Mono", "Roboto Mono", monospace;
   font-size: clamp(7px, 0.72vw, 11px);
   line-height: 1;
+  position: relative;
+  z-index: 3;
+}
+
+.year-day.is-term .year-day-num {
+  color: var(--year-term-text, rgba(20, 18, 16, 0.86));
 }
 
 .year-day.is-month-start {
@@ -408,14 +1287,19 @@
 }
 
 .year-day-month {
-  position: static;
+  position: relative;
+  z-index: 3;
   margin-top: 1px;
   font-size: clamp(6px, 0.52vw, 8px);
   letter-spacing: 0.08em;
   color: rgba(20, 18, 16, 0.3);
-  font-family: "IBM Plex Mono", "Cutive Mono", monospace;
+  font-family: "IBM Plex Mono", "Roboto Mono", monospace;
   text-transform: uppercase;
   line-height: 1;
+}
+
+.year-day.is-term .year-day-month {
+  color: color-mix(in srgb, var(--year-term-text, rgba(20, 18, 16, 0.72)) 58%, rgba(255, 255, 255, 1) 42%);
 }
 
 @media (max-width: 560px) {
@@ -428,6 +1312,11 @@
     padding: var(--landing-pad-top) var(--landing-pad-x) 6px;
   }
 
+  .year-calendar-back-link {
+    top: 0;
+    left: 0;
+  }
+
   .year-calendar-grid {
     grid-template-columns: 22px 22px max-content 46px;
     column-gap: 16px;
@@ -436,6 +1325,10 @@
   .year-calendar-year-switch {
     width: 22px;
     min-height: 64px;
+  }
+
+  .year-calendar-year-switch-wrap {
+    transform: translateX(-38px);
   }
 
   .year-calendar-term-preview {
@@ -455,11 +1348,7 @@
   .year-calendar-home-link-inline {
     width: 22px;
     height: 22px;
-  }
-
-  .year-calendar-home-icon-inline {
-    width: 22px;
-    height: 20px;
+    flex-basis: 22px;
   }
 
   .year-day-stream {

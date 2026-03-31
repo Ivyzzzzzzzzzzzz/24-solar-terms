@@ -1,36 +1,41 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   applyTermBackgroundTheme,
+  claimTermBackgroundOwner,
   disposeTermBackground,
-  ensureTermBackgroundScript
+  ensureTermBackgroundScript,
+  isTermBackgroundOwnerActive
 } from '../lib';
 
 const TermBackground = ({ termId }) => {
-  useEffect(() => {
-    ensureTermBackgroundScript()
-      .then(() => applyTermBackgroundTheme(window.__TERM_ID__))
-      .catch(() => {
-        // Keep UI resilient if runtime fails to load.
-      });
+  const backgroundOwnerRef = useRef(Symbol('term-page-background'));
 
-    // initialize once; per-term updates happen in the effect below
+  useEffect(() => {
+    const owner = claimTermBackgroundOwner(backgroundOwnerRef.current);
+
+    return () => {
+      disposeTermBackground(owner);
+    };
   }, []);
 
   useEffect(() => {
+    let alive = true;
+    const owner = backgroundOwnerRef.current;
     window.__TERM_ID__ = termId;
 
     ensureTermBackgroundScript()
-      .then(() => applyTermBackgroundTheme(termId))
+      .then(() => {
+        if (!alive || !isTermBackgroundOwnerActive(owner)) return;
+        applyTermBackgroundTheme(termId);
+      })
       .catch(() => {
         // Keep UI resilient if runtime fails to load.
       });
-  }, [termId]);
 
-  useEffect(() => {
     return () => {
-      disposeTermBackground();
+      alive = false;
     };
-  }, []);
+  }, [termId]);
 
   return <div id="termP5Mount" aria-hidden="true" style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }} />;
 };

@@ -24,10 +24,19 @@ const SolarDial = ({ onTermChange }) => {
   const dialRef = useRef(null);
   const svgRef = useRef(null);
   const dragRef = useRef(null);
-  const audioCtxRef = useRef(null);
+  const centerEnRef = useRef(null);
+  const outerTipRef = useRef(null);
+  const ringAllTermsRef = useRef(null);
+  const ringNameRef = useRef(null);
+  const ringDateRef = useRef(null);
+  const ringLonRef = useRef(null);
+  const ringDayNRef = useRef(null);
   const moveRafRef = useRef(null);
   const pendingMoveRef = useRef(null);
   const currentTermIndexRef = useRef(0);
+  const dragMovedRef = useRef(false);
+  const lastPointerWasDragRef = useRef(false);
+  const dragDeltaSumRef = useRef(0);
 
   const N = TERM_LIST.length;
   const TEXT_TOP_OFFSET = 180;
@@ -74,14 +83,6 @@ const SolarDial = ({ onTermChange }) => {
     const daysToNextHou = Math.max(0, houLen - (pos - (houIndex - 1) * houLen));
 
     return { currentTerm: current, yearProgress, daysLeftYear, houIndex, houProgress, daysToNextHou };
-  };
-
-  const getTodayDateLabels = () => {
-    const now = new Date();
-    const monthNames = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
-    const dateEn = `${monthNames[now.getMonth()]} ${now.getDate()}`;
-    const dateZh = `${now.getMonth() + 1}月${now.getDate()}日`;
-    return { dateEn, dateZh };
   };
 
   const rotationFromValue = (value, units) => {
@@ -134,12 +135,17 @@ const SolarDial = ({ onTermChange }) => {
     root.setProperty('--term-track', rgbStr(track));
     root.setProperty('--term-fill', rgbStr(fill));
     root.setProperty('--term-rim', rgbStr(rim));
-    root.setProperty('--term-text', rgbStr(mix(base, { r: 20, g: 18, b: 16 }, 0.65)));
+    root.setProperty('--term-text', rgbStr(mix(base, { r: 20, g: 18, b: 16 }, 0.8)));
   };
 
   const outerRotationForIndex = (idx) => {
     const step = 360 / N;
     return -step * (idx + 0.5);
+  };
+
+  const clockwiseRotationToTarget = (current, target) => {
+    const delta = mod(target - current, 360);
+    return current + delta;
   };
 
   const indexFromOuterRotation = (rot) => {
@@ -196,33 +202,20 @@ const SolarDial = ({ onTermChange }) => {
     return Math.hypot(dx, dy);
   };
 
-  const clickFeedback = () => {
-    try {
-      if (navigator.vibrate) navigator.vibrate(8);
-    } catch (_) {}
-    try {
-      if (!audioCtxRef.current) {
-        audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtxRef.current.state === 'suspended') audioCtxRef.current.resume();
+  const updateOuterTooltip = (text, evt) => {
+    if (!dialRef.current || !evt) return;
+    if (dragRef.current) return;
+    const rect = dialRef.current.getBoundingClientRect();
+    const x = evt.clientX - rect.left + 12;
+    const y = evt.clientY - rect.top + 12;
+    setState(prev => ({
+      ...prev,
+      tooltip: { text, x, y, visible: true }
+    }));
+  };
 
-      const t0 = audioCtxRef.current.currentTime;
-      const osc = audioCtxRef.current.createOscillator();
-      const gain = audioCtxRef.current.createGain();
-
-      osc.type = 'square';
-      osc.frequency.setValueAtTime(900, t0);
-
-      gain.gain.setValueAtTime(0.0001, t0);
-      gain.gain.exponentialRampToValueAtTime(0.03, t0 + 0.005);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.03);
-
-      osc.connect(gain);
-      gain.connect(audioCtxRef.current.destination);
-
-      osc.start(t0);
-      osc.stop(t0 + 0.035);
-    } catch (_) {}
+  const clearOuterTooltip = () => {
+    setState(prev => (prev.tooltip.visible ? { ...prev, tooltip: { ...prev.tooltip, visible: false } } : prev));
   };
 
   const applyTermToAll = (idx) => {
@@ -238,11 +231,17 @@ const SolarDial = ({ onTermChange }) => {
   const handlePointerDown = (ringKind, e) => {
     if (ringKind !== 'outer') return;
     if (!hasUserInteracted) setHasUserInteracted(true);
+    lastPointerWasDragRef.current = false;
 
-    e.preventDefault();
+    const targetEl = e.target && e.target.closest ? e.target.closest('.dial-allterms-text') : null;
+    const isTermText = Boolean(targetEl);
+    if (!isTermText) e.preventDefault();
+    clearOuterTooltip();
+    dragMovedRef.current = false;
+    dragDeltaSumRef.current = 0;
 
     const target = e.currentTarget;
-    if (target && target.setPointerCapture) {
+    if (target && target.setPointerCapture && !isTermText) {
       try {
         target.setPointerCapture(e.pointerId);
       } catch (_) {}
@@ -253,8 +252,6 @@ const SolarDial = ({ onTermChange }) => {
       lastAngle: angleFromPointer(e),
       startRot: state.ringRotations[ringKind === 'outer' ? 'allTerms' : ringKind]
     };
-
-    setState(prev => (prev.isDragging ? prev : { ...prev, isDragging: true }));
   };
 
   const handleSvgPointerDown = (e) => {
@@ -270,6 +267,13 @@ const SolarDial = ({ onTermChange }) => {
     const newAngle = angleFromPointer(e);
     const delta = normDeg(newAngle - dragRef.current.lastAngle);
     const newRot = dragRef.current.startRot + delta;
+
+    dragDeltaSumRef.current += Math.abs(delta);
+    if (dragDeltaSumRef.current > 3 && !dragMovedRef.current) {
+      dragMovedRef.current = true;
+      clearOuterTooltip();
+      setState(prev => (prev.isDragging ? prev : { ...prev, isDragging: true }));
+    }
 
     let nextIdx = state.currentTermIndex;
 
@@ -314,13 +318,18 @@ const SolarDial = ({ onTermChange }) => {
     if (!dragRef.current) return;
 
     const kind = dragRef.current.kind;
+    const didDrag = dragMovedRef.current;
+    const pending = pendingMoveRef.current;
     let finalIdx = state.currentTermIndex;
 
     if (kind === 'outer') {
-      finalIdx = indexFromOuterRotation(state.ringRotations.allTerms);
+      const finalRot = pending && typeof pending.newRot === 'number'
+        ? pending.newRot
+        : state.ringRotations.allTerms;
+      finalIdx = indexFromOuterRotation(finalRot);
     }
 
-    snapAllRings(finalIdx);
+    lastPointerWasDragRef.current = didDrag;
     dragRef.current = null;
     pendingMoveRef.current = null;
 
@@ -328,10 +337,20 @@ const SolarDial = ({ onTermChange }) => {
       cancelAnimationFrame(moveRafRef.current);
       moveRafRef.current = null;
     }
+
+    if (didDrag) {
+      snapAllRings(finalIdx);
+      return;
+    }
+
+    setState(prev => (prev.isDragging ? { ...prev, isDragging: false } : prev));
   };
 
-  const snapAllRings = (idx) => {
+  const snapAllRings = (idx, opts = {}) => {
     applyTermToAll(idx);
+    const outerRotation = typeof opts.outerRotation === 'number'
+      ? opts.outerRotation
+      : outerRotationForIndex(idx);
 
     setState(prev => ({
       ...prev,
@@ -341,25 +360,41 @@ const SolarDial = ({ onTermChange }) => {
         lon: 0,
         daynight: 0,
         hou: 0,
-        allTerms: outerRotationForIndex(idx)
+        allTerms: outerRotation
       },
       currentTermIndex: idx,
       isDragging: false
     }));
-
-    clickFeedback();
   };
 
   const handleCenterClick = () => {
     const term = TERM_LIST[state.currentTermIndex];
     if (term) {
+      if (typeof onTermChange === 'function') {
+        onTermChange(term, state.currentTermIndex, {
+          isUserInteracted: true
+        });
+      }
       navigate(`/term/${term.id}`);
     }
   };
 
+  const handleCenterKeyDown = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleCenterClick();
+    }
+  };
+
   const handleTermTextClick = (idx) => {
+    if (lastPointerWasDragRef.current) {
+      lastPointerWasDragRef.current = false;
+      return;
+    }
     if (!hasUserInteracted) setHasUserInteracted(true);
-    snapAllRings(idx);
+    const target = outerRotationForIndex(idx);
+    const clockwiseRotation = clockwiseRotationToTarget(state.ringRotations.allTerms, target);
+    snapAllRings(idx, { outerRotation: clockwiseRotation });
   };
 
   // Initialize on mount
@@ -409,33 +444,70 @@ const SolarDial = ({ onTermChange }) => {
 
   useEffect(() => {
     if (typeof onTermChange === 'function') {
-      onTermChange(TERM_LIST[state.currentTermIndex], state.currentTermIndex);
+      onTermChange(TERM_LIST[state.currentTermIndex], state.currentTermIndex, {
+        isUserInteracted: hasUserInteracted
+      });
     }
-  }, [state.currentTermIndex, onTermChange]);
+  }, [hasUserInteracted, state.currentTermIndex, onTermChange]);
+
+  useEffect(() => {
+    if (!outerTipRef.current) return;
+    outerTipRef.current.style.opacity = state.tooltip.visible ? '1' : '0';
+    outerTipRef.current.style.transform = `translate(${state.tooltip.x}px, ${state.tooltip.y}px)`;
+  }, [state.tooltip]);
+
+  useEffect(() => {
+    if (ringAllTermsRef.current) {
+      ringAllTermsRef.current.style.transform = `rotate(${state.ringRotations.allTerms}deg)`;
+    }
+    if (ringNameRef.current) {
+      ringNameRef.current.style.transform = `rotate(${state.ringRotations.name}deg)`;
+    }
+    if (ringDateRef.current) {
+      ringDateRef.current.style.transform = `rotate(${state.ringRotations.date}deg)`;
+    }
+    if (ringLonRef.current) {
+      ringLonRef.current.style.transform = `rotate(${state.ringRotations.lon}deg)`;
+    }
+    if (ringDayNRef.current) {
+      ringDayNRef.current.style.transform = `rotate(${state.ringRotations.daynight}deg)`;
+    }
+  }, [state.ringRotations]);
+
+
+
 
   const term = TERM_LIST[state.currentTermIndex];
   const todayInfo = getTodayInfo();
-  const todayDateLabels = getTodayDateLabels();
   const currentYearDays = isLeapYear(new Date().getFullYear()) ? 366 : 365;
   const termDoy = Number(term?.doy || 1);
   const termYearProgress = clamp01(termDoy / currentYearDays);
   const termDaysLeftYear = Math.max(0, currentYearDays - termDoy);
   const activeYearProgress = hasUserInteracted ? termYearProgress : todayInfo.yearProgress;
   const activeDaysLeftYear = hasUserInteracted ? termDaysLeftYear : todayInfo.daysLeftYear;
-  const dialDateEn = hasUserInteracted ? (term?.dateEn || 'Dec. 21') : todayDateLabels.dateEn;
-  const dialDateZh = hasUserInteracted ? (term?.dateZh || '十二月二十一') : todayDateLabels.dateZh;
+  const dialDateEn = term?.dateEn || 'Dec. 21';
+  const dialDateZh = term?.dateZh || '十二月二十一';
   const yearRingProgress = Math.max(0, Math.min(1, activeYearProgress || 0));
   const yearBoxTrackPath = annularGuidePath(200, 200, 98, 86, 0, 359.9);
   const yearBoxProgressEnd = -90 + (yearRingProgress * 360);
   const yearBoxProgressPath = annularGuidePath(200, 200, 98, 86, -90, yearBoxProgressEnd);
+  const yearBoxBridgePath = annularGuidePath(200, 200, 102, 62, -90, yearBoxProgressEnd);
   const outerSnapGuidePath = annularGuidePath(200, 200, 186, 166, -10.5, 10.5);
+  const enWords = (term?.en || 'Winter Solstice').split(/\s+/);
+  const enStartY = -24 - (Math.max(1, enWords.length) - 1) * 5.5;
+  const centerLabel = term?.en ? `Open ${term.en}` : 'Open term details';
+
 
   return (
     <div className="landing-dial" id="landingDial" ref={dialRef}>
-      <div id="outerTip" className="outer-tip en" aria-hidden="true" style={{
-        opacity: state.tooltip.visible ? 1 : 0,
-        transform: `translate(${state.tooltip.x}px, ${state.tooltip.y}px)`
-      }}>
+      <button
+        type="button"
+        className="dial-center-hit"
+        aria-label={centerLabel}
+        onClick={handleCenterClick}
+        onKeyDown={handleCenterKeyDown}
+      />
+      <div ref={outerTipRef} id="outerTip" className="outer-tip en" aria-hidden="true">
         {state.tooltip.text}
       </div>
 
@@ -449,6 +521,16 @@ const SolarDial = ({ onTermChange }) => {
         onPointerMove={handlePointerMove}
       >
         <defs>
+          <radialGradient id="dialCoreGradient" cx="50%" cy="46%" r="64%">
+            <stop className="dial-core-stop dial-core-stop-inner" offset="0%" />
+            <stop className="dial-core-stop dial-core-stop-mid" offset="58%" />
+            <stop className="dial-core-stop dial-core-stop-outer" offset="100%" />
+          </radialGradient>
+          <radialGradient id="dialCoreGradientHover" cx="50%" cy="46%" r="64%">
+            <stop className="dial-core-stop dial-core-stop-hover-inner" offset="0%" />
+            <stop className="dial-core-stop dial-core-stop-hover-mid" offset="58%" />
+            <stop className="dial-core-stop dial-core-stop-hover-outer" offset="100%" />
+          </radialGradient>
           <filter id="inkWobble" x="-30%" y="-30%" width="160%" height="160%">
             <feTurbulence
               type="fractalNoise"
@@ -474,6 +556,16 @@ const SolarDial = ({ onTermChange }) => {
           </filter>
           <filter id="dialBlur">
             <feGaussianBlur in="SourceGraphic" stdDeviation="6" />
+          </filter>
+          <filter id="dialCoreBlur" x="-26%" y="-26%" width="152%" height="152%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="8.4" />
+          </filter>
+          <filter id="yearBoxFillBlur" x="-44%" y="-44%" width="188%" height="188%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="9.4" result="yearBoxFillSoft" />
+            <feMerge>
+              <feMergeNode in="yearBoxFillSoft" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
           </filter>
 
           <path id="pAllTerms" d="M 200 25  A 175 175 0 1 1 200 375 A 175 175 0 1 1 200 25" fill="none" />
@@ -520,7 +612,7 @@ const SolarDial = ({ onTermChange }) => {
         <g
           className="dial-ring dial-ring-static dial-ring-outer"
           id="ringAllTerms"
-          style={{ transform: `rotate(${state.ringRotations.allTerms}deg)` }}
+          ref={ringAllTermsRef}
         >
           <circle cx="200" cy="200" r="182" className="dial-outer-hit" />
           <circle cx="200" cy="200" r="182" className="dial-track dial-track-0" />
@@ -534,8 +626,10 @@ const SolarDial = ({ onTermChange }) => {
                   key={`term-${t.id}`}
                   className="dial-allterms-text zh-only"
                   data-en={t.en}
+                  onPointerEnter={(e) => updateOuterTooltip(t.en, e)}
+                  onPointerMove={(e) => updateOuterTooltip(t.en, e)}
+                  onPointerLeave={clearOuterTooltip}
                   onClick={() => handleTermTextClick(idx)}
-                  style={{ cursor: 'pointer', pointerEvents: 'auto' }}
                 >
                   <textPath href="#pAllTerms" startOffset={`${startOffset}%`} textAnchor="middle">
                     {t.zh}
@@ -551,7 +645,7 @@ const SolarDial = ({ onTermChange }) => {
           className="dial-ring"
           data-ring="name"
           id="ringName"
-          style={{ transform: `rotate(${state.ringRotations.name}deg)` }}
+          ref={ringNameRef}
         >
           <circle cx="200" cy="200" r="150" className="dial-track dial-track-1" />
           <circle cx="200" cy="200" r="150" className="dial-rim dial-rim-soft" />
@@ -562,7 +656,7 @@ const SolarDial = ({ onTermChange }) => {
           className="dial-ring"
           data-ring="date"
           id="ringDate"
-          style={{ transform: `rotate(${state.ringRotations.date}deg)` }}
+          ref={ringDateRef}
         >
           <circle cx="200" cy="200" r="128" className="dial-track dial-track-2" />
           <circle cx="200" cy="200" r="128" className="dial-rim dial-rim-soft" />
@@ -576,7 +670,7 @@ const SolarDial = ({ onTermChange }) => {
         </g>
 
         {/* Solar longitude ring */}
-        <g className="dial-ring" data-ring="lon" id="ringLon" style={{ transform: `rotate(${state.ringRotations.lon}deg)` }}>
+        <g className="dial-ring" data-ring="lon" id="ringLon" ref={ringLonRef}>
           <circle cx="200" cy="200" r="92" className="dial-track dial-track-3" />
           <circle cx="200" cy="200" r="92" className="dial-rim dial-rim-soft" />
           <path className="dial-year-box-track" d={yearBoxTrackPath} />
@@ -591,7 +685,7 @@ const SolarDial = ({ onTermChange }) => {
         </g>
 
         {/* Day/Night ring */}
-        <g className="dial-ring" data-ring="daynight" id="ringDayN" style={{ transform: `rotate(${state.ringRotations.daynight}deg)` }}>
+        <g className="dial-ring" data-ring="daynight" id="ringDayN" ref={ringDayNRef}>
           <circle cx="200" cy="200" r="80" className="dial-track dial-track-4" />
           <circle cx="200" cy="200" r="80" className="dial-rim dial-rim-soft" />
         </g>
@@ -623,22 +717,28 @@ const SolarDial = ({ onTermChange }) => {
           className="dial-center-btn"
           role="button"
           tabIndex={0}
-          aria-label="Enter term details"
+          aria-label={centerLabel}
           onClick={handleCenterClick}
-          style={{ cursor: 'pointer' }}
+          onKeyDown={handleCenterKeyDown}
         >
           <circle cx="200" cy="200" r="68" className="dial-core" />
 
-          <text x="200" y="190" textAnchor="middle" className="dial-center-term en" id="dialCenterEn">
-            {term?.en || 'Winter Solstice'}
-          </text>
-          <text x="200" y="214" textAnchor="middle" className="dial-center-term-zh zh" id="dialCenterZh">
-            {term?.zh || '冬至'}
-          </text>
+          <g className="dial-center-text" transform="translate(200 214)">
+            <text ref={centerEnRef} x="0" y={enStartY} textAnchor="middle" className="dial-center-term en" id="dialCenterEn">
+              {enWords.map((word, i) => (
+                <tspan key={`${term?.id || 'fallback'}-en-${i}`} x="0" dy={i === 0 ? '0' : '1.15em'}>
+                  {word}
+                </tspan>
+              ))}
+            </text>
+            <text x="0" y="14" textAnchor="middle" className="dial-center-term-zh zh" id="dialCenterZh">
+              {term?.zh || '冬至'}
+            </text>
+          </g>
 
-          <text x="200" y="246" textAnchor="middle" className="dial-center-hint en">
+          {/* <text x="200" y="246" textAnchor="middle" className="dial-center-hint en">
             Enter
-          </text>
+          </text> */}
         </g>
       </svg>
     </div>

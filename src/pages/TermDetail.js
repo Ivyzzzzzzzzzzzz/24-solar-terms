@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { TERM_LIST, HOU_MAP, TERM_CONTENT_MAP } from '../data';
-import { BackCorner, TermBackground } from '../components';
+import { useAmbientAudio, useAmbientTerm } from '../audio/AmbientAudioProvider';
+import { TERM_LIST, HOU_MAP, TERM_CONTENT_MAP, TERM_COLORS } from '../data';
+import { TermBackground } from '../components';
 import TermMenuRing from './termDetail/TermMenuRing';
 import TermCenterPanels from './termDetail/TermCenterPanels';
 import './termDetail/TermDetail.layout.css';
@@ -161,6 +162,19 @@ const TERM_NAV_TRACK = {
   ry: 19
 };
 
+const MENU_AUTO_ADVANCE_MS = 5000;
+const MENU_ROTATION_STEP = 90;
+
+const hexToRgbChannels = (hex) => {
+  const value = String(hex || '').replace('#', '').trim();
+  const normalized = value.length === 3
+    ? value.split('').map((ch) => ch + ch).join('')
+    : value;
+  const intValue = Number.parseInt(normalized, 16);
+  if (Number.isNaN(intValue)) return '146 158 170';
+  return `${(intValue >> 16) & 255} ${(intValue >> 8) & 255} ${intValue & 255}`;
+};
+
 const annularGuidePath = (cx, cy, rOuter, rInner, startDeg, endDeg) => {
   const a0 = ((startDeg - 90) * Math.PI) / 180;
   const a1 = ((endDeg - 90) * Math.PI) / 180;
@@ -227,14 +241,47 @@ const getEvenlySpacedEllipsePoints = (count, cx, cy, rx, ry, startAngle = -Math.
 const TermDetail = () => {
   const navigate = useNavigate();
   const { termId } = useParams();
+  const { selectTermId } = useAmbientAudio();
+  useAmbientTerm(termId || TERM_LIST[0].id);
   const [term, setTerm] = useState(null);
   const [menuRotation, setMenuRotation] = useState(0);
+  const [isContentHover, setIsContentHover] = useState(false);
   const [isTermNavHover, setIsTermNavHover] = useState(false);
   const [navPulseOn, setNavPulseOn] = useState(false);
+  const isContentHoverRef = useRef(false);
   const navWheelTsRef = useRef(0);
   const navWheelAccumRef = useRef(0);
   const navWheelResetTimerRef = useRef(null);
   const navPulseTimerRef = useRef(null);
+  const menuAutoAdvanceTimerRef = useRef(null);
+  const menuAutoAdvanceStartedAtRef = useRef(0);
+  const menuAutoAdvanceRemainingRef = useRef(MENU_AUTO_ADVANCE_MS);
+
+  const clearMenuAutoAdvanceTimer = useCallback(() => {
+    if (menuAutoAdvanceTimerRef.current) {
+      window.clearTimeout(menuAutoAdvanceTimerRef.current);
+      menuAutoAdvanceTimerRef.current = null;
+    }
+  }, []);
+
+  const startMenuAutoAdvance = useCallback((delay = MENU_AUTO_ADVANCE_MS) => {
+    clearMenuAutoAdvanceTimer();
+    const nextDelay = Math.max(0, delay);
+    menuAutoAdvanceRemainingRef.current = nextDelay;
+    menuAutoAdvanceStartedAtRef.current = Date.now();
+    menuAutoAdvanceTimerRef.current = window.setTimeout(() => {
+      menuAutoAdvanceTimerRef.current = null;
+      menuAutoAdvanceRemainingRef.current = MENU_AUTO_ADVANCE_MS;
+      setMenuRotation((prev) => prev + MENU_ROTATION_STEP);
+    }, nextDelay);
+  }, [clearMenuAutoAdvanceTimer]);
+
+  const pauseMenuAutoAdvance = useCallback(() => {
+    if (!menuAutoAdvanceTimerRef.current) return;
+    const elapsed = Date.now() - menuAutoAdvanceStartedAtRef.current;
+    menuAutoAdvanceRemainingRef.current = Math.max(0, menuAutoAdvanceRemainingRef.current - elapsed);
+    clearMenuAutoAdvanceTimer();
+  }, [clearMenuAutoAdvanceTimer]);
 
   useEffect(() => {
     // Find term from the list
@@ -252,16 +299,36 @@ const TermDetail = () => {
   }, [termId]);
 
   useEffect(() => {
-    const timer = window.setInterval(() => {
-      setMenuRotation((prev) => prev + 0.35);
-    }, 50);
-    return () => window.clearInterval(timer);
-  }, []);
+    isContentHoverRef.current = isContentHover;
+  }, [isContentHover]);
 
   useEffect(() => () => {
     if (navPulseTimerRef.current) window.clearTimeout(navPulseTimerRef.current);
     if (navWheelResetTimerRef.current) window.clearTimeout(navWheelResetTimerRef.current);
-  }, []);
+    clearMenuAutoAdvanceTimer();
+  }, [clearMenuAutoAdvanceTimer]);
+
+  useEffect(() => {
+    menuAutoAdvanceRemainingRef.current = MENU_AUTO_ADVANCE_MS;
+    if (!isContentHoverRef.current) {
+      startMenuAutoAdvance(MENU_AUTO_ADVANCE_MS);
+    }
+
+    return () => {
+      clearMenuAutoAdvanceTimer();
+    };
+  }, [clearMenuAutoAdvanceTimer, menuRotation, startMenuAutoAdvance]);
+
+  useEffect(() => {
+    if (isContentHover) {
+      pauseMenuAutoAdvance();
+      return;
+    }
+
+    if (!menuAutoAdvanceTimerRef.current) {
+      startMenuAutoAdvance(menuAutoAdvanceRemainingRef.current || MENU_AUTO_ADVANCE_MS);
+    }
+  }, [isContentHover, pauseMenuAutoAdvance, startMenuAutoAdvance]);
 
   if (!term) return <div>Loading...</div>;
 
@@ -273,11 +340,16 @@ const TermDetail = () => {
   });
 
   const normalizedRotation = ((menuRotation % 360) + 360) % 360;
-  const activeMenuIndex = ((Math.round(-normalizedRotation / 90) % MENU_ITEMS.length) + MENU_ITEMS.length) % MENU_ITEMS.length;
+  const activeMenuIndex = ((Math.round(normalizedRotation / 90) % MENU_ITEMS.length) + MENU_ITEMS.length) % MENU_ITEMS.length;
   const activeMenu = MENU_ITEMS[activeMenuIndex].key;
   const menuSelectorPath = annularGuidePath(84, 84, 84, 74, -34, 34);
   const currentTermIndex = TERM_LIST.findIndex((t) => t.id === term.id);
   const nextTermIndex = currentTermIndex >= 0 ? (currentTermIndex + 1) % TERM_LIST.length : 0;
+  const termBaseColor = TERM_COLORS[term.id]?.base || '#9aa6b2';
+  const orbBaseRgb = hexToRgbChannels(termBaseColor);
+  const orbPaletteStyle = {
+    '--term-orb-color-base-rgb': orbBaseRgb
+  };
   const nextTerm = TERM_LIST[nextTermIndex];
   const navEllipsePoints = getEvenlySpacedEllipsePoints(
     TERM_LIST.length,
@@ -313,6 +385,7 @@ const TermDetail = () => {
     const targetTerm = TERM_LIST[targetIndex];
     if (!targetTerm) return;
     triggerNavPulse();
+    selectTermId(targetTerm.id);
     navigate(`/term/${targetTerm.id}`);
   };
 
@@ -356,7 +429,7 @@ const TermDetail = () => {
 
   const alignMenuToTop = (index) => {
     const current = ((menuRotation % 360) + 360) % 360;
-    const target = (((-index * 90) % 360) + 360) % 360;
+    const target = (((index * 90) % 360) + 360) % 360;
     const clockwiseDelta = (target - current + 360) % 360;
     setMenuRotation((prev) => prev + clockwiseDelta);
   };
@@ -364,19 +437,25 @@ const TermDetail = () => {
   return (
     <div className="term-page">
       <TermBackground termId={term.id} />
-      <div className="frame term-frame">
-        <BackCorner />
+        <div className="frame term-frame">
+        <Link className="term-back-link" to="/" aria-label="Back to landing">
+          <span className="term-back-link-label">Back</span>
+        </Link>
 
         <div className="term-main">
           <div className="term-content">
             <div className="term-header">
               <Link className="term-left-home-link" to="/" aria-label="Back to landing page">
-                <img
-                  className="term-left-home-icon"
-                  src="/assets/images/Ellipse%2025.svg"
-                  alt=""
-                  aria-hidden="true"
-                />
+                <span className="term-left-home-orb" aria-hidden="true" style={orbPaletteStyle}>
+                  <span className="term-left-home-orb-fluid">
+                    <span className="term-left-home-orb-spectrum"></span>
+                    <span className="term-left-home-orb-stream"></span>
+                    <span className="term-left-home-orb-layer term-left-home-orb-layer-cool"></span>
+                    <span className="term-left-home-orb-layer term-left-home-orb-layer-warm"></span>
+                    <span className="term-left-home-orb-layer term-left-home-orb-layer-gold"></span>
+                    <span className="term-left-home-orb-layer term-left-home-orb-layer-muted"></span>
+                  </span>
+                </span>
               </Link>
               <div className="term-title-zh" id="termTitleZh">{term.zh || term.nameZh}</div>
 
@@ -492,6 +571,8 @@ const TermDetail = () => {
           activeMenu={activeMenu}
           content={content}
           phaseRows={phaseRows}
+          onContentMouseEnter={() => setIsContentHover(true)}
+          onContentMouseLeave={() => setIsContentHover(false)}
         />
       </div>
     </div>

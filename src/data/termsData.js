@@ -321,32 +321,32 @@ export const HOU_MAP = {
 };
 
 export const TERM_COLORS = {
-  "dongzhi":     { base: "#7fa3be" },
-  "xiaohan":     { base: "#7e90c2" },
-  "dahan":       { base: "#898fc7" },
+  "dongzhi":     { base: "#89a2b6" },
+  "xiaohan":     { base: "#8895b9" },
+  "dahan":       { base: "#9195be" },
 
-  "lichun":      { base: "#c0ca8e" },
-  "yushui":      { base: "#9fce84" },
-  "jingzhe":     { base: "#93d0a1" },
-  "chunfen":     { base: "#6eb99e" },
-  "qingming":    { base: "#7fc7c0" },
-  "guyu":        { base: "#7cbcca" },
+  "lichun":      { base: "#b9c195" },
+  "yushui":      { base: "#a1c38d" },
+  "jingzhe":     { base: "#99c6a3" },
+  "chunfen":     { base: "#7cb09d" },
+  "qingming":    { base: "#89bdb8" },
+  "guyu":        { base: "#87b5bf" },
 
-  "lixia":       { base: "#c8ca6d" },
-  "xiaoman":     { base: "#d8c673" },
-  "mangzhong":   { base: "#efbe61" },
-  "xiazhi":      { base: "#e1a76e" },
-  "xiaoshu":     { base: "#dea081" },
-  "dashu":       { base: "#d79088" },
+  "lixia":       { base: "#bcbe7c" },
+  "xiaoman":     { base: "#cabd81" },
+  "mangzhong":   { base: "#dbb774" },
+  "xiazhi":      { base: "#d1a67d" },
+  "xiaoshu":     { base: "#d0a28b" },
+  "dashu":       { base: "#cb9690" },
 
-  "liqiu":       { base: "#df9470" },
-  "chushu":      { base: "#d09589" },
-  "bailu":       { base: "#d5888b" },
-  "qiufen":      { base: "#c98197" },
-  "hanlu":       { base: "#bd7ea5" },
-  "shuangjiang": { base: "#ad7db1" },
+  "liqiu":       { base: "#cf997f" },
+  "chushu":      { base: "#c59a91" },
+  "bailu":       { base: "#c99093" },
+  "qiufen":      { base: "#bf8b9b" },
+  "hanlu":       { base: "#b588a4" },
+  "shuangjiang": { base: "#a887ab" },
 
-  "lidong":      { base: "#778dbc" },
-  "xiaoxue":     { base: "#7cb6d1" },
-  "daxue":       { base: "#6c8ca2" }
+  "lidong":      { base: "#8392b4" },
+  "xiaoxue":     { base: "#87b1c5" },
+  "daxue":       { base: "#798f9e" }
 };

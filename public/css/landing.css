@@ -43,7 +43,7 @@
 }
 
 .landing-title {
-    font-family: "Cutive Mono", "Cutive Mono-Regular", Helvetica, sans-serif;
+    font-family: "Roboto Mono", "Roboto Mono", Helvetica, sans-serif;
     font-size: 14px;
     letter-spacing: 0.28em;
     text-transform: uppercase;
@@ -71,7 +71,7 @@
 }
 
 .landing-meta-year {
-    font-family: "Cutive Mono", "Cutive Mono-Regular", Helvetica, sans-serif;
+    font-family: "Roboto Mono", "Roboto Mono", Helvetica, sans-serif;
     font-size: 16px;
     letter-spacing: 0.08em;
     line-height: 1;
@@ -97,7 +97,7 @@
 }
 
 .landing-meta-date-en {
-    font-family: "Cutive Mono", "Cutive Mono-Regular", Helvetica, sans-serif;
+    font-family: "Roboto Mono", "Roboto Mono", Helvetica, sans-serif;
     font-size: 12px;
     letter-spacing: 0.06em;
     line-height: 1;

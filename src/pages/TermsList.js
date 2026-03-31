@@ -1,21 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { TERM_LIST } from '../data';
+import { useAmbientAudio, useAmbientTerm } from '../audio/AmbientAudioProvider';
+import { TERM_LIST, getCurrentTermId } from '../data';
 import './TermsList.css';
 
 const TermsList = () => {
+  const { selectTermId } = useAmbientAudio();
+  useAmbientTerm(getCurrentTermId());
   const terms = TERM_LIST;
 
   return (
     <div>
       <header className="site-header">
         <div className="site-title">24 Solar Terms</div>
-        <nav>
-          <ul className="site-nav">
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/terms">Term List</Link></li>
-          </ul>
-        </nav>
       </header>
 
       <main>
@@ -27,6 +24,7 @@ const TermsList = () => {
               key={term.id}
               className="term-card"
               to={`/term/${term.id}`}
+              onClick={() => selectTermId(term.id)}
             >
               <div><strong>{term.zh}</strong> — {term.en}</div>
               <div className="term-card-summary">

@@ -13,8 +13,13 @@
   transition: transform 0.2s ease-out;
 }
 
+
 .dial-svg.is-dragging .dial-ring {
   transition: none !important;
+}
+
+.dial-svg.is-dragging .dial-allterms-text {
+  pointer-events: none;
 }
 
 .dial-ring:active {
@@ -75,6 +80,28 @@
   stroke: #d0c9be;
 }
 
+.dial-year-box-fill-glow {
+  fill: none;
+  stroke: var(--term-fill);
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.95;
+  filter: url(#yearBoxFillBlur);
+  pointer-events: none;
+}
+
+.dial-year-box-fill {
+  filter: url(#yearBoxFillBlur) drop-shadow(0 0 14px color-mix(in srgb, var(--term-fill) 90%, rgba(255, 255, 255, 0.18)));
+}
+
+.dial-year-box-bridge {
+  fill: color-mix(in srgb, var(--term-fill) 82%, rgba(255, 255, 255, 0.12));
+  opacity: 0.6;
+  filter: url(#dialBlendBlur);
+  pointer-events: none;
+}
+
 .dial-text {
   font-size: var(--ring-text-size);
   fill: var(--term-text);
@@ -111,15 +138,52 @@
   stroke-width: 1.2;
 }
 
+.dial-core-stop-inner {
+  stop-color: color-mix(in srgb, var(--term-base) 46%, rgba(20, 18, 16, 0.46));
+}
+
+.dial-core-stop-mid {
+  stop-color: color-mix(in srgb, var(--term-base) 58%, var(--term-fill) 42%);
+}
+
+.dial-core-stop-outer {
+  stop-color: color-mix(in srgb, var(--term-fill) 82%, rgba(255, 255, 255, 0.14));
+}
+
+.dial-core-stop-hover-inner {
+  stop-color: color-mix(in srgb, var(--term-base) 42%, rgba(20, 18, 16, 0.52));
+}
+
+.dial-core-stop-hover-mid {
+  stop-color: color-mix(in srgb, var(--term-base) 54%, var(--term-fill) 46%);
+}
+
+.dial-core-stop-hover-outer {
+  stop-color: color-mix(in srgb, var(--term-fill) 86%, rgba(255, 255, 255, 0.18));
+}
+
+.dial-core-bleed {
+  fill: color-mix(in srgb, var(--term-fill) 86%, rgba(255, 255, 255, 0.14));
+  opacity: 0.42;
+  filter: url(#dialBlendBlur);
+  transform-origin: 200px 200px;
+  transition: opacity 160ms ease, transform 160ms ease;
+  pointer-events: none;
+}
+
 .dial-core {
-  fill: color-mix(in srgb, var(--term-base) 50%, rgba(20, 18, 16, 0.10));
-  filter: url(#dialBlur);
+  fill: url(#dialCoreGradient);
+  filter: url(#dialCoreBlur) drop-shadow(0 0 5px color-mix(in srgb, var(--term-fill) 72%, rgba(255, 255, 255, 0.22)));
   transition: transform 160ms ease, fill 160ms ease;
   transform-origin: 200px 200px;
 }
 
+.dial-center-btn:hover .dial-core-bleed {
+  opacity: 0.5;
+}
+
 .dial-center-btn:hover .dial-core {
-  fill: color-mix(in srgb, var(--term-base) 58%, rgba(20, 18, 16, 0.10));
+  fill: url(#dialCoreGradientHover);
 }
 
 .dial-center-btn:active .dial-core {
@@ -127,15 +191,15 @@
 }
 
 .dial-center-term {
-  font-family: var(--en);
-  font-size: 12px;
+  font-family: "Stoke", "Stoke-Light", Helvetica, sans-serif;
+  font-size: 10px;
   fill: rgba(246, 241, 234, 0.92);
   letter-spacing: 0.10em;
   pointer-events: none;
 }
 
 .dial-center-term-zh {
-  font-family: var(--zh);
+  font-family: "FZZJ-YZDKJW", "FZZJ-YZDKJW-Regular", "FZFangSong-Z02S", "FangSong", "Songti SC", serif;
   font-size: 14px;
   fill: rgba(246, 241, 234, 0.90);
   letter-spacing: 0.18em;
@@ -150,12 +214,20 @@
   pointer-events: none;
 }
 
+.dial-center-term.en {
+  font-family: "Stoke", "Stoke-Light", Helvetica, sans-serif;
+}
+
+.dial-center-term-zh.zh {
+  font-family: "FZZJ-YZDKJW", "FZZJ-YZDKJW-Regular", "FZFangSong-Z02S", "FangSong", "Songti SC", serif;
+}
+
 .dial-allterms-text {
-  cursor: grab;
   user-select: none;
   transition: font-weight 0.2s;
+  font-family: "FZZJ-YZDKJW", "FZZJ-YZDKJW-Regular", "FZFangSong-Z02S", "FangSong", "Songti SC", serif;
   font-size: var(--ring-text-size);
-  fill: var(--term-text);
+  fill: color-mix(in srgb, var(--term-text) 65%, rgba(255, 255, 255, 1));
 }
 
 .dial-allterms-text:hover {
@@ -173,4 +245,5 @@
   font-size: 11px;
   pointer-events: none;
   opacity: 0;
+  z-index: 2;
 }
