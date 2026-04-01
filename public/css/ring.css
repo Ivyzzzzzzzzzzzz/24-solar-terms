@@ -1,37 +1,7 @@
 /* ==========================
    Ring Styles (from design)
 ========================== */
-@font-face {
-    font-family: "FZFangSong-Z02S";
-    src: url("fonts/FZFangSong-Z02S-Regular.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "FZZJ-YZDKJW-Regular";
-    src: url("../assets/fonts/FZZJ-YZDKJW.TTF") format("truetype");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "FZZJ-YZDKJW";
-    src: url("../assets/fonts/FZZJ-YZDKJW.TTF") format("truetype");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "FZZJ-TLKSJW-Regular";
-    src: url("../assets/fonts/FZFSJW.TTF") format("truetype");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
+/* Keep CJK fonts on system fallbacks to avoid downloading multi-megabyte TTF files on first load. */
 
 :root {
     --paper: #f6f1ea;

@@ -138,8 +138,16 @@
 }
 
 .landing .term-grid-link {
+    position: absolute;
     top: var(--landing-pad-top);
     right: var(--landing-pad-x);
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    z-index: 3;
     margin: 0;
 }
 

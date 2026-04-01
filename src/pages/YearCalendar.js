@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAmbientAudio } from '../audio/AmbientAudioProvider';
 import { TERM_LIST, TERM_COLORS, getCurrentTermId } from '../data';
@@ -6,6 +6,7 @@ import './YearCalendar.css';
 
 const INITIAL_YEAR = 2026;
 const GRID_COLS = 22;
+const MAX_AURA_COUNT = 12;
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const MONTH_INDEX = {
@@ -68,11 +69,57 @@ const rgbChannels = (c) => `${c.r} ${c.g} ${c.b}`;
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
 
 const YearCalendar = () => {
-  const { setActiveTermId, selectTermId } = useAmbientAudio();
+  const { previewTermId, selectTermId } = useAmbientAudio();
   const [year, setYear] = useState(INITIAL_YEAR);
   const [isTextOn, setIsTextOn] = useState(true);
   const [hoveredTerm, setHoveredTerm] = useState(null);
+  const [isLiteEffects, setIsLiteEffects] = useState(false);
   const lastWheelTsRef = useRef(0);
+  const hoveredTermIdRef = useRef(null);
+  const handleTermHover = useCallback((term) => {
+    if (!term?.id) return;
+    if (hoveredTermIdRef.current === term.id) return;
+    hoveredTermIdRef.current = term.id;
+    setHoveredTerm(term);
+  }, []);
+  const handleTermHoverExit = useCallback(() => {
+    if (!hoveredTermIdRef.current) return;
+    hoveredTermIdRef.current = null;
+    setHoveredTerm(null);
+  }, []);
+  const toggleTextVisibility = useCallback(() => {
+    setIsTextOn((v) => !v);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const nav = window.navigator;
+    const conn = nav.connection || nav.mozConnection || nav.webkitConnection;
+
+    const updateLiteEffects = () => {
+      const prefersReducedMotion = media.matches;
+      const saveData = Boolean(conn?.saveData);
+      const constrainedNetwork = typeof conn?.effectiveType === 'string' && /2g/.test(conn.effectiveType);
+      const lowCpu = typeof nav.hardwareConcurrency === 'number' && nav.hardwareConcurrency <= 4;
+      const lowMemory = typeof nav.deviceMemory === 'number' && nav.deviceMemory <= 4;
+      setIsLiteEffects(prefersReducedMotion || saveData || constrainedNetwork || lowCpu || lowMemory);
+    };
+
+    updateLiteEffects();
+
+    if (media.addEventListener) media.addEventListener('change', updateLiteEffects);
+    else if (media.addListener) media.addListener(updateLiteEffects);
+    conn?.addEventListener?.('change', updateLiteEffects);
+
+    return () => {
+      if (media.removeEventListener) media.removeEventListener('change', updateLiteEffects);
+      else if (media.removeListener) media.removeListener(updateLiteEffects);
+      conn?.removeEventListener?.('change', updateLiteEffects);
+    };
+  }, []);
+
   const today = useMemo(() => {
     const d = new Date();
     return { year: d.getFullYear(), month: d.getMonth(), day: d.getDate() };
@@ -226,7 +273,9 @@ const YearCalendar = () => {
 
   const totalRows = useMemo(() => Math.ceil(dayStream.length / GRID_COLS), [dayStream.length]);
 
-  const termMotionById = useMemo(() => {
+  const termAuraMotionById = useMemo(() => {
+    if (isLiteEffects) return {};
+
     const map = {};
 
     scheduledTerms.forEach((term, index) => {
@@ -248,12 +297,16 @@ const YearCalendar = () => {
     });
 
     return map;
-  }, [scheduledTerms]);
+  }, [isLiteEffects, scheduledTerms]);
 
   const termAuraNodes = useMemo(() => {
-    const fallback = { r: 246, g: 241, b: 234 };
+    if (isLiteEffects) return [];
 
-    return scheduledTerms.map((term) => {
+    const fallback = { r: 246, g: 241, b: 234 };
+    const stride = Math.max(1, Math.ceil(scheduledTerms.length / MAX_AURA_COUNT));
+    const auraTerms = scheduledTerms.filter((_, index) => index % stride === 0).slice(0, MAX_AURA_COUNT);
+
+    return auraTerms.map((term) => {
       const palette = termPaletteById[term.id] || {};
       const col = (term.doy - 1) % GRID_COLS;
       const row = Math.floor((term.doy - 1) / GRID_COLS);
@@ -271,7 +324,7 @@ const YearCalendar = () => {
           top: `${centerY.toFixed(4)}%`,
           width: `${width.toFixed(4)}%`,
           height: `${height.toFixed(4)}%`,
-          ...termMotionById[term.id],
+          ...termAuraMotionById[term.id],
           '--year-aura-base': palette.base || '#9aa6b2',
           '--year-aura-track': rgbStr(palette.track || fallback),
           '--year-aura-fill': rgbStr(palette.fill || fallback),
@@ -286,7 +339,7 @@ const YearCalendar = () => {
         }
       };
     });
-  }, [scheduledTerms, termMotionById, termPaletteById, totalRows]);
+  }, [isLiteEffects, scheduledTerms, termAuraMotionById, termPaletteById, totalRows]);
 
   const fieldWashStyle = useMemo(() => {
     const paper = { r: 252, g: 252, b: 250 };
@@ -302,9 +355,83 @@ const YearCalendar = () => {
     };
   }, [scheduledTerms, termPaletteById]);
 
+  const termCellStyleById = useMemo(() => {
+    const styles = {};
+
+    TERM_LIST.forEach((term) => {
+      styles[term.id] = {
+        '--year-term-base': termPaletteById[term.id]?.base || termFillById[term.id],
+        '--year-term-fill': termFillById[term.id],
+        '--year-term-mid': termMidById[term.id],
+        '--year-term-rim': termRimById[term.id],
+        '--year-term-text': termTextById[term.id],
+        '--year-term-focus-strength': (0.24 + (clamp01(term.dayH / 24) * 0.08)).toFixed(3)
+      };
+    });
+
+    return styles;
+  }, [termFillById, termMidById, termPaletteById, termRimById, termTextById]);
+
+  const dayNodes = useMemo(() => dayStream.map(({ month, day, doy, isMonthStart }) => {
+    const dateKey = keyFromDate(year, month, day);
+    const term = termByDateKey[dateKey];
+    const isToday = year === today.year && month === today.month && day === today.day;
+    const todayTooltipEn = `Today is ${MONTHS[month]} ${day}, ${year}`;
+    const todayTooltipZh = `今天是${year}年${month + 1}月${day}日`;
+
+    if (term) {
+      return (
+        <Link
+          key={doy}
+          to={`/term/${term.id}`}
+          className={`year-day is-term${isToday ? ' is-today' : ''}${isMonthStart ? ' is-month-start' : ''}`}
+          style={termCellStyleById[term.id]}
+          aria-label={`${MONTHS[month]} ${day}, ${term.zh} ${term.en}`}
+          onClick={() => selectTermId(term.id)}
+          onMouseEnter={() => handleTermHover(term)}
+          onMouseLeave={handleTermHoverExit}
+          onFocus={() => handleTermHover(term)}
+          onBlur={handleTermHoverExit}
+        >
+          {isTextOn && <span className="year-day-num">{String(day).padStart(2, '0')}</span>}
+          {isTextOn && isMonthStart && <span className="year-day-month">{MONTHS[month]}</span>}
+          <span className="year-day-tooltip" aria-hidden="true">
+            {isToday ? (
+              <>
+                <span className="year-day-tooltip-zh">{todayTooltipZh}</span>
+                <span className="year-day-tooltip-en">{todayTooltipEn}</span>
+              </>
+            ) : (
+              <>
+                <span className="year-day-tooltip-zh">{term.zh}</span>
+                <span className="year-day-tooltip-en">{term.en}</span>
+              </>
+            )}
+          </span>
+        </Link>
+      );
+    }
+
+    return (
+      <span
+        key={doy}
+        className={`year-day is-seasonal${isToday ? ' is-today' : ''}${isMonthStart ? ' is-month-start' : ''}`}
+      >
+        {isTextOn && <span className="year-day-num">{String(day).padStart(2, '0')}</span>}
+        {isTextOn && isMonthStart && <span className="year-day-month">{MONTHS[month]}</span>}
+        {isToday && (
+          <span className="year-day-tooltip" aria-hidden="true">
+            <span className="year-day-tooltip-zh">{todayTooltipZh}</span>
+            <span className="year-day-tooltip-en">{todayTooltipEn}</span>
+          </span>
+        )}
+      </span>
+    );
+  }), [dayStream, handleTermHover, handleTermHoverExit, isTextOn, selectTermId, termByDateKey, termCellStyleById, today.day, today.month, today.year, year]);
+
   useEffect(() => {
-    setActiveTermId(hoveredTerm?.id || getCurrentTermId());
-  }, [hoveredTerm, setActiveTermId]);
+    previewTermId(hoveredTerm?.id || getCurrentTermId());
+  }, [hoveredTerm, previewTermId]);
 
   return (
     <main className="year-calendar-page">
@@ -318,7 +445,11 @@ const YearCalendar = () => {
       >
         <div className="year-calendar-home-col">
           <Link className="year-calendar-home-link-inline" to="/" aria-label="Back to landing page">
-            <span className="year-calendar-home-orb-inline" aria-hidden="true" style={orbPaletteStyle}>
+            <span
+              className={`year-calendar-home-orb-inline${isLiteEffects ? ' is-lite-effects' : ''}`}
+              aria-hidden="true"
+              style={orbPaletteStyle}
+            >
               <span className="year-calendar-home-orb-fluid">
                 <span className="year-calendar-home-orb-spectrum"></span>
                 <span className="year-calendar-home-orb-stream"></span>
@@ -345,7 +476,7 @@ const YearCalendar = () => {
             <span className="year-calendar-year-arrow year-calendar-year-arrow-bottom" aria-hidden="true">↓</span>
           </div>
         </div>
-        <div className="year-day-stream" role="list" style={fieldWashStyle}>
+        <div className={`year-day-stream${isLiteEffects ? ' is-lite-effects' : ''}`} role="list" style={fieldWashStyle}>
           <div className="year-day-stream-field" aria-hidden="true">
             {termAuraNodes.map((aura) => (
               <span
@@ -355,74 +486,13 @@ const YearCalendar = () => {
               ></span>
             ))}
           </div>
-          {dayStream.map(({ month, day, doy, isMonthStart }) => {
-            const dateKey = keyFromDate(year, month, day);
-            const term = termByDateKey[dateKey];
-            const isToday = year === today.year && month === today.month && day === today.day;
-            const todayTooltipEn = `Today is ${MONTHS[month]} ${day}, ${year}`;
-            const todayTooltipZh = `今天是${year}年${month + 1}月${day}日`;
-            if (term) {
-              return (
-                <Link
-                  key={`${month}-${day}`}
-                  to={`/term/${term.id}`}
-                  className={`year-day is-term${isToday ? ' is-today' : ''}${isMonthStart ? ' is-month-start' : ''}`}
-                  style={{
-                    ...termMotionById[term.id],
-                    '--year-term-base': termPaletteById[term.id]?.base || termFillById[term.id],
-                    '--year-term-fill': termFillById[term.id],
-                    '--year-term-mid': termMidById[term.id],
-                    '--year-term-rim': termRimById[term.id],
-                    '--year-term-text': termTextById[term.id],
-                    '--year-term-focus-strength': (0.24 + (clamp01(term.dayH / 24) * 0.08)).toFixed(3)
-                  }}
-                  aria-label={`${MONTHS[month]} ${day}, ${term.zh} ${term.en}`}
-                  onClick={() => selectTermId(term.id)}
-                  onMouseEnter={() => setHoveredTerm(term)}
-                  onMouseLeave={() => setHoveredTerm(null)}
-                  onFocus={() => setHoveredTerm(term)}
-                  onBlur={() => setHoveredTerm(null)}
-                >
-                  {isTextOn && <span className="year-day-num">{String(day).padStart(2, '0')}</span>}
-                  {isTextOn && isMonthStart && <span className="year-day-month">{MONTHS[month]}</span>}
-                  <span className="year-day-tooltip" aria-hidden="true">
-                    {isToday ? (
-                      <>
-                        <span className="year-day-tooltip-zh">{todayTooltipZh}</span>
-                        <span className="year-day-tooltip-en">{todayTooltipEn}</span>
-                      </>
-                    ) : (
-                      <>
-                        <span className="year-day-tooltip-zh">{term.zh}</span>
-                        <span className="year-day-tooltip-en">{term.en}</span>
-                      </>
-                    )}
-                  </span>
-                </Link>
-              );
-            }
-            return (
-              <span
-                key={`${month}-${day}`}
-                className={`year-day is-seasonal${isToday ? ' is-today' : ''}${isMonthStart ? ' is-month-start' : ''}`}
-              >
-                {isTextOn && <span className="year-day-num">{String(day).padStart(2, '0')}</span>}
-                {isTextOn && isMonthStart && <span className="year-day-month">{MONTHS[month]}</span>}
-                {isToday && (
-                  <span className="year-day-tooltip" aria-hidden="true">
-                    <span className="year-day-tooltip-zh">{todayTooltipZh}</span>
-                    <span className="year-day-tooltip-en">{todayTooltipEn}</span>
-                  </span>
-                )}
-              </span>
-            );
-          })}
+          {dayNodes}
         </div>
         <div className="year-calendar-control-col">
           <button
             type="button"
             className={`year-calendar-text-toggle${isTextOn ? '' : ' is-off'}`}
-            onClick={() => setIsTextOn((v) => !v)}
+            onClick={toggleTextVisibility}
             aria-pressed={!isTextOn}
             aria-label={isTextOn ? 'Turn text off' : 'Turn text on'}
           >

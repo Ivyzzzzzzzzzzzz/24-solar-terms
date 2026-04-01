@@ -447,10 +447,11 @@ const SolarDial = ({ onTermChange }) => {
   useEffect(() => {
     if (typeof onTermChange === 'function') {
       onTermChange(TERM_LIST[state.currentTermIndex], state.currentTermIndex, {
-        isUserInteracted: hasUserInteracted
+        isUserInteracted: hasUserInteracted,
+        isDragging: state.isDragging
       });
     }
-  }, [hasUserInteracted, state.currentTermIndex, onTermChange]);
+  }, [hasUserInteracted, state.currentTermIndex, state.isDragging, onTermChange]);
 
   useEffect(() => {
     if (!outerTipRef.current) return;

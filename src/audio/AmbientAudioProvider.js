@@ -140,6 +140,15 @@ export const AmbientAudioProvider = ({ children }) => {
     });
   }, [setActiveTermId]);
 
+  const previewTermId = useCallback((termId) => {
+    const nextTermId = termId || getCurrentTermId();
+    activeTermRef.current = nextTermId;
+
+    if (engineRef.current) {
+      engineRef.current.setTerm(nextTermId);
+    }
+  }, []);
+
   useEffect(() => {
     if (!supported) return undefined;
 
@@ -178,9 +187,10 @@ export const AmbientAudioProvider = ({ children }) => {
     status,
     supported,
     setActiveTermId,
+    previewTermId,
     selectTermId,
     toggleEnabled
-  }), [activeTermId, enabled, selectTermId, setActiveTermId, status, supported, toggleEnabled]);
+  }), [activeTermId, enabled, previewTermId, selectTermId, setActiveTermId, status, supported, toggleEnabled]);
 
   return (
     <AmbientAudioContext.Provider value={value}>

@@ -2,6 +2,7 @@ let p5LoadPromise = null;
 
 const P5_SCRIPT_ID = 'globalP5RuntimeScript';
 const P5_SCRIPT_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js';
+const P5_SCRIPT_LOADED_ATTR = 'data-p5-loaded';
 
 export const ensureP5Global = async () => {
   if (typeof window === 'undefined') {
@@ -32,6 +33,13 @@ export const ensureP5Global = async () => {
     const rejectLoad = () => reject(new Error('Failed to load p5 runtime.'));
 
     if (existing) {
+      const alreadyLoaded = existing.readyState === 'complete'
+        || existing.readyState === 'loaded'
+        || existing.getAttribute(P5_SCRIPT_LOADED_ATTR) === '1';
+      if (alreadyLoaded) {
+        resolveWhenReady();
+        return;
+      }
       existing.addEventListener('load', resolveWhenReady, { once: true });
       existing.addEventListener('error', rejectLoad, { once: true });
       return;
@@ -41,7 +49,10 @@ export const ensureP5Global = async () => {
     script.id = P5_SCRIPT_ID;
     script.src = P5_SCRIPT_SRC;
     script.async = true;
-    script.onload = resolveWhenReady;
+    script.onload = () => {
+      script.setAttribute(P5_SCRIPT_LOADED_ATTR, '1');
+      resolveWhenReady();
+    };
     script.onerror = rejectLoad;
     document.head.appendChild(script);
   }).catch((error) => {

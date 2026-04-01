@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { AmbientAudioProvider } from './audio/AmbientAudioProvider';
 import AmbientSoundControl from './components/AmbientSoundControl';
-import Landing from './pages/Landing';
-import Intro from './pages/Intro';
-import TermsList from './pages/TermsList';
-import TermDetail from './pages/TermDetail';
-import YearCalendar from './pages/YearCalendar';
 import './App.css';
+
+const Landing = lazy(() => import('./pages/Landing'));
+const Intro = lazy(() => import('./pages/Intro'));
+const TermsList = lazy(() => import('./pages/TermsList'));
+const TermDetail = lazy(() => import('./pages/TermDetail'));
+const YearCalendar = lazy(() => import('./pages/YearCalendar'));
 
 function HistoryTracker() {
   const location = useLocation();
@@ -34,14 +35,16 @@ function App() {
     <AmbientAudioProvider>
       <Router>
         <HistoryTracker />
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/intro" element={<Intro />} />
-          <Route path="/calendar" element={<YearCalendar />} />
-          <Route path="/terms" element={<TermsList />} />
-          <Route path="/term/:termId" element={<TermDetail />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <Suspense fallback={null}>
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/intro" element={<Intro />} />
+            <Route path="/calendar" element={<YearCalendar />} />
+            <Route path="/terms" element={<TermsList />} />
+            <Route path="/term/:termId" element={<TermDetail />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
         <AmbientSoundControl />
       </Router>
     </AmbientAudioProvider>

@@ -620,6 +620,20 @@
     0 6px 14px rgba(20, 18, 16, 0.12);
 }
 
+.year-calendar-home-orb-inline.is-lite-effects .year-calendar-home-orb-fluid,
+.year-calendar-home-orb-inline.is-lite-effects .year-calendar-home-orb-spectrum,
+.year-calendar-home-orb-inline.is-lite-effects .year-calendar-home-orb-stream,
+.year-calendar-home-orb-inline.is-lite-effects .year-calendar-home-orb-layer {
+  animation: none;
+  transform: none;
+}
+
+.year-calendar-home-orb-inline.is-lite-effects .year-calendar-home-orb-spectrum,
+.year-calendar-home-orb-inline.is-lite-effects .year-calendar-home-orb-stream,
+.year-calendar-home-orb-inline.is-lite-effects .year-calendar-home-orb-layer {
+  filter: none;
+}
+
 @keyframes yearOrbSpectrumWheel {
   0% {
     transform: translate(-4px, -2px) scale(1.02) rotate(-4deg);
@@ -801,22 +815,18 @@
   0%, 12% {
     transform: translate(-50%, -50%) scale(0.2);
     opacity: calc(var(--year-aura-opacity, 0.58) * 0.44);
-    filter: blur(calc(var(--year-aura-blur, 14px) * 1)) saturate(114%);
   }
   48% {
     transform: translate(-50%, -50%) scale(var(--year-aura-scale-peak, 1.42));
     opacity: calc(var(--year-aura-opacity, 0.58) * 1.42);
-    filter: blur(calc(var(--year-aura-blur, 14px) * 1.34)) saturate(118%);
   }
   74% {
     transform: translate(-50%, -50%) scale(0.64);
     opacity: calc(var(--year-aura-opacity, 0.58) * 0.86);
-    filter: blur(calc(var(--year-aura-blur, 14px) * 1.16)) saturate(116%);
   }
   100% {
     transform: translate(-50%, -50%) scale(0.2);
     opacity: calc(var(--year-aura-opacity, 0.58) * 0.44);
-    filter: blur(calc(var(--year-aura-blur, 14px) * 1)) saturate(114%);
   }
 }
 
@@ -824,22 +834,18 @@
   0%, 14% {
     transform: scale(0.12);
     opacity: calc(var(--year-aura-soft-opacity, 0.46) * 0.3);
-    filter: blur(calc(var(--year-aura-blur, 14px) * 1.04));
   }
   50% {
     transform: scale(var(--year-aura-core-peak, 1.56));
     opacity: calc(var(--year-aura-soft-opacity, 0.46) * 1.46);
-    filter: blur(calc(var(--year-aura-blur, 14px) * 1.24));
   }
   80% {
     transform: scale(0.52);
     opacity: calc(var(--year-aura-soft-opacity, 0.46) * 0.74);
-    filter: blur(calc(var(--year-aura-blur, 14px) * 1.12));
   }
   100% {
     transform: scale(0.12);
     opacity: calc(var(--year-aura-soft-opacity, 0.46) * 0.3);
-    filter: blur(calc(var(--year-aura-blur, 14px) * 1.04));
   }
 }
 
@@ -847,22 +853,18 @@
   0%, 20% {
     transform: scale(0.16);
     opacity: calc(var(--year-aura-wave-opacity, 0.52) * 0.24);
-    filter: blur(calc(var(--year-aura-blur, 14px) * 0.9));
   }
   58% {
     transform: scale(var(--year-aura-wave-peak, 2.08));
     opacity: calc(var(--year-aura-wave-opacity, 0.52) * 1.78);
-    filter: blur(calc(var(--year-aura-blur, 14px) * 1.08));
   }
   84% {
     transform: scale(0.48);
     opacity: calc(var(--year-aura-wave-opacity, 0.52) * 0.54);
-    filter: blur(calc(var(--year-aura-blur, 14px) * 0.96));
   }
   100% {
     transform: scale(0.16);
     opacity: calc(var(--year-aura-wave-opacity, 0.52) * 0.24);
-    filter: blur(calc(var(--year-aura-blur, 14px) * 0.9));
   }
 }
 
@@ -1049,6 +1051,7 @@
   display: grid;
   position: relative;
   isolation: isolate;
+  contain: layout paint;
   grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
   grid-auto-rows: auto;
   column-gap: 0;
@@ -1060,6 +1063,10 @@
   overflow: visible;
 }
 
+.year-day-stream.is-lite-effects .year-day-stream-field {
+  display: none;
+}
+
 .year-day-stream-field {
   position: absolute;
   inset: 0;
@@ -1068,7 +1075,7 @@
   overflow: hidden;
   opacity: 1;
   mix-blend-mode: normal;
-  filter: blur(0.8px) saturate(118%) contrast(108%);
+  filter: blur(0.35px) saturate(112%) contrast(104%);
 }
 
 .year-term-aura {
@@ -1088,7 +1095,7 @@
   filter: blur(calc(var(--year-aura-blur, 14px) * 0.98)) saturate(116%);
   animation: yearCalendarAuraPulse var(--year-aura-duration, 12.6s) cubic-bezier(0.33, 0.02, 0.2, 1) infinite;
   animation-delay: var(--year-aura-delay, 0s);
-  will-change: transform, opacity, filter;
+  will-change: transform, opacity;
 }
 
 .year-term-aura::before {
@@ -1108,7 +1115,7 @@
   filter: blur(calc(var(--year-aura-blur, 14px) * 0.94));
   animation: yearCalendarAuraCorePulse var(--year-aura-soft-duration, 14.4s) cubic-bezier(0.33, 0.02, 0.2, 1) infinite;
   animation-delay: var(--year-aura-soft-delay, 0s);
-  will-change: transform, opacity, filter;
+  will-change: transform, opacity;
 }
 
 .year-term-aura::after {
@@ -1144,7 +1151,7 @@
   filter: blur(calc(var(--year-aura-blur, 14px) * 0.84));
   animation: yearCalendarAuraWavePulse var(--year-aura-wave-duration, 12.8s) cubic-bezier(0.33, 0.02, 0.2, 1) infinite;
   animation-delay: var(--year-aura-wave-delay, 0s);
-  will-change: transform, opacity, filter;
+  will-change: transform, opacity;
 }
 
 .year-day {
@@ -1153,6 +1160,7 @@
   min-width: 0;
   min-height: 28px;
   box-sizing: border-box;
+  contain: layout paint;
   border-radius: 0;
   display: flex;
   flex-direction: column;

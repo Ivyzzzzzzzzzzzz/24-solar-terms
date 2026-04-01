@@ -6,7 +6,7 @@ import { getCurrentTermId } from '../data';
 import './Landing.css';
 
 const Landing = () => {
-  const { setActiveTermId } = useAmbientAudio();
+  const { previewTermId, setActiveTermId } = useAmbientAudio();
   const displayYear = useMemo(() => new Date().getFullYear(), []);
   const todayLabels = useMemo(() => {
     const now = new Date();
@@ -18,10 +18,15 @@ const Landing = () => {
   }, []);
   const handleTermChange = useCallback((term, _termIndex, meta = {}) => {
     if (!term?.id) return;
+    if (meta.isDragging) {
+      previewTermId(term.id);
+      return;
+    }
+
     setActiveTermId(term.id, {
       playIdentity: Boolean(meta.isUserInteracted)
     });
-  }, [setActiveTermId]);
+  }, [previewTermId, setActiveTermId]);
 
   useEffect(() => {
     setActiveTermId(getCurrentTermId());

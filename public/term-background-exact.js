@@ -872,13 +872,24 @@ function projectPointerToField(x, y) {
     return null;
   }
 
-  if (typeof width === 'undefined' || typeof height === 'undefined') {
+  const canvas = typeof window !== 'undefined' ? window.__termBgCanvas : null;
+  const fallbackWidth =
+    (canvas && (canvas.clientWidth || canvas.width)) ||
+    (typeof window !== 'undefined' ? window.innerWidth : 0);
+  const fallbackHeight =
+    (canvas && (canvas.clientHeight || canvas.height)) ||
+    (typeof window !== 'undefined' ? window.innerHeight : 0);
+
+  const fieldWidth = p5Ready && Number.isFinite(width) ? width : fallbackWidth;
+  const fieldHeight = p5Ready && Number.isFinite(height) ? height : fallbackHeight;
+
+  if (!Number.isFinite(fieldWidth) || !Number.isFinite(fieldHeight) || fieldWidth <= 0 || fieldHeight <= 0) {
     return { x, y };
   }
 
   return {
-    x: clamp(x, width * 0.04, width * 0.96),
-    y: clamp(Math.max(y, height * 0.6), height * 0.6, height * 0.94)
+    x: clamp(x, fieldWidth * 0.04, fieldWidth * 0.96),
+    y: clamp(Math.max(y, fieldHeight * 0.6), fieldHeight * 0.6, fieldHeight * 0.94)
   };
 }
 
@@ -1891,10 +1902,12 @@ window.__termBgStartSeasonLoop = (options = {}) => {
 };
 
 window.__termBgPointerMove = (point) => {
+  if (!p5Ready) return;
   handlePointerMove(point);
 };
 
 window.__termBgPointerDown = (point) => {
+  if (!p5Ready) return;
   handlePointerDown(point);
 };
 

@@ -115,19 +115,31 @@ export const startTermBackgroundSeasonLoop = (options) => {
 
 export const moveTermBackgroundPointer = (point) => {
 	if (typeof window.__termBgPointerMove === 'function') {
-		window.__termBgPointerMove(point);
+		try {
+			window.__termBgPointerMove(point);
+		} catch (_) {
+			// Keep pointer-forwarding resilient while sketch runtime is warming up.
+		}
 	}
 };
 
 export const pressTermBackgroundPointer = (point) => {
 	if (typeof window.__termBgPointerDown === 'function') {
-		window.__termBgPointerDown(point);
+		try {
+			window.__termBgPointerDown(point);
+		} catch (_) {
+			// Keep pointer-forwarding resilient while sketch runtime is warming up.
+		}
 	}
 };
 
 export const leaveTermBackgroundPointer = () => {
 	if (typeof window.__termBgPointerLeave === 'function') {
-		window.__termBgPointerLeave();
+		try {
+			window.__termBgPointerLeave();
+		} catch (_) {
+			// Ignore transient runtime errors from the p5 sketch teardown path.
+		}
 	}
 };
 
