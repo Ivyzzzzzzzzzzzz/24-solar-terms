@@ -1,7 +1,7 @@
 .term-center-content {
     position: fixed;
     left: 50%;
-    top: 50%;
+    top: var(--term-shared-center-y, 50%);
     transform: translate(-50%, -50%);
     width: min(760px, 68vw);
     min-height: 280px;
@@ -11,6 +11,7 @@
 
 .term-page {
     --term-detail-surface: var(--term-bg-color, rgb(246, 241, 232));
+    --term-detail-outline: var(--term-detail-outline-color, #54504c);
 }
 
 .term-center-content .term-note,
@@ -48,6 +49,7 @@
 
 .term-center-content .term-phases {
     width: 461px;
+    transform: translate(-50%, calc(-50% + 42px));
 }
 
 .term-center-content .term-poem {
@@ -80,7 +82,7 @@
     font-weight: 400;
     line-height: 22px;
     letter-spacing: -0.48px;
-    border: 0.5px solid #54504C;
+    border: 0.5px solid var(--term-detail-outline);
     background: var(--term-detail-surface);
     opacity: 0;
     pointer-events: none;
@@ -121,7 +123,7 @@
     align-items: center;
     gap: 18px;
     padding: 12px 10px;
-    border: 0.5px solid #54504c;
+    border: 0.5px solid var(--term-detail-outline);
     opacity: 0;
     pointer-events: none;
     transition: opacity 180ms ease, background-color 160ms ease, transform 220ms ease;
@@ -217,7 +219,7 @@
 }
 
 .term-phases-row {
-    border: 1px solid #54504c;
+    border: 1px solid var(--term-detail-outline);
     height: 26px;
     position: relative;
     overflow: hidden;
@@ -413,7 +415,7 @@
 .term-ritual-marker {
     width: 18px;
     height: 18px;
-    border: 1px solid #54504c;
+    border: 1px solid var(--term-detail-outline);
     background: transparent;
     transition: opacity 180ms ease, transform 200ms ease;
 }
@@ -454,7 +456,7 @@
     opacity: 1;
     max-height: 160px;
     padding: 6px 8px;
-    border-color: #54504c;
+    border-color: var(--term-detail-outline);
     background: var(--term-detail-surface);
     transform: translateX(-50%) scaleY(1);
     pointer-events: auto;

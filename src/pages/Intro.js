@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAmbientTerm } from '../audio/AmbientAudioProvider';
 import { getCurrentTermId } from '../data';
 import {
@@ -17,8 +17,16 @@ import './Intro.css';
 const SEASON_LOOP_DURATION_MS = 60000;
 
 const Intro = () => {
+  const navigate = useNavigate();
   useAmbientTerm(getCurrentTermId());
   const backgroundOwnerRef = useRef(Symbol('intro-term-background'));
+
+  const handleBackClick = (event) => {
+    event.preventDefault();
+    const idx = window.history?.state?.idx;
+    if (typeof idx === 'number' && idx > 0) navigate(-1);
+    else navigate('/');
+  };
 
   useEffect(() => {
     let alive = true;
@@ -71,7 +79,7 @@ const Intro = () => {
     <div className="intro-page">
       <div id="termP5Mount" className="intro-p5" aria-hidden="true"></div>
       <header className="intro-header">
-        <Link className="intro-back" to="/" aria-label="Back to landing">
+        <Link className="intro-back" to="/" aria-label="Back" onClick={handleBackClick}>
           <span className="intro-back-label">Back</span>
         </Link>
         <div className="intro-title">
@@ -90,6 +98,9 @@ const Intro = () => {
           Each term begins at a precise solar longitude and helps describe the rhythm of the year:
           from the first warming of spring, to the height of summer, to the deep of winter.
           The system is still used today in calendars, cultural practices, and traditional knowledge.
+        </p>
+        <p>
+          This project is an interactive website that reinterprets the Chinese 24 Solar Terms through ecological data, cultural practices, and personal reflection. By visualizing seasonal changes such as daylight, temperature, and natural rhythms, the website helps users reconnect calendar time with the environment around them. The 24 Solar Terms are recognized as an item of Intangible Cultural Heritage, and part of this project&apos;s intention is to help preserve and carry this knowledge forward. Through visual storytelling and interactive exploration, the project translates traditional knowledge into a contemporary experience that encourages people today to notice seasonal change and keep this cultural memory alive into the future.
         </p>
       </main>
     </div>

@@ -81,6 +81,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
+    margin-top: 12px;
     color: rgba(84, 80, 76, 0.78);
     perspective: 500px;
 }
@@ -103,14 +104,17 @@
 }
 
 .landing-meta-date-en {
-    font-family: "Roboto Mono", "Roboto Mono", Helvetica, sans-serif;
-    font-size: 12px;
+    font-family: var(--en), var(--zh);
+    font-size: var(--ring-text-size);
     letter-spacing: 0.06em;
     line-height: 1;
 }
 
 .landing-meta-date-zh {
-    font-size: 13px;
+    position: relative;
+    top: 1pt;
+    font-family: var(--zh);
+    font-size: var(--ring-text-size);
     line-height: 1;
 }
 

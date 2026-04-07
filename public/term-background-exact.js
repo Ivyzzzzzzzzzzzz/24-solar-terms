@@ -253,15 +253,15 @@ function createIntroSeasonTheme(progress) {
       seasonDensityPull: 0.54,
       densityGrowthRate: 0.045,
       densityDecay: 0,
-      windDryScale: 1.55,
-      windWetScale: 1.72,
-      windGustChance: 0.44,
-      windGustMin: 0.008,
-      windGustMax: 0.018,
-      windGustIn: 1.9,
-      windGustOut: 2.7,
-      bendImpulse: 0.032,
-      tickStrength: 0.82,
+      windDryScale: 1.18,
+      windWetScale: 1.32,
+      windGustChance: 0.34,
+      windGustMin: 0.006,
+      windGustMax: 0.017,
+      windGustIn: 1.7,
+      windGustOut: 2.3,
+      bendImpulse: 0.029,
+      tickStrength: 0.62,
       dryRate: 0.012,
       rainDensity: 0.08,
       rainWeight: 2.2,
@@ -282,100 +282,100 @@ function createIntroSeasonTheme(progress) {
       frostAlphaMin: 0,
       frostAlphaMax: 4
     },
+    // {
+    //   at: 0.14,
+    //   name: 'spring',
+    //   bg: { r: 244, g: 240, b: 227 },
+    //   grassCol: '#68ef13',
+    //   grassMix: 0.64,
+    //   grassHeightMin: 0.06,
+    //   grassHeightMax: 0.28,
+    //   seasonGrowthTarget: 0.5,
+    //   seasonGrowthPull: 0.78,
+    //   growthRate: 0.07,
+    //   growthDecay: 0,
+    //   growthScale: 0.26,
+    //   seasonDensityTarget: 0.72,
+    //   seasonDensityPull: 0.84,
+    //   densityGrowthRate: 0.1,
+    //   densityDecay: 0,
+    //   windDryScale: 1.92,
+    //   windWetScale: 2.06,
+    //   windGustChance: 0.62,
+    //   windGustMin: 0.012,
+    //   windGustMax: 0.027,
+    //   windGustIn: 2.35,
+    //   windGustOut: 3.0,
+    //   bendImpulse: 0.046,
+    //   tickStrength: 1.14,
+    //   dryRate: 0.012,
+    //   rainDensity: 0.18,
+    //   rainWeight: 2.8,
+    //   rainAlpha: 12,
+    //   rainPresenceTarget: 0.14,
+    //   rainWind: 24,
+    //   rainSpeedMin: 225,
+    //   rainSpeedMax: 400,
+    //   rainLenMin: 9,
+    //   rainLenMax: 22,
+    //   splashAlpha: 28,
+    //   splashCount: 1,
+    //   branchDrawRatio: 0.72,
+    //   branchLengthScale: 0.86,
+    //   snowDensity: 0,
+    //   snowAlpha: 0,
+    //   frostDensity: 0.03,
+    //   frostAlphaMin: 0,
+    //   frostAlphaMax: 2
+    // },
+    // {
+    //   at: 0.28,
+    //   name: 'spring',
+    //   bg: { r: 243, g: 239, b: 224 },
+    //   grassCol: '#7bc65d',
+    //   grassMix: 0.7,
+    //   grassHeightMin: 0.08,
+    //   grassHeightMax: 0.36,
+    //   seasonGrowthTarget: 0.64,
+    //   seasonGrowthPull: 0.66,
+    //   growthRate: 0.045,
+    //   growthDecay: 0,
+    //   growthScale: 0.34,
+    //   seasonDensityTarget: 0.84,
+    //   seasonDensityPull: 0.72,
+    //   densityGrowthRate: 0.06,
+    //   densityDecay: 0,
+    //   windDryScale: 1.72,
+    //   windWetScale: 1.84,
+    //   windGustChance: 0.48,
+    //   windGustMin: 0.009,
+    //   windGustMax: 0.02,
+    //   windGustIn: 1.9,
+    //   windGustOut: 2.6,
+    //   bendImpulse: 0.038,
+    //   tickStrength: 0.92,
+    //   dryRate: 0.012,
+    //   rainDensity: 0.3,
+    //   rainWeight: 3.6,
+    //   rainAlpha: 20,
+    //   rainPresenceTarget: 0.24,
+    //   rainWind: 22,
+    //   rainSpeedMin: 240,
+    //   rainSpeedMax: 430,
+    //   rainLenMin: 12,
+    //   rainLenMax: 28,
+    //   splashAlpha: 44,
+    //   splashCount: 2,
+    //   branchDrawRatio: 0.84,
+    //   branchLengthScale: 0.96,
+    //   snowDensity: 0,
+    //   snowAlpha: 0,
+    //   frostDensity: 0,
+    //   frostAlphaMin: 0,
+    //   frostAlphaMax: 0
+    // },
     {
-      at: 0.14,
-      name: 'spring',
-      bg: { r: 244, g: 240, b: 227 },
-      grassCol: '#68ef13',
-      grassMix: 0.64,
-      grassHeightMin: 0.06,
-      grassHeightMax: 0.28,
-      seasonGrowthTarget: 0.5,
-      seasonGrowthPull: 0.78,
-      growthRate: 0.07,
-      growthDecay: 0,
-      growthScale: 0.26,
-      seasonDensityTarget: 0.72,
-      seasonDensityPull: 0.84,
-      densityGrowthRate: 0.1,
-      densityDecay: 0,
-      windDryScale: 1.92,
-      windWetScale: 2.06,
-      windGustChance: 0.62,
-      windGustMin: 0.012,
-      windGustMax: 0.027,
-      windGustIn: 2.35,
-      windGustOut: 3.0,
-      bendImpulse: 0.046,
-      tickStrength: 1.14,
-      dryRate: 0.012,
-      rainDensity: 0.18,
-      rainWeight: 2.8,
-      rainAlpha: 12,
-      rainPresenceTarget: 0.14,
-      rainWind: 24,
-      rainSpeedMin: 225,
-      rainSpeedMax: 400,
-      rainLenMin: 9,
-      rainLenMax: 22,
-      splashAlpha: 28,
-      splashCount: 1,
-      branchDrawRatio: 0.72,
-      branchLengthScale: 0.86,
-      snowDensity: 0,
-      snowAlpha: 0,
-      frostDensity: 0.03,
-      frostAlphaMin: 0,
-      frostAlphaMax: 2
-    },
-    {
-      at: 0.28,
-      name: 'spring',
-      bg: { r: 243, g: 239, b: 224 },
-      grassCol: '#7bc65d',
-      grassMix: 0.7,
-      grassHeightMin: 0.08,
-      grassHeightMax: 0.36,
-      seasonGrowthTarget: 0.64,
-      seasonGrowthPull: 0.66,
-      growthRate: 0.045,
-      growthDecay: 0,
-      growthScale: 0.34,
-      seasonDensityTarget: 0.84,
-      seasonDensityPull: 0.72,
-      densityGrowthRate: 0.06,
-      densityDecay: 0,
-      windDryScale: 1.72,
-      windWetScale: 1.84,
-      windGustChance: 0.48,
-      windGustMin: 0.009,
-      windGustMax: 0.02,
-      windGustIn: 1.9,
-      windGustOut: 2.6,
-      bendImpulse: 0.038,
-      tickStrength: 0.92,
-      dryRate: 0.012,
-      rainDensity: 0.3,
-      rainWeight: 3.6,
-      rainAlpha: 20,
-      rainPresenceTarget: 0.24,
-      rainWind: 22,
-      rainSpeedMin: 240,
-      rainSpeedMax: 430,
-      rainLenMin: 12,
-      rainLenMax: 28,
-      splashAlpha: 44,
-      splashCount: 2,
-      branchDrawRatio: 0.84,
-      branchLengthScale: 0.96,
-      snowDensity: 0,
-      snowAlpha: 0,
-      frostDensity: 0,
-      frostAlphaMin: 0,
-      frostAlphaMax: 0
-    },
-    {
-      at: 0.46,
+      at: 0.4,
       name: 'summer',
       bg: { r: 241, g: 238, b: 224 },
       grassCol: '#2f7f35',
@@ -391,20 +391,20 @@ function createIntroSeasonTheme(progress) {
       seasonDensityPull: 0.7,
       densityGrowthRate: 0.035,
       densityDecay: 0.004,
-      windDryScale: 0.88,
-      windWetScale: 0.94,
-      windGustChance: 0.1,
-      windGustMin: 0.003,
-      windGustMax: 0.009,
-      windGustIn: 1.3,
-      windGustOut: 1.8,
-      bendImpulse: 0.018,
-      tickStrength: 0.34,
-      dryRate: 0.012,
+      windDryScale: 2.05,
+      windWetScale: 2.35,
+      windGustChance: 0.44,
+      windGustMin: 0.012,
+      windGustMax: 0.030,
+      windGustIn: 2.2,
+      windGustOut: 2.8,
+      bendImpulse: 0.045,
+      tickStrength: 1.0,
+      dryRate: 0,
       rainDensity: 0.52,
       rainWeight: 5.6,
       rainAlpha: 40,
-      rainPresenceTarget: 0.78,
+      rainPresenceTarget: 1,
       rainWind: 16,
       rainSpeedMin: 260,
       rainSpeedMax: 560,
@@ -412,7 +412,7 @@ function createIntroSeasonTheme(progress) {
       rainLenMax: 44,
       splashAlpha: 86,
       splashCount: 4,
-      branchDrawRatio: 1.0,
+      branchDrawRatio: 5,
       branchLengthScale: 1.12,
       snowDensity: 0,
       snowAlpha: 0,
@@ -421,7 +421,7 @@ function createIntroSeasonTheme(progress) {
       frostAlphaMax: 0
     },
     {
-      at: 0.71,
+      at: 0.65,
       name: 'autumn',
       bg: { r: 238, g: 228, b: 210 },
       grassCol: '#8e640f',
@@ -447,10 +447,10 @@ function createIntroSeasonTheme(progress) {
       bendImpulse: 0.026,
       tickStrength: 0.64,
       dryRate: 0.04,
-      rainDensity: 0.06,
-      rainWeight: 2.1,
-      rainAlpha: 3,
-      rainPresenceTarget: 0.06,
+      rainDensity: 0,
+      rainWeight: 0,
+      rainAlpha: 0,
+      rainPresenceTarget: 0,
       rainWind: 14,
       rainSpeedMin: 180,
       rainSpeedMax: 280,
@@ -467,7 +467,7 @@ function createIntroSeasonTheme(progress) {
       frostAlphaMax: 8
     },
     {
-      at: 0.88,
+      at: 0.79,
       name: 'winter',
       bg: { r: 247, g: 246, b: 243 },
       grassCol: '#c5c8bd',
@@ -516,7 +516,7 @@ function createIntroSeasonTheme(progress) {
       at: 1.0,
       name: 'spring',
       bg: { r: 245, g: 241, b: 229 },
-      grassCol: '#8eaf57',
+      grassCol: '#9dff00',
       grassMix: 0.56,
       grassHeightMin: 0.045,
       grassHeightMax: 0.18,
@@ -529,15 +529,15 @@ function createIntroSeasonTheme(progress) {
       seasonDensityPull: 0.54,
       densityGrowthRate: 0.045,
       densityDecay: 0,
-      windDryScale: 1.55,
-      windWetScale: 1.72,
-      windGustChance: 0.44,
-      windGustMin: 0.008,
-      windGustMax: 0.018,
-      windGustIn: 1.9,
-      windGustOut: 2.7,
-      bendImpulse: 0.032,
-      tickStrength: 0.82,
+      windDryScale: 1.18,
+      windWetScale: 1.32,
+      windGustChance: 0.34,
+      windGustMin: 0.006,
+      windGustMax: 0.017,
+      windGustIn: 1.7,
+      windGustOut: 2.3,
+      bendImpulse: 0.029,
+      tickStrength: 0.62,
       dryRate: 0.012,
       rainDensity: 0.08,
       rainWeight: 2.2,
@@ -573,7 +573,10 @@ function createIntroSeasonTheme(progress) {
   }
   const span = Math.max(0.0001, next.at - current.at);
   const localT = (tt - current.at) / span;
-  const mixT = smoothstep(0, 1, localT);
+  const isWinterToSpring = current.name === 'winter' && next.name === 'spring';
+  const mixT = isWinterToSpring
+    ? smoothstep(0, 1, smoothstep(0, 1, localT))
+    : smoothstep(0, 1, localT);
 
   const blendNum = (key) => lerpNum(current[key], next[key], mixT);
   const blendHex = (key) => mixHex(current[key], next[key], mixT);
@@ -640,6 +643,68 @@ function createIntroSeasonTheme(progress) {
   base.snowSpeedMax = 36;
 
   return base;
+}
+
+let INTRO_THEME_BOUNDS = null;
+
+function computeIntroThemeBounds() {
+  if (INTRO_THEME_BOUNDS) return INTRO_THEME_BOUNDS;
+
+  const bounds = {};
+  const samples = 256;
+  const upsertBound = (key, value) => {
+    if (!Number.isFinite(value)) return;
+    if (!bounds[key]) {
+      bounds[key] = { min: value, max: value };
+      return;
+    }
+    bounds[key].min = Math.min(bounds[key].min, value);
+    bounds[key].max = Math.max(bounds[key].max, value);
+  };
+
+  for (let i = 0; i <= samples; i++) {
+    const theme = createIntroSeasonTheme(i / samples);
+    for (const [key, value] of Object.entries(theme)) {
+      if (typeof value === 'number') {
+        upsertBound(key, value);
+      }
+    }
+    if (theme.bg) {
+      upsertBound('bg.r', theme.bg.r);
+      upsertBound('bg.g', theme.bg.g);
+      upsertBound('bg.b', theme.bg.b);
+    }
+  }
+
+  INTRO_THEME_BOUNDS = bounds;
+  return bounds;
+}
+
+function clampThemeToIntroBounds(theme) {
+  const bounds = computeIntroThemeBounds();
+  const next = {
+    ...theme,
+    bg: theme?.bg ? { ...theme.bg } : theme?.bg
+  };
+
+  for (const [key, value] of Object.entries(next)) {
+    if (key === 'bg') continue;
+    if (typeof value !== 'number' || !Number.isFinite(value)) continue;
+    const bound = bounds[key];
+    if (!bound) continue;
+    next[key] = clamp(value, bound.min, bound.max);
+  }
+
+  if (next.bg && typeof next.bg === 'object') {
+    const rBound = bounds['bg.r'];
+    const gBound = bounds['bg.g'];
+    const bBound = bounds['bg.b'];
+    if (rBound && Number.isFinite(next.bg.r)) next.bg.r = Math.round(clamp(next.bg.r, rBound.min, rBound.max));
+    if (gBound && Number.isFinite(next.bg.g)) next.bg.g = Math.round(clamp(next.bg.g, gBound.min, gBound.max));
+    if (bBound && Number.isFinite(next.bg.b)) next.bg.b = Math.round(clamp(next.bg.b, bBound.min, bBound.max));
+  }
+
+  return next;
 }
 
 const THEMES = TERM_YEAR_SEQUENCE.reduce((acc, id, i) => {
@@ -760,6 +825,18 @@ function getTermBgCanvasElement() {
   return window.__termBgCanvas || null;
 }
 
+function applyTermBgCanvasViewportStyle(canvas) {
+  if (!canvas || !canvas.style) return;
+  canvas.style.position = 'fixed';
+  canvas.style.top = '0';
+  canvas.style.left = '0';
+  canvas.style.width = '100vw';
+  canvas.style.height = '100vh';
+  canvas.style.display = 'block';
+  canvas.style.pointerEvents = 'none';
+  canvas.style.zIndex = '0';
+}
+
 function syncTermBgCanvasMount() {
   const mount = getTermBgMount();
   const canvas = getTermBgCanvasElement();
@@ -768,6 +845,7 @@ function syncTermBgCanvasMount() {
   if (canvas.parentNode !== mount) {
     mount.appendChild(canvas);
   }
+  applyTermBgCanvasViewportStyle(canvas);
 
   return canvas.isConnected;
 }
@@ -908,7 +986,7 @@ function handlePointerMove(event) {
     POINTER.hasPoint = true;
     POINTER.lastSampleAt = now;
     POINTER.lastMoveAt = now;
-    pressGrassAt(x, y);
+    pressGrassAt(x, y, 0.58);
     return;
   }
 
@@ -923,18 +1001,18 @@ function handlePointerMove(event) {
 
   if (dist < 0.5) return;
 
-  const speed = Math.min(2600, dist / dt);
+  const speed = Math.min(1900, dist / dt);
   if (Math.abs(dx) > 0.75) {
     POINTER.dirX = Math.sign(dx);
   }
-  POINTER.speed = lerpNum(POINTER.speed, speed, 0.55);
-  POINTER.energy = Math.min(1.25, POINTER.energy + 0.14 + speed / 5200);
+  POINTER.speed = lerpNum(POINTER.speed, speed, 0.32);
+  POINTER.energy = Math.min(1.0, POINTER.energy + 0.06 + speed / 8200);
   POINTER.active = true;
   POINTER.lastMoveAt = now;
-  pressGrassAt(x, y);
+  pressGrassAt(x, y, 0.76);
 }
 
-function pressGrassAt(x, y) {
+function pressGrassAt(x, y, interactionStrength = 1) {
   if (BACKGROUND_MODE !== 'season-loop' || !blades.length) return false;
 
   const radiusX = Math.max(120, width * 0.12);
@@ -961,9 +1039,10 @@ function pressGrassAt(x, y) {
     const falloff = xFalloff * yFalloff;
     if (falloff <= 0.01) continue;
 
-    blade.press(0.48 + falloff * 0.36);
-    blade.addTarget((x <= blade.x ? 1 : -1) * (0.018 + THEME.bendImpulse * 1.15) * falloff);
-    blade.triggerTick(0.72 + falloff * 0.88);
+    const softStrength = clamp(interactionStrength, 0.35, 1.1);
+    blade.press((0.22 + falloff * 0.24) * softStrength);
+    blade.addTarget((x <= blade.x ? 1 : -1) * (0.012 + THEME.bendImpulse * 0.9) * falloff * softStrength);
+    blade.triggerTick((0.38 + falloff * 0.46) * softStrength);
     hitCount++;
   }
 
@@ -976,7 +1055,7 @@ function handlePointerDown(event) {
   const projected = projectPointerToField(point.x, point.y);
   if (!projected) return;
   const { x, y } = projected;
-  pressGrassAt(x, y);
+  pressGrassAt(x, y, 0.9);
 }
 
 function handlePointerReset() {
@@ -1005,10 +1084,10 @@ function updatePointerInteraction(dt) {
   if (!POINTER.active) return;
   const now = millis() * 0.001;
   const idle = now - POINTER.lastMoveAt;
-  const decayRate = idle < 0.08 ? 0.65 : idle < 0.22 ? 1.7 : 3.2;
+  const decayRate = idle < 0.12 ? 0.34 : idle < 0.32 ? 0.9 : 1.75;
   POINTER.energy = Math.max(0, POINTER.energy - dt * decayRate);
-  POINTER.speed = Math.max(0, POINTER.speed - dt * 920);
-  if (idle > 0.85 && POINTER.energy < 0.01) {
+  POINTER.speed = lerpNum(POINTER.speed, 0, Math.min(1, dt * 3.2));
+  if (idle > 1.15 && POINTER.energy < 0.01) {
     handlePointerReset();
   }
 }
@@ -1021,17 +1100,17 @@ function getPointerWindForBlade(blade, theme) {
   const age = millis() * 0.001 - POINTER.lastMoveAt;
   if (age > 0.9) return 0;
 
-  const freshness = 1 - smoothstep(0.03, 0.72, age);
-  const speedNorm = clamp(POINTER.speed / 1800, 0, 1.15);
-  const spread = lerpNum(90, 240, speedNorm);
+  const freshness = 1 - smoothstep(0.04, 0.95, age);
+  const speedNorm = clamp(POINTER.speed / 2100, 0, 1.1);
+  const spread = lerpNum(120, 280, speedNorm);
   const xDistance = Math.abs(blade.x - POINTER.x);
   const proximity = 1 - smoothstep(spread * 0.12, spread, xDistance);
   if (proximity <= 0) return 0;
 
-  const verticalBias = lerpNum(0.9, 1.12, clamp(POINTER.y / Math.max(height, 1), 0, 1));
-  const seasonFloor = 0.9;
+  const verticalBias = lerpNum(0.94, 1.08, clamp(POINTER.y / Math.max(height, 1), 0, 1));
+  const seasonFloor = 0.82;
   const amplitude =
-    0.042 *
+    0.034 *
     freshness *
     proximity *
     POINTER.energy *
@@ -1046,6 +1125,7 @@ function setup() {
   const mount = getTermBgMount();
   const canvas = createCanvas(windowWidth, windowHeight);
   window.__termBgCanvas = canvas.elt;
+  applyTermBgCanvasViewportStyle(canvas.elt);
   canvas.parent(mount);
   bindPointerInteractions();
   resetPointerInteraction();
@@ -1130,13 +1210,261 @@ function assignTheme(theme) {
 }
 
 function applyTheme(key, reinit = true) {
-  const theme = THEMES[key] || THEMES.guyu;
+  const normalizedKey = String(key || '').toLowerCase();
+  const introTermIndex = TERM_YEAR_INDEX[normalizedKey];
+  const theme =
+    Number.isInteger(introTermIndex)
+      ? (() => {
+          // Sample intro-season interpolation from each term's exact start position.
+          // This keeps Lichun aligned with the spring-start values at progress 0.
+          const progress = introTermIndex / TERM_YEAR_SEQUENCE.length;
+          const introTheme = createIntroSeasonTheme(progress);
+          introTheme.name = TERM_LABELS[normalizedKey] || introTheme.name;
+          const clampedIntroTheme = clampThemeToIntroBounds(introTheme);
+          // Use a stable intro-derived snapshot envelope for term pages so
+          // grass stays within intro-like range without hard clipping.
+          let termSnapshotGrowth = clamp(
+            (clampedIntroTheme.seasonGrowthTarget ?? 0.25) * 0.56,
+            0.08,
+            0.62
+          );
+          let termSnapshotDensity = clamp(
+            (clampedIntroTheme.seasonDensityTarget ?? clampedIntroTheme.seasonGrowthTarget ?? 0.25) * 0.62,
+            0.2,
+            0.74
+          );
+          const isSpringTerm = introTermIndex >= 0 && introTermIndex < 6;
+          const isSummerTerm = introTermIndex >= 6 && introTermIndex < 12;
+          const isAutumnTerm = introTermIndex >= 12 && introTermIndex < 18;
+          const withinSeason = (introTermIndex % 6) / 5;
+          const waveA = (Math.sin((introTermIndex + 1) * 1.87) + 1) * 0.5;
+          const waveB = (Math.cos((introTermIndex + 1) * 2.41) + 1) * 0.5;
+          const waveMix = waveA * 0.58 + waveB * 0.42;
+
+          if (isSpringTerm) {
+            // Spring terms should remain low-profile on detail pages too.
+            termSnapshotGrowth = clamp(termSnapshotGrowth * 0.55, 0.06, 0.24);
+            termSnapshotDensity = clamp(termSnapshotDensity * 0.88, 0.2, 0.58);
+            clampedIntroTheme.growthScale = Math.min(clampedIntroTheme.growthScale ?? 0.28, 0.28);
+          } else if (isSummerTerm) {
+            // Summer terms were consistently too tall on detail pages; compress
+            // their growth envelope to match the intro page visual scale.
+            termSnapshotGrowth = clamp(termSnapshotGrowth * 0.45, 0.06, 0.28);
+            termSnapshotDensity = clamp(termSnapshotDensity * 0.82, 0.2, 0.56);
+            clampedIntroTheme.growthScale = Math.min(clampedIntroTheme.growthScale ?? 0.34, 0.34);
+          } else if (isAutumnTerm) {
+            // Autumn terms also need to sit in a lower visual band on detail pages.
+            termSnapshotGrowth = clamp(termSnapshotGrowth * 0.5, 0.06, 0.24);
+            termSnapshotDensity = clamp(termSnapshotDensity * 0.86, 0.2, 0.54);
+            clampedIntroTheme.growthScale = Math.min(clampedIntroTheme.growthScale ?? 0.3, 0.3);
+          }
+
+          // Add deterministic per-term variation so every term detail page has
+          // its own motion/texture while staying inside intro-derived ranges.
+          const growthCap = isSpringTerm ? 0.26 : isSummerTerm ? 0.30 : isAutumnTerm ? 0.26 : 0.22;
+          const densityCap = isSpringTerm ? 0.60 : isSummerTerm ? 0.60 : isAutumnTerm ? 0.56 : 0.50;
+          termSnapshotGrowth = clamp(termSnapshotGrowth * lerpNum(0.92, 1.06, waveA), 0.06, growthCap);
+          termSnapshotDensity = clamp(termSnapshotDensity * lerpNum(0.9, 1.08, waveB), 0.2, densityCap);
+
+          clampedIntroTheme.grassSpacing = clamp(
+            (clampedIntroTheme.grassSpacing ?? 12) * lerpNum(0.9, 1.15, waveB),
+            5.5,
+            24
+          );
+          const spacingCenter = clampedIntroTheme.grassSpacing ?? 12;
+          const spacingSpread = lerpNum(2.8, 8.2, waveMix);
+          const spacingMin = clamp(
+            spacingCenter - spacingSpread * lerpNum(0.92, 1.18, waveB),
+            4.5,
+            20
+          );
+          const spacingMax = clamp(
+            spacingCenter + spacingSpread * lerpNum(1.0, 1.28, waveA),
+            spacingMin + 1.8,
+            30
+          );
+          clampedIntroTheme.fieldSpacingMin = spacingMin;
+          clampedIntroTheme.fieldSpacingMax = spacingMax;
+          clampedIntroTheme.fieldJitterMax = clamp(
+            (clampedIntroTheme.fieldJitterMax ?? 10) * lerpNum(0.74, 1.34, waveMix),
+            5,
+            18
+          );
+          clampedIntroTheme.windDryScale = clamp(
+            (clampedIntroTheme.windDryScale ?? 1.0) * lerpNum(0.88, 1.2, waveA),
+            0.45,
+            2.6
+          );
+          clampedIntroTheme.windWetScale = clamp(
+            (clampedIntroTheme.windWetScale ?? 1.05) * lerpNum(0.88, 1.22, waveB),
+            0.5,
+            2.9
+          );
+          clampedIntroTheme.windGustChance = clamp(
+            (clampedIntroTheme.windGustChance ?? 0.15) * lerpNum(0.78, 1.28, waveMix),
+            0.04,
+            0.72
+          );
+          clampedIntroTheme.bendImpulse = clamp(
+            (clampedIntroTheme.bendImpulse ?? 0.02) * lerpNum(0.86, 1.18, waveA),
+            0.01,
+            0.06
+          );
+          clampedIntroTheme.tickStrength = clamp(
+            (clampedIntroTheme.tickStrength ?? 0.4) * lerpNum(0.86, 1.22, waveB),
+            0.14,
+            1.3
+          );
+          clampedIntroTheme.branchDrawRatio = clamp(
+            (clampedIntroTheme.branchDrawRatio ?? 0.6) * lerpNum(0.82, 1.18, waveMix),
+            0.18,
+            5
+          );
+          clampedIntroTheme.branchLengthScale = clamp(
+            (clampedIntroTheme.branchLengthScale ?? 0.72) * lerpNum(0.82, 1.22, waveA),
+            0.4,
+            1.3
+          );
+          const twigBaseMin = isSummerTerm ? 1 : isAutumnTerm ? 1 : isSpringTerm ? 0 : 0;
+          const twigBaseMax = isSummerTerm ? 5 : isAutumnTerm ? 4 : isSpringTerm ? 3 : 2;
+          const twigSwing = Math.round(lerpNum(-1, 2, waveMix));
+          const twigMin = clamp(twigBaseMin + Math.round(lerpNum(0, 1, waveA)), 0, 4);
+          const twigMax = clamp(twigBaseMax + twigSwing, twigMin + 1, 7);
+          clampedIntroTheme.branchCountMin = twigMin;
+          clampedIntroTheme.branchCountMax = twigMax;
+          clampedIntroTheme.interactionChance = clamp(
+            (clampedIntroTheme.interactionChance ?? 0.12) * lerpNum(0.72, 1.34, waveB),
+            0.04,
+            0.46
+          );
+          clampedIntroTheme.wetGain = clamp(
+            (clampedIntroTheme.wetGain ?? 0.06) * lerpNum(0.8, 1.26, waveA),
+            0.03,
+            0.16
+          );
+          clampedIntroTheme.dryRate = clamp(
+            (clampedIntroTheme.dryRate ?? 0.015) * lerpNum(0.74, 1.32, waveMix),
+            0.002,
+            0.06
+          );
+          clampedIntroTheme.targetDecay = clamp(
+            (clampedIntroTheme.targetDecay ?? 0.93) * lerpNum(0.985, 1.012, waveB),
+            0.9,
+            0.97
+          );
+
+          const gustMin = clamp(
+            (clampedIntroTheme.windGustMin ?? 0.004) * lerpNum(0.8, 1.32, waveA),
+            0.002,
+            0.03
+          );
+          const gustMax = clamp(
+            (clampedIntroTheme.windGustMax ?? 0.012) * lerpNum(0.82, 1.38, waveB),
+            gustMin + 0.002,
+            0.04
+          );
+          clampedIntroTheme.windGustMin = gustMin;
+          clampedIntroTheme.windGustMax = gustMax;
+          clampedIntroTheme.windGustIn = clamp(
+            (clampedIntroTheme.windGustIn ?? 1.5) * lerpNum(0.86, 1.24, waveA),
+            0.9,
+            3.2
+          );
+          clampedIntroTheme.windGustOut = clamp(
+            (clampedIntroTheme.windGustOut ?? 2.0) * lerpNum(0.86, 1.24, waveB),
+            1.2,
+            3.4
+          );
+          if ((clampedIntroTheme.rainDensity ?? 0) > 0.02 || (clampedIntroTheme.rainPresenceTarget ?? 0) > 0.02) {
+            clampedIntroTheme.rainDensity = clamp(
+              (clampedIntroTheme.rainDensity ?? 0) * lerpNum(0.85, 1.2, waveA),
+              0,
+              2.3
+            );
+            clampedIntroTheme.rainAlpha = clamp(
+              (clampedIntroTheme.rainAlpha ?? 0) * lerpNum(0.86, 1.16, waveB),
+              0,
+              50
+            );
+            clampedIntroTheme.rainWind = clamp(
+              (clampedIntroTheme.rainWind ?? 16) * lerpNum(0.88, 1.14, waveMix),
+              8,
+              32
+            );
+            clampedIntroTheme.rainOnMin = clamp(
+              (clampedIntroTheme.rainOnMin ?? 1.5) * lerpNum(0.78, 1.24, waveA),
+              0.7,
+              10
+            );
+            clampedIntroTheme.rainOnMax = clamp(
+              (clampedIntroTheme.rainOnMax ?? 5.0) * lerpNum(0.78, 1.24, waveB),
+              clampedIntroTheme.rainOnMin + 0.4,
+              16
+            );
+            clampedIntroTheme.rainOffMin = clamp(
+              (clampedIntroTheme.rainOffMin ?? 2.0) * lerpNum(0.78, 1.3, waveB),
+              0.8,
+              12
+            );
+            clampedIntroTheme.rainOffMax = clamp(
+              (clampedIntroTheme.rainOffMax ?? 6.0) * lerpNum(0.78, 1.3, waveA),
+              clampedIntroTheme.rainOffMin + 0.6,
+              18
+            );
+          }
+
+          clampedIntroTheme.termSnapshotGrowth = termSnapshotGrowth;
+          clampedIntroTheme.termSnapshotDensity = termSnapshotDensity;
+
+          // Normalize seasonal term pages into the same on-screen window as intro
+          // by soft-scaling source blade heights instead of clipping render output.
+          const seasonalHardCap = isSpringTerm
+            ? lerpNum(0.15, 0.19, waveMix * 0.6 + withinSeason * 0.4)
+            : isSummerTerm
+              ? lerpNum(0.18, 0.24, waveMix * 0.6 + withinSeason * 0.4)
+              : isAutumnTerm
+                ? lerpNum(0.14, 0.20, waveMix * 0.6 + withinSeason * 0.4)
+                : lerpNum(0.10, 0.16, waveMix * 0.6 + withinSeason * 0.4);
+          const viewportHeightCeil = isSpringTerm
+            ? lerpNum(0.27, 0.32, waveMix)
+            : isSummerTerm
+              ? lerpNum(0.32, 0.37, waveMix)
+              : isAutumnTerm
+                ? lerpNum(0.26, 0.31, waveMix)
+                : lerpNum(0.20, 0.28, waveMix);
+          const projectedGrowthStretch =
+            (1 + termSnapshotGrowth * Math.max(0, clampedIntroTheme.growthScale ?? 0)) * 1.18;
+          let introWindowGrassMax = clamp(
+            viewportHeightCeil / Math.max(0.001, projectedGrowthStretch),
+            0.05,
+            clampedIntroTheme.grassHeightMax
+          );
+          introWindowGrassMax = Math.min(introWindowGrassMax, seasonalHardCap);
+          if (clampedIntroTheme.grassHeightMax > introWindowGrassMax) {
+            const heightScale = introWindowGrassMax / Math.max(clampedIntroTheme.grassHeightMax, 0.0001);
+            clampedIntroTheme.grassHeightMax *= heightScale;
+            clampedIntroTheme.grassHeightMin = Math.min(
+              clampedIntroTheme.grassHeightMin * heightScale,
+              clampedIntroTheme.grassHeightMax * 0.95
+            );
+          }
+          const variedTermTheme = clampThemeToIntroBounds(clampedIntroTheme);
+          variedTermTheme.termSnapshotGrowth = termSnapshotGrowth;
+          variedTermTheme.termSnapshotDensity = termSnapshotDensity;
+          variedTermTheme.branchCountMin = Math.max(0, Math.round(variedTermTheme.branchCountMin ?? twigMin));
+          variedTermTheme.branchCountMax = Math.max(
+            variedTermTheme.branchCountMin + 1,
+            Math.round(variedTermTheme.branchCountMax ?? twigMax)
+          );
+          return variedTermTheme;
+        })()
+      : (THEMES[normalizedKey] || THEMES.guyu);
   BACKGROUND_MODE = 'term';
-  ACTIVE_THEME = key;
+  ACTIVE_THEME = normalizedKey || 'guyu';
   assignTheme(theme);
 
   if (reinit) {
-    initField(true);
+    initField(false);
     initRain();
     initRainSystem();
     initWindSystem();
@@ -1157,10 +1485,12 @@ function initField(keepState = false) {
   const jitterMax = THEME.fieldJitterMax ?? 14;
   const spacingMin = THEME.fieldSpacingMin ?? 6;
   const spacingMax = THEME.fieldSpacingMax ?? 26;
-  let xCursor = width * 0.08;
+  const edgeOverscan = Math.max(24, spacingMax + jitterMax);
+  let xCursor = -edgeOverscan;
+  const maxBladeCount = Math.ceil(baseCount * 1.8) + 16;
 
   let i = 0;
-  while (xCursor < width * 0.92 && i < baseCount * 1.2) {
+  while (xCursor < width + edgeOverscan && i < maxBladeCount) {
     const n = noise(xCursor * noiseScale);
     const spacing = map(n, 0, 1, spacingMin, spacingMax);
     const jitter = random(-jitterMax, jitterMax);
@@ -1178,17 +1508,28 @@ function initField(keepState = false) {
 function initRainSystem() {
   const theme = THEME;
   rainIntensity = 0;
-  const target = theme.seasonGrowthTarget ?? 0.2;
-  const densityTarget = theme.seasonDensityTarget ?? target;
-  if (!isFinite(growthLevel) || growthLevel <= 0) {
+  const target =
+    BACKGROUND_MODE === 'season-loop'
+      ? (theme.seasonGrowthTarget ?? 0.2)
+      : (theme.termSnapshotGrowth ?? clamp((theme.seasonGrowthTarget ?? 0.2) * 0.56, 0.08, 0.62));
+  const densityTarget =
+    BACKGROUND_MODE === 'season-loop'
+      ? (theme.seasonDensityTarget ?? target)
+      : (theme.termSnapshotDensity ?? clamp((theme.seasonDensityTarget ?? target) * 0.62, 0.2, 0.74));
+  if (BACKGROUND_MODE !== 'season-loop') {
     growthLevel = target;
-  } else {
-    growthLevel = growthLevel + (target - growthLevel) * 0.35;
-  }
-  if (!isFinite(densityLevel) || densityLevel <= 0) {
     densityLevel = densityTarget;
   } else {
-    densityLevel = densityLevel + (densityTarget - densityLevel) * 0.35;
+    if (!isFinite(growthLevel) || growthLevel <= 0) {
+      growthLevel = target;
+    } else {
+      growthLevel = growthLevel + (target - growthLevel) * 0.35;
+    }
+    if (!isFinite(densityLevel) || densityLevel <= 0) {
+      densityLevel = densityTarget;
+    } else {
+      densityLevel = densityLevel + (densityTarget - densityLevel) * 0.35;
+    }
   }
   scheduleRainPhase(theme.startWithRain);
 }
@@ -1357,6 +1698,16 @@ function updateGrowth(dt) {
   const densityPull = theme.seasonDensityPull ?? seasonalPull;
   densityLevel += (densityTarget - densityLevel) * min(1, dt * densityPull);
 
+  if (BACKGROUND_MODE !== 'season-loop') {
+    const fixedGrowth = theme.termSnapshotGrowth ?? clamp(seasonalTarget * 0.56, 0.08, 0.62);
+    const fixedDensity = theme.termSnapshotDensity ?? clamp(densityTarget * 0.62, 0.2, 0.74);
+    growthLevel += (fixedGrowth - growthLevel) * min(1, dt * 1.4);
+    densityLevel += (fixedDensity - densityLevel) * min(1, dt * 1.25);
+    growthLevel = clamp(growthLevel, Math.max(0, fixedGrowth - 0.02), Math.min(1, fixedGrowth + 0.02));
+    densityLevel = clamp(densityLevel, Math.max(0, fixedDensity - 0.03), Math.min(1, fixedDensity + 0.03));
+    return;
+  }
+
   if (theme.growthRate > 0) {
     const grow = theme.growthRate * dt * max(0, rainIntensity);
     growthLevel = constrain(growthLevel + grow, 0, 1);
@@ -1373,6 +1724,11 @@ function updateGrowth(dt) {
 }
 
 function getRainSpawnX() {
+  // In intro season-loop summers, keep rainfall distributed across the full viewport
+  // instead of concentrating in narrow vertical patch bands.
+  if (BACKGROUND_MODE === 'season-loop' && (THEME.rainPresenceTarget ?? 0) >= 0.55) {
+    return random(-20, width + 20);
+  }
   if (!rainPatches.length) return random(-20, width + 20);
   const p = random(rainPatches);
   return p.x + random(-p.r, p.r);
@@ -1875,23 +2231,24 @@ function smoothstep(edge0, edge1, x) {
 }
 
 window.__termBgApplyTheme = (key) => {
-  if (!key || !THEMES[key]) return;
-  window.__TERM_ID__ = key;
+  if (!key) return;
+  const normalizedKey = String(key).toLowerCase();
+  window.__TERM_ID__ = normalizedKey;
   pendingMode = null;
   if (!ensureTermBgP5Instance()) {
     BACKGROUND_MODE = 'term';
-    ACTIVE_THEME = key;
-    assignTheme(THEMES[key]);
-    pendingThemeKey = key;
+    ACTIVE_THEME = normalizedKey;
+    applyTheme(normalizedKey, false);
+    pendingThemeKey = normalizedKey;
     return;
   }
   if (!p5Ready || typeof width === 'undefined' || typeof height === 'undefined') {
     BACKGROUND_MODE = 'term';
-    pendingThemeKey = key;
+    pendingThemeKey = normalizedKey;
     return;
   }
   syncTermBgCanvasMount();
-  applyTheme(key, true);
+  applyTheme(normalizedKey, true);
 };
 
 window.__termBgStartSeasonLoop = (options = {}) => {

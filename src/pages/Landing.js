@@ -5,6 +5,16 @@ import { P5Wrapper, SolarDial } from '../components';
 import { getCurrentTermId } from '../data';
 import './Landing.css';
 
+const HANZI_DIGITS = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+
+const toHanziNumber = (value) => {
+  if (value <= 10) return value === 10 ? '十' : HANZI_DIGITS[value];
+  if (value < 20) return `十${HANZI_DIGITS[value - 10]}`;
+  const tens = Math.floor(value / 10);
+  const ones = value % 10;
+  return `${HANZI_DIGITS[tens]}十${ones ? HANZI_DIGITS[ones] : ''}`;
+};
+
 const Landing = () => {
   const { previewTermId, setActiveTermId } = useAmbientAudio();
   const displayYear = useMemo(() => new Date().getFullYear(), []);
@@ -13,7 +23,7 @@ const Landing = () => {
     const monthNames = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
     return {
       dateEn: `${monthNames[now.getMonth()]} ${now.getDate()}`,
-      dateZh: `${now.getMonth() + 1}月${now.getDate()}日`
+      dateZh: `${toHanziNumber(now.getMonth() + 1)}月${toHanziNumber(now.getDate())}日`
     };
   }, []);
   const handleTermChange = useCallback((term, _termIndex, meta = {}) => {

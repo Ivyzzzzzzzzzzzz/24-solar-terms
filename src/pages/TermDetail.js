@@ -116,6 +116,11 @@ const SOLAR_PANEL_COPY = {
   }
 };
 
+const SOLAR_PANEL_COPY_FALLBACK = {
+  en: 'The Sun shifts season by season. Shadow follows quietly.',
+  zh: '太阳随季节变化，影子也随之转移。'
+};
+
 const SOLAR_SHADOW_LENGTH_SCALE = {
   lichun: 0.88,
   yushui: 0.82,
@@ -175,28 +180,6 @@ const hexToRgbChannels = (hex) => {
   return `${(intValue >> 16) & 255} ${(intValue >> 8) & 255} ${intValue & 255}`;
 };
 
-const annularGuidePath = (cx, cy, rOuter, rInner, startDeg, endDeg) => {
-  const a0 = ((startDeg - 90) * Math.PI) / 180;
-  const a1 = ((endDeg - 90) * Math.PI) / 180;
-  const x0 = cx + Math.cos(a0) * rOuter;
-  const y0 = cy + Math.sin(a0) * rOuter;
-  const x1 = cx + Math.cos(a1) * rOuter;
-  const y1 = cy + Math.sin(a1) * rOuter;
-  const x2 = cx + Math.cos(a1) * rInner;
-  const y2 = cy + Math.sin(a1) * rInner;
-  const x3 = cx + Math.cos(a0) * rInner;
-  const y3 = cy + Math.sin(a0) * rInner;
-  const large = Math.abs(endDeg - startDeg) > 180 ? 1 : 0;
-
-  return [
-    `M ${x0.toFixed(2)} ${y0.toFixed(2)}`,
-    `A ${rOuter} ${rOuter} 0 ${large} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`,
-    `L ${x2.toFixed(2)} ${y2.toFixed(2)}`,
-    `A ${rInner} ${rInner} 0 ${large} 0 ${x3.toFixed(2)} ${y3.toFixed(2)}`,
-    'Z'
-  ].join(' ');
-};
-
 const getEvenlySpacedEllipsePoints = (count, cx, cy, rx, ry, startAngle = -Math.PI / 2) => {
   if (count <= 0) return [];
 
@@ -246,9 +229,11 @@ const TermDetail = () => {
   const [term, setTerm] = useState(null);
   const [menuRotation, setMenuRotation] = useState(0);
   const [isContentHover, setIsContentHover] = useState(false);
+  const [isMenuRingHover, setIsMenuRingHover] = useState(false);
   const [isTermNavHover, setIsTermNavHover] = useState(false);
   const [navPulseOn, setNavPulseOn] = useState(false);
-  const isContentHoverRef = useRef(false);
+  const [solarPanelCopyHeight, setSolarPanelCopyHeight] = useState(null);
+  const isMenuAutoAdvancePausedRef = useRef(false);
   const navWheelTsRef = useRef(0);
   const navWheelAccumRef = useRef(0);
   const navWheelResetTimerRef = useRef(null);
@@ -256,6 +241,12 @@ const TermDetail = () => {
   const menuAutoAdvanceTimerRef = useRef(null);
   const menuAutoAdvanceStartedAtRef = useRef(0);
   const menuAutoAdvanceRemainingRef = useRef(MENU_AUTO_ADVANCE_MS);
+  const handleBackClick = useCallback((event) => {
+    event.preventDefault();
+    const idx = window.history?.state?.idx;
+    if (typeof idx === 'number' && idx > 0) navigate(-1);
+    else navigate('/');
+  }, [navigate]);
 
   const clearMenuAutoAdvanceTimer = useCallback(() => {
     if (menuAutoAdvanceTimerRef.current) {
@@ -298,9 +289,11 @@ const TermDetail = () => {
     }
   }, [termId]);
 
+  const isMenuAutoAdvancePaused = isContentHover || isMenuRingHover;
+
   useEffect(() => {
-    isContentHoverRef.current = isContentHover;
-  }, [isContentHover]);
+    isMenuAutoAdvancePausedRef.current = isMenuAutoAdvancePaused;
+  }, [isMenuAutoAdvancePaused]);
 
   useEffect(() => () => {
     if (navPulseTimerRef.current) window.clearTimeout(navPulseTimerRef.current);
@@ -310,7 +303,7 @@ const TermDetail = () => {
 
   useEffect(() => {
     menuAutoAdvanceRemainingRef.current = MENU_AUTO_ADVANCE_MS;
-    if (!isContentHoverRef.current) {
+    if (!isMenuAutoAdvancePausedRef.current) {
       startMenuAutoAdvance(MENU_AUTO_ADVANCE_MS);
     }
 
@@ -320,7 +313,7 @@ const TermDetail = () => {
   }, [clearMenuAutoAdvanceTimer, menuRotation, startMenuAutoAdvance]);
 
   useEffect(() => {
-    if (isContentHover) {
+    if (isMenuAutoAdvancePaused) {
       pauseMenuAutoAdvance();
       return;
     }
@@ -328,7 +321,82 @@ const TermDetail = () => {
     if (!menuAutoAdvanceTimerRef.current) {
       startMenuAutoAdvance(menuAutoAdvanceRemainingRef.current || MENU_AUTO_ADVANCE_MS);
     }
-  }, [isContentHover, pauseMenuAutoAdvance, startMenuAutoAdvance]);
+  }, [isMenuAutoAdvancePaused, pauseMenuAutoAdvance, startMenuAutoAdvance]);
+
+  useEffect(() => {
+    if (typeof document === 'undefined' || !document.body) return undefined;
+
+    let isDisposed = false;
+
+    const measureLargestCopyHeight = () => {
+      const host = document.createElement('div');
+      host.style.position = 'fixed';
+      host.style.left = '-9999px';
+      host.style.top = '0';
+      host.style.opacity = '0';
+      host.style.pointerEvents = 'none';
+      host.style.width = '210px';
+      host.style.boxSizing = 'border-box';
+      host.style.zIndex = '-1';
+      document.body.appendChild(host);
+
+      const allCopies = [...Object.values(SOLAR_PANEL_COPY), SOLAR_PANEL_COPY_FALLBACK];
+      let largestHeight = 0;
+
+      allCopies.forEach((copy) => {
+        const box = document.createElement('div');
+        box.className = 'term-solar-panel-copy';
+        box.style.height = 'auto';
+        box.style.minHeight = '0';
+        box.style.animation = 'none';
+        box.style.transition = 'none';
+
+        const en = document.createElement('div');
+        en.className = 'term-solar-panel-note';
+        en.lang = 'en';
+        en.textContent = copy.en;
+
+        const zh = document.createElement('div');
+        zh.className = 'term-solar-panel-note-zh';
+        zh.lang = 'zh-Hans';
+        zh.textContent = copy.zh;
+
+        box.append(en, zh);
+        host.appendChild(box);
+        largestHeight = Math.max(largestHeight, box.getBoundingClientRect().height);
+        host.removeChild(box);
+      });
+
+      document.body.removeChild(host);
+
+      if (!isDisposed && largestHeight > 0) {
+        setSolarPanelCopyHeight(Number(largestHeight.toFixed(2)));
+      }
+    };
+
+    const scheduleMeasure = () => {
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          if (!isDisposed) measureLargestCopyHeight();
+        });
+      });
+    };
+
+    scheduleMeasure();
+
+    document.fonts?.ready
+      ?.then(() => {
+        if (!isDisposed) scheduleMeasure();
+      })
+      .catch(() => {});
+
+    window.addEventListener('resize', scheduleMeasure);
+
+    return () => {
+      isDisposed = true;
+      window.removeEventListener('resize', scheduleMeasure);
+    };
+  }, []);
 
   if (!term) return <div>Loading...</div>;
 
@@ -342,7 +410,6 @@ const TermDetail = () => {
   const normalizedRotation = ((menuRotation % 360) + 360) % 360;
   const activeMenuIndex = ((Math.round(normalizedRotation / 90) % MENU_ITEMS.length) + MENU_ITEMS.length) % MENU_ITEMS.length;
   const activeMenu = MENU_ITEMS[activeMenuIndex].key;
-  const menuSelectorPath = annularGuidePath(84, 84, 84, 74, -34, 34);
   const currentTermIndex = TERM_LIST.findIndex((t) => t.id === term.id);
   const nextTermIndex = currentTermIndex >= 0 ? (currentTermIndex + 1) % TERM_LIST.length : 0;
   const termBaseColor = TERM_COLORS[term.id]?.base || '#9aa6b2';
@@ -361,11 +428,12 @@ const TermDetail = () => {
   const solarLonValues = TERM_LIST.map((t) => Number(t.solarLon || 0));
   const minSolarLon = Math.min(...solarLonValues);
   const maxSolarLon = Math.max(...solarLonValues);
-  const panelCopy = SOLAR_PANEL_COPY[term.id] || {
-    en: 'The Sun shifts season by season. Shadow follows quietly.',
-    zh: '太阳随季节变化，影子也随之转移。'
-  };
+  const panelCopy = SOLAR_PANEL_COPY[term.id] || SOLAR_PANEL_COPY_FALLBACK;
   const panelShadowScale = SOLAR_SHADOW_LENGTH_SCALE[term.id] ?? 0.68;
+  const solarPanelStyle = {
+    '--term-solar-shadow-scale': panelShadowScale,
+    ...(solarPanelCopyHeight ? { '--term-solar-copy-height': `${solarPanelCopyHeight}px` } : {})
+  };
 
   const navDotRadiusBySolarLon = (solarLon) => {
     if (maxSolarLon === minSolarLon) return (TERM_NAV_DOT_SIZE.minR + TERM_NAV_DOT_SIZE.maxR) / 2;
@@ -435,17 +503,20 @@ const TermDetail = () => {
   };
 
   return (
-    <div className="term-page">
+    <div
+      className="term-page"
+      style={{ '--term-detail-outline-color': termBaseColor }}
+    >
       <TermBackground termId={term.id} />
         <div className="frame term-frame">
-        <Link className="term-back-link" to="/" aria-label="Back to landing">
+        <Link className="term-back-link" to="/" aria-label="Back" onClick={handleBackClick}>
           <span className="term-back-link-label">Back</span>
         </Link>
 
         <div className="term-main">
           <div className="term-content">
             <div className="term-header">
-              <Link className="term-left-home-link" to="/" aria-label="Back to landing page">
+              <Link className="term-left-home-link" to="/" aria-label="Go to landing page">
                 <span className="term-left-home-orb" aria-hidden="true" style={orbPaletteStyle}>
                   <span className="term-left-home-orb-fluid">
                     <span className="term-left-home-orb-spectrum"></span>
@@ -459,17 +530,6 @@ const TermDetail = () => {
               </Link>
               <div className="term-title-zh" id="termTitleZh">{term.zh || term.nameZh}</div>
 
-              <div className="term-date">
-                <div className="term-date-zh">
-                  <p className="term-date-line">
-                    <span className="term-date-text">二零二五年</span>
-                  </p>
-                  <p className="term-date-line">
-                    <span className="term-date-text">{term.dateZh}</span>
-                  </p>
-                </div>
-                <div className="term-date-en" id="termDateEn">{term.dateEn}</div>
-              </div>
             </div>
 
             <div className="term-summary">
@@ -542,16 +602,24 @@ const TermDetail = () => {
             role="button"
             tabIndex={0}
             aria-label="Term navigator panel"
-            style={{ '--term-solar-shadow-scale': panelShadowScale }}
+            style={solarPanelStyle}
             onMouseEnter={() => setIsTermNavHover(true)}
             onMouseLeave={() => setIsTermNavHover(false)}
             onWheel={handleTermNavWheel}
             onKeyDown={handleTermNavKeyDown}
           >
             <div className="term-solar-panel-value">{Number(term.solarLon || 0).toFixed(0)}°</div>
-            <div className="term-solar-panel-note">{panelCopy.en}</div>
-            <div className="term-solar-panel-note-zh">{panelCopy.zh}</div>
+            <div className="term-solar-panel-copy">
+              <div className="term-solar-panel-note" lang="en">{panelCopy.en}</div>
+              <div className="term-solar-panel-note-zh">{panelCopy.zh}</div>
+            </div>
           </aside>
+          <p className="term-solar-panel-caption" lang="en">
+            The solar longitude is a way scientists describe the Sun&apos;s position along its apparent path in the sky (called the ecliptic). It is measured in degrees from 0° to 360°, starting at the spring equinox (0°) and increasing as the Earth orbits the Sun. Rather than using calendar dates, solar longitude gives a precise, continuous way to track seasonal change based on the Earth&apos;s position in space.
+          </p>
+          <p className="term-solar-panel-caption term-solar-panel-caption-zh" lang="zh-Hans">
+            太阳黄经是科学上用来描述太阳在天空中沿黄道（太阳视运动路径）位置的一种方式。它以春分点为0°起点，按照地球绕太阳运行的过程，从0°到360°逐渐增加。与使用日历日期不同，太阳黄经提供了一种更精确、连续的方式，用来根据地球在空间中的位置追踪季节变化。
+          </p>
 
           <div className="term-solar-panel-instruction" aria-hidden={!isTermNavHover}>
             <div className="term-solar-panel-instruction-zh">滚动切换节气</div>
@@ -562,9 +630,10 @@ const TermDetail = () => {
         <TermMenuRing
           menuItems={MENU_ITEMS}
           menuRotation={menuRotation}
-          menuSelectorPath={menuSelectorPath}
           activeMenu={activeMenu}
           alignMenuToTop={alignMenuToTop}
+          menuRingColor={termBaseColor}
+          onHoverChange={setIsMenuRingHover}
         />
 
         <TermCenterPanels

@@ -1,13 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAmbientAudio } from '../audio/AmbientAudioProvider';
 import { TERM_LIST, TERM_COLORS, getCurrentTermId } from '../data';
 import './YearCalendar.css';
 
 const INITIAL_YEAR = 2026;
 const GRID_COLS = 22;
-const MAX_AURA_COUNT = 12;
-
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const MONTH_INDEX = {
   Jan: 0,
@@ -69,6 +67,7 @@ const rgbChannels = (c) => `${c.r} ${c.g} ${c.b}`;
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
 
 const YearCalendar = () => {
+  const navigate = useNavigate();
   const { previewTermId, selectTermId } = useAmbientAudio();
   const [year, setYear] = useState(INITIAL_YEAR);
   const [isTextOn, setIsTextOn] = useState(true);
@@ -150,6 +149,13 @@ const YearCalendar = () => {
     if (e.deltaY > 0) shiftYear(1);
     else if (e.deltaY < 0) shiftYear(-1);
   };
+
+  const handleBackClick = useCallback((event) => {
+    event.preventDefault();
+    const idx = window.history?.state?.idx;
+    if (typeof idx === 'number' && idx > 0) navigate(-1);
+    else navigate('/');
+  }, [navigate]);
 
   const termPaletteById = useMemo(() => {
     const paper = { r: 246, g: 241, b: 234 };
@@ -290,9 +296,9 @@ const YearCalendar = () => {
         '--year-aura-soft-delay': `${(-(index * 1.08 + phaseSeed * 8.4)).toFixed(2)}s`,
         '--year-aura-wave-duration': `${(19.6 + (cadence * 4.7) + (dayBias * 1.45)).toFixed(2)}s`,
         '--year-aura-wave-delay': `${(-(index * 1.72 + phaseSeed * 9.1)).toFixed(2)}s`,
-        '--year-aura-scale-peak': '1.12',
-        '--year-aura-core-peak': '1.24',
-        '--year-aura-wave-peak': '1.56'
+        '--year-aura-scale-peak': '0.3',
+        '--year-aura-core-peak': '1.18',
+        '--year-aura-wave-peak': '1.30'
       };
     });
 
@@ -303,10 +309,8 @@ const YearCalendar = () => {
     if (isLiteEffects) return [];
 
     const fallback = { r: 246, g: 241, b: 234 };
-    const stride = Math.max(1, Math.ceil(scheduledTerms.length / MAX_AURA_COUNT));
-    const auraTerms = scheduledTerms.filter((_, index) => index % stride === 0).slice(0, MAX_AURA_COUNT);
 
-    return auraTerms.map((term) => {
+    return scheduledTerms.map((term) => {
       const palette = termPaletteById[term.id] || {};
       const col = (term.doy - 1) % GRID_COLS;
       const row = Math.floor((term.doy - 1) / GRID_COLS);
@@ -435,7 +439,7 @@ const YearCalendar = () => {
 
   return (
     <main className="year-calendar-page">
-      <Link className="year-calendar-back-link" to="/" aria-label="Back to landing">
+      <Link className="year-calendar-back-link" to="/" aria-label="Back" onClick={handleBackClick}>
         <span className="year-calendar-back-link-label">Back</span>
       </Link>
       <section
@@ -444,7 +448,7 @@ const YearCalendar = () => {
         onWheel={handleYearWheel}
       >
         <div className="year-calendar-home-col">
-          <Link className="year-calendar-home-link-inline" to="/" aria-label="Back to landing page">
+          <Link className="year-calendar-home-link-inline" to="/" aria-label="Go to landing page">
             <span
               className={`year-calendar-home-orb-inline${isLiteEffects ? ' is-lite-effects' : ''}`}
               aria-hidden="true"

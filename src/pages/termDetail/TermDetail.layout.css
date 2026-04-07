@@ -27,6 +27,7 @@
     justify-content: flex-start;
     z-index: 1;
     --zh: "FZZJ-YZDKJW", "FZZJ-YZDKJW-Regular", "FZFangSong-Z02S", "FangSong", "Songti SC", serif;
+    --term-shared-center-y: 50%;
 }
 
 .term-page::before {
@@ -369,9 +370,9 @@
         radial-gradient(circle at 30% 26%, rgba(255, 255, 255, 0.28) 0 12%, rgba(255, 255, 255, 0.12) 24%, rgba(255, 255, 255, 0) 44%),
         radial-gradient(circle at 72% 74%, color-mix(in srgb, rgb(var(--term-orb-color-base-rgb)) 18%, white 82%) 0 14%, rgba(255, 255, 255, 0) 42%),
         radial-gradient(circle at 52% 46%, color-mix(in srgb, rgb(var(--term-orb-color-base-rgb)) 18%, white 82%) 0 56%, rgba(252, 249, 244, 0.78) 100%);
-    border: 0.8px solid rgba(20, 18, 16, 0.14);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
-    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    border: none;
+    box-shadow: none;
+    transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
 .term-left-home-orb-fluid {
@@ -587,19 +588,16 @@
 
 .term-left-home-orb::after {
     inset: 0;
-    border: 0.8px solid rgba(20, 18, 16, 0.12);
-    box-shadow: inset 0 0 0 0.35px rgba(255, 255, 255, 0.2);
-    opacity: 1;
+    border: none;
+    box-shadow: none;
+    opacity: 0;
     z-index: 5;
 }
 
 .term-left-home-link:hover .term-left-home-orb,
 .term-left-home-link:focus-visible .term-left-home-orb {
     transform: scale(1.04);
-    border-color: rgba(20, 18, 16, 0.2);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.34),
-        0 6px 14px rgba(20, 18, 16, 0.12);
+    box-shadow: 0 6px 14px rgba(20, 18, 16, 0.12);
 }
 
 @keyframes orbSpectrumWheel {

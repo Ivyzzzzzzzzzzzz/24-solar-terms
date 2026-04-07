@@ -9,6 +9,7 @@ const Intro = lazy(() => import('./pages/Intro'));
 const TermsList = lazy(() => import('./pages/TermsList'));
 const TermDetail = lazy(() => import('./pages/TermDetail'));
 const YearCalendar = lazy(() => import('./pages/YearCalendar'));
+const SHOW_AMBIENT_SOUND_CONTROL = true;
 
 function HistoryTracker() {
   const location = useLocation();
@@ -45,7 +46,7 @@ function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
-        <AmbientSoundControl />
+        {SHOW_AMBIENT_SOUND_CONTROL ? <AmbientSoundControl /> : null}
       </Router>
     </AmbientAudioProvider>
   );

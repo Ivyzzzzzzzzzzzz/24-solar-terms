@@ -1,10 +1,10 @@
 .term-menu-ring {
-    position: absolute;
-    right: calc(34px + 104px);
-    top: 50%;
+    position: fixed;
+    left: calc(34px + 104px);
+    top: var(--term-shared-center-y, 50%);
     transform: translateY(-50%);
-    width: 140px;
-    height: 140px;
+    width: 116px;
+    height: 116px;
     z-index: 3;
 }
 
@@ -13,15 +13,25 @@
     inset: 0;
     width: 100%;
     height: 100%;
+    overflow: visible;
     pointer-events: none;
     z-index: 1;
 }
 
 .term-menu-selector-box {
-    fill: rgba(255, 255, 255, 0.92);
+    fill: color-mix(in srgb, var(--term-menu-ring-color, #ffffff) 96%, rgba(20, 18, 16, 0.04));
+    fill-opacity: 0.9;
+    stroke: none;
+    stroke-width: 0;
     stroke-linejoin: round;
     stroke-linecap: round;
-    filter: drop-shadow(0 1px 2px rgb(255, 255, 255));
+    filter: blur(8px);
+    /* filter:
+        blur(8px)
+        drop-shadow(0 0 6px color-mix(in srgb, var(--term-menu-ring-color, #ffffff) 72%, rgba(20, 18, 16, 0.08)))
+        drop-shadow(0 0 13px color-mix(in srgb, var(--term-menu-ring-color, #ffffff) 38%, rgba(20, 18, 16, 0.12))); */
+    transform-origin: 84px 84px;
+    animation: termMenuSelectorHint 6.8s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
 }
 
 .term-menu-wheel {
@@ -42,14 +52,57 @@
     overflow: visible;
 }
 
+.term-menu-ring-track-glow {
+    stroke: color-mix(in srgb, var(--term-menu-ring-color, #ffffff) 90%, white 10%);
+    stroke-width: 9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.48;
+    filter: blur(3.2px);
+}
+
 .term-menu-ring-track {
-    stroke: rgb(255, 255, 255);
+    stroke: var(--term-menu-ring-color, rgb(255, 255, 255));
     stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 2px color-mix(in srgb, var(--term-menu-ring-color, #ffffff) 70%, white 30%));
 }
 
 .term-menu-path-label {
     cursor: pointer;
     user-select: none;
+    pointer-events: bounding-box;
+    fill: rgba(84, 80, 76, 0.56);
+    opacity: 0.9;
+    transition: fill 180ms ease, filter 180ms ease, opacity 180ms ease;
+    animation: termMenuLabelHint 7.2s ease-in-out infinite;
+}
+
+.term-menu-path-label:nth-of-type(1) { animation-delay: 0s; }
+.term-menu-path-label:nth-of-type(2) { animation-delay: 0.2s; }
+.term-menu-path-label:nth-of-type(3) { animation-delay: 0.4s; }
+.term-menu-path-label:nth-of-type(4) { animation-delay: 0.6s; }
+
+.term-menu-path-label.is-active {
+    animation: none;
+}
+
+.term-menu-ring:hover .term-menu-selector-box,
+.term-menu-ring:focus-within .term-menu-selector-box {
+    animation-play-state: paused;
+}
+
+.term-menu-ring:hover .term-menu-path-label,
+.term-menu-ring:focus-within .term-menu-path-label {
+    animation: none;
+}
+
+.term-menu-path-label:hover,
+.term-menu-path-label:focus-visible {
+    fill: rgba(84, 80, 76, 0.86);
+    opacity: 1;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.16));
 }
 
 .term-menu-path-label:focus,
@@ -59,18 +112,25 @@
 
 .term-menu-path-zh {
     font-family: "FZZJ-YZDKJW", "FZZJ-YZDKJW-Regular", "Noto Serif SC", Helvetica, sans-serif;
-    font-size: 22px;
+    font-size: 26.5px;
 }
 
 .term-menu-path-en {
     font-family: "Stoke", "Stoke-Light", Helvetica, sans-serif;
-    font-size: 16px;
-    letter-spacing: 0.72px;
+    font-size: 19.25px;
+    letter-spacing: 0.87px;
 }
 
 .term-menu-path-label.is-active {
     fill: #2f2b28;
+    opacity: 1;
     filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.12));
+}
+
+.term-menu-path-label.is-active:hover,
+.term-menu-path-label.is-active:focus-visible {
+    fill: #2f2b28;
+    filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.2));
 }
 
 .term-ring-item {
@@ -272,6 +332,37 @@
     animation: inkDrawWash 900ms cubic-bezier(.18,.9,.2,1) both;
 }
 
+@keyframes termMenuSelectorHint {
+    0%,
+    78%,
+    100% {
+        transform: scale(1);
+        fill-opacity: 0.88;
+    }
+    86% {
+        transform: scale(1.026);
+        fill-opacity: 1;
+    }
+    92% {
+        transform: scale(1.012);
+        fill-opacity: 0.94;
+    }
+}
+
+@keyframes termMenuLabelHint {
+    0%,
+    79%,
+    100% {
+        opacity: 0.86;
+    }
+    86% {
+        opacity: 1;
+    }
+    92% {
+        opacity: 0.93;
+    }
+}
+
 @keyframes inkDrawMain {
     0% {
         opacity: 0.15;
@@ -336,6 +427,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .term-menu-selector-box,
+    .term-menu-path-label {
+        animation: none;
+    }
+
     .term-menu-item:hover .term-menu-dot-stroke,
     .term-menu-item:focus-within .term-menu-dot-stroke {
         animation: none;
