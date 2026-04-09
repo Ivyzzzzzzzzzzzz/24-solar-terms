@@ -4,7 +4,6 @@ import { useAmbientAudio } from '../audio/AmbientAudioProvider';
 import { TERM_LIST, TERM_COLORS, getCurrentTermId } from '../data';
 import './YearCalendar.css';
 
-const INITIAL_YEAR = 2026;
 const GRID_COLS = 22;
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const MONTH_INDEX = {
@@ -69,11 +68,9 @@ const clamp01 = (v) => Math.max(0, Math.min(1, v));
 const YearCalendar = () => {
   const navigate = useNavigate();
   const { previewTermId, selectTermId } = useAmbientAudio();
-  const [year, setYear] = useState(INITIAL_YEAR);
   const [isTextOn, setIsTextOn] = useState(true);
   const [hoveredTerm, setHoveredTerm] = useState(null);
   const [isLiteEffects, setIsLiteEffects] = useState(false);
-  const lastWheelTsRef = useRef(0);
   const hoveredTermIdRef = useRef(null);
   const handleTermHover = useCallback((term) => {
     if (!term?.id) return;
@@ -123,6 +120,7 @@ const YearCalendar = () => {
     const d = new Date();
     return { year: d.getFullYear(), month: d.getMonth(), day: d.getDate() };
   }, []);
+  const year = today.year;
   const fallbackOrbTermIndex = useMemo(() => {
     const now = new Date();
     const start = new Date(now.getFullYear(), 0, 1);
@@ -135,21 +133,6 @@ const YearCalendar = () => {
     }
     return Math.max(0, TERM_LIST.findIndex((term) => term.id === active.id));
   }, []);
-  const shiftYear = (delta) => {
-    setYear((prev) => Math.max(1900, Math.min(2100, prev + delta)));
-  };
-
-  const handleYearWheel = (e) => {
-    e.preventDefault();
-
-    const now = Date.now();
-    if (now - lastWheelTsRef.current < 160) return;
-    lastWheelTsRef.current = now;
-
-    if (e.deltaY > 0) shiftYear(1);
-    else if (e.deltaY < 0) shiftYear(-1);
-  };
-
   const handleBackClick = useCallback((event) => {
     event.preventDefault();
     const idx = window.history?.state?.idx;
@@ -443,9 +426,8 @@ const YearCalendar = () => {
         <span className="year-calendar-back-link-label">Back</span>
       </Link>
       <section
-        className="year-calendar-grid is-year-scroll"
+        className="year-calendar-grid"
         aria-label={`Solar terms year calendar ${year}`}
-        onWheel={handleYearWheel}
       >
         <div className="year-calendar-home-col">
           <Link className="year-calendar-home-link-inline" to="/" aria-label="Go to landing page">
@@ -466,31 +448,25 @@ const YearCalendar = () => {
           </Link>
         </div>
         <div className="year-calendar-year-col">
-          <div className="year-calendar-year-switch-wrap" onWheel={handleYearWheel}>
-            <span className="year-calendar-year-arrow year-calendar-year-arrow-top" aria-hidden="true">↑</span>
-            <button
-              type="button"
-              className="year-calendar-year-switch"
-              onClick={() => shiftYear(1)}
-              aria-label="Scroll up and down to switch year"
-              title="Scroll up/down to change year"
-            >
-            <span className="year-calendar-title year-calendar-title-vertical">{year}</span>
-            </button>
-            <span className="year-calendar-year-arrow year-calendar-year-arrow-bottom" aria-hidden="true">↓</span>
+          <div className="year-calendar-year-switch-wrap">
+            <div className="year-calendar-year-current" aria-label={`Current year ${year}`}>
+              <span className="year-calendar-title year-calendar-title-vertical">{year}</span>
+            </div>
           </div>
         </div>
-        <div className={`year-day-stream${isLiteEffects ? ' is-lite-effects' : ''}`} role="list" style={fieldWashStyle}>
-          <div className="year-day-stream-field" aria-hidden="true">
-            {termAuraNodes.map((aura) => (
-              <span
-                key={aura.id}
-                className="year-term-aura"
-                style={aura.style}
-              ></span>
-            ))}
+        <div className="year-day-scroll">
+          <div className={`year-day-stream${isLiteEffects ? ' is-lite-effects' : ''}`} role="list" style={fieldWashStyle}>
+            <div className="year-day-stream-field" aria-hidden="true">
+              {termAuraNodes.map((aura) => (
+                <span
+                  key={aura.id}
+                  className="year-term-aura"
+                  style={aura.style}
+                ></span>
+              ))}
+            </div>
+            {dayNodes}
           </div>
-          {dayNodes}
         </div>
         <div className="year-calendar-control-col">
           <button

@@ -302,16 +302,42 @@ export class AmbientAudioEngine {
       await this.context.resume();
     }
 
+    if (!this.enabled) return;
+
     if (!this.schedulerStarted) this.startSchedulers();
 
     this.fadeOutputTo(MASTER_LEVEL, 2.8);
   }
 
-  async suspend() {
+  async suspend(options = {}) {
     if (!this.context) return;
+    const immediate = Boolean(options.immediate);
 
     this.enabled = false;
     this.stopSchedulers();
+
+    if (immediate) {
+      this.releaseAllVoices(0.02);
+
+      const now = this.context.currentTime;
+      this.masterOutput?.gain.cancelScheduledValues(now);
+      this.masterOutput?.gain.setValueAtTime(MIN_GAIN, now);
+
+      if (this.suspendTimer) {
+        window.clearTimeout(this.suspendTimer);
+        this.suspendTimer = null;
+      }
+
+      if (this.context.state === 'running') {
+        try {
+          await this.context.suspend();
+        } catch (_) {
+          // Keep the UI resilient if the runtime rejects suspension.
+        }
+      }
+      return;
+    }
+
     this.releaseAllVoices(1.4);
     this.fadeOutputTo(MIN_GAIN, 1.6);
 

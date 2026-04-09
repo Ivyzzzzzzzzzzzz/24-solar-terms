@@ -12,14 +12,6 @@ import { getCurrentTermId } from '../data';
 
 const STORAGE_KEY = '__ambient_sound_enabled__';
 
-const readStoredPreference = () => {
-  try {
-    return window.localStorage.getItem(STORAGE_KEY) === '1';
-  } catch (_) {
-    return false;
-  }
-};
-
 const writeStoredPreference = (enabled) => {
   try {
     window.localStorage.setItem(STORAGE_KEY, enabled ? '1' : '0');
@@ -36,6 +28,8 @@ export const AmbientAudioProvider = ({ children }) => {
   const gestureCleanupRef = useRef(null);
   const activeTermRef = useRef(getCurrentTermId());
   const enabledRef = useRef(false);
+  const suppressIdentityUntilRef = useRef(0);
+  const startAttemptRef = useRef(0);
 
   const [activeTermId, setActiveTermIdState] = useState(activeTermRef.current);
   const [enabled, setEnabled] = useState(false);
@@ -55,7 +49,11 @@ export const AmbientAudioProvider = ({ children }) => {
     return engineRef.current;
   }, [supported]);
 
-  const startEngine = useCallback(async () => {
+  const startEngine = useCallback(async (options = {}) => {
+    const attemptId = ++startAttemptRef.current;
+    const timeoutMs = Number.isFinite(options.timeoutMs) ? Math.max(0, options.timeoutMs) : 0;
+    const failureStatus = options.failureStatus || 'error';
+
     if (!supported) {
       setStatus('unsupported');
       return false;
@@ -67,20 +65,57 @@ export const AmbientAudioProvider = ({ children }) => {
     setStatus('starting');
 
     try {
-      await engine.start(activeTermRef.current);
+      const startPromise = engine.start(activeTermRef.current);
+
+      if (timeoutMs > 0) {
+        await new Promise((resolve, reject) => {
+          let settled = false;
+          const finish = (fn, value) => {
+            if (settled) return;
+            settled = true;
+            if (timerId) window.clearTimeout(timerId);
+            fn(value);
+          };
+
+          const timerId = window.setTimeout(() => {
+            finish(reject, new Error('start-timeout'));
+          }, timeoutMs);
+
+          startPromise
+            .then(() => finish(resolve))
+            .catch((error) => finish(reject, error));
+        });
+      } else {
+        await startPromise;
+      }
+
+      if (attemptId !== startAttemptRef.current) return enabledRef.current;
+
       enabledRef.current = true;
       setEnabled(true);
       setStatus('ready');
       return true;
     } catch (_) {
+      if (attemptId !== startAttemptRef.current || enabledRef.current) {
+        return enabledRef.current;
+      }
+
+      try {
+        await engine.suspend({ immediate: true });
+      } catch (_) {
+        // Keep startup fallback resilient if suspend is unavailable.
+      }
+
       enabledRef.current = false;
       setEnabled(false);
-      setStatus('error');
+      setStatus(failureStatus);
       return false;
     }
   }, [ensureEngine, supported]);
 
-  const stopEngine = useCallback(async () => {
+  const stopEngine = useCallback(async (options = {}) => {
+    const immediate = Boolean(options.immediate);
+    startAttemptRef.current += 1;
     clearGestureHandlers();
 
     if (!engineRef.current) {
@@ -91,7 +126,7 @@ export const AmbientAudioProvider = ({ children }) => {
     }
 
     try {
-      await engineRef.current.suspend();
+      await engineRef.current.suspend({ immediate });
     } catch (_) {
       // Keep UI responsive even if the runtime rejects audio suspension.
     }
@@ -109,10 +144,12 @@ export const AmbientAudioProvider = ({ children }) => {
 
     if (enabledRef.current) {
       writeStoredPreference(false);
-      await stopEngine();
+      await stopEngine({ immediate: true });
       return;
     }
 
+    // Avoid one-shot identity cues when the user explicitly toggles sound.
+    suppressIdentityUntilRef.current = Date.now() + 1500;
     clearGestureHandlers();
     const started = await startEngine();
     writeStoredPreference(started);
@@ -121,6 +158,7 @@ export const AmbientAudioProvider = ({ children }) => {
   const setActiveTermId = useCallback((termId, options = {}) => {
     const nextTermId = termId || getCurrentTermId();
     const shouldPlayIdentity = Boolean(options.playIdentity);
+    const allowIdentityNow = Date.now() >= suppressIdentityUntilRef.current;
     const previousTermId = activeTermRef.current;
     const didChange = previousTermId !== nextTermId;
 
@@ -129,7 +167,7 @@ export const AmbientAudioProvider = ({ children }) => {
 
     if (engineRef.current) {
       if (didChange) engineRef.current.setTerm(nextTermId);
-      if (shouldPlayIdentity) engineRef.current.playTermIdentity(nextTermId);
+      if (shouldPlayIdentity && allowIdentityNow) engineRef.current.playTermIdentity(nextTermId);
     }
   }, []);
 
@@ -150,28 +188,12 @@ export const AmbientAudioProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (!supported) return undefined;
-
-    const preferredOn = readStoredPreference();
-    if (!preferredOn) return undefined;
-
-    const handleGesture = async () => {
-      clearGestureHandlers();
-      const started = await startEngine();
-      if (!started) writeStoredPreference(false);
-    };
-
-    const detach = () => {
-      window.removeEventListener('pointerdown', handleGesture);
-      window.removeEventListener('keydown', handleGesture);
-    };
-
-    window.addEventListener('pointerdown', handleGesture, { once: true, passive: true });
-    window.addEventListener('keydown', handleGesture, { once: true });
-    gestureCleanupRef.current = detach;
-
-    return detach;
-  }, [clearGestureHandlers, startEngine, supported]);
+    clearGestureHandlers();
+    enabledRef.current = false;
+    setEnabled(false);
+    setStatus(supported ? 'idle' : 'unsupported');
+    writeStoredPreference(false);
+  }, [clearGestureHandlers, supported]);
 
   useEffect(() => () => {
     clearGestureHandlers();

@@ -2,8 +2,16 @@ html,
 body,
 #root {
   width: 100%;
-  height: 100%;
+}
+
+html,
+body {
   min-height: 100%;
+}
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 body {
@@ -14,8 +22,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: auto;
   overscroll-behavior-y: none;
+}
+
+body.landing-no-scroll {
+  overflow: hidden;
 }
 
 code {

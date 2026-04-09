@@ -7,10 +7,13 @@ const TermCenterPanels = ({
   onContentMouseEnter,
   onContentMouseLeave
 }) => {
+  const preventWidow = (text = '') => {
+    const normalized = String(text).trim().replace(/\s+/g, ' ');
+    return normalized.replace(/\s+([^\s]+)\s*$/, '\u00A0$1');
+  };
+
   const getPhaseHoverText = (phase) => {
-    const text = phase?.en || '';
-    const splitIndex = text.indexOf(':');
-    return splitIndex >= 0 ? text.slice(splitIndex + 1).trim() : text;
+    return preventWidow(phase?.en || '');
   };
 
   const panelHoverProps = {
@@ -48,33 +51,18 @@ const TermCenterPanels = ({
         aria-hidden={activeMenu !== 'phases'}
         {...panelHoverProps}
       >
-        {phaseRows[0] && (
-          <>
-            <div className="term-phases-row term-phases-row-1">
-              <div className="term-phases-row-inner">
-                <div className="term-phases-zh">{phaseRows[0].zh}</div>
-                <div className="term-phases-en">{phaseRows[0].en}</div>
-              </div>
+        {phaseRows.slice(0, 3).map((phase, index) => (
+          <div
+            key={`phase-row-${index}`}
+            className={`term-phases-row term-phases-row-${index + 1}`}
+            tabIndex={0}
+          >
+            <div className="term-phases-row-inner">
+              <div className="term-phases-zh">{phase.zh}</div>
             </div>
-            <div className="term-phases-note">{content.phasesNote || ''}</div>
-          </>
-        )}
-
-        {phaseRows[1] && (
-          <div className="term-phases-row term-phases-row-2" tabIndex={0}>
-            <div className="term-phases-en">{phaseRows[1].en}</div>
-            <div className="term-phases-zh">{phaseRows[1].zh}</div>
-            <div className="term-phases-hover-note">{getPhaseHoverText(phaseRows[1])}</div>
+            <div className="term-phases-hover-note">{getPhaseHoverText(phase)}</div>
           </div>
-        )}
-
-        {phaseRows[2] && (
-          <div className="term-phases-row term-phases-row-3" tabIndex={0}>
-            <div className="term-phases-zh">{phaseRows[2].zh}</div>
-            <div className="term-phases-en">{phaseRows[2].en}</div>
-            <div className="term-phases-hover-note">{getPhaseHoverText(phaseRows[2])}</div>
-          </div>
-        )}
+        ))}
       </div>
 
       <div

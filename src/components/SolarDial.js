@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TERM_LIST, HOU_MAP, TERM_COLORS } from '../data';
+import { TERM_LIST, HOU_MAP_LANDING, TERM_COLORS } from '../data';
 import './SolarDial.css';
 
 const SolarDial = ({ onTermChange }) => {
@@ -176,6 +176,18 @@ const SolarDial = ({ onTermChange }) => {
       `A ${rInner} ${rInner} 0 ${large} 0 ${x3.toFixed(2)} ${y3.toFixed(2)}`,
       'Z'
     ].join(' ');
+  };
+
+  const arcPathFromAngles = (cx, cy, r, startDeg, endDeg) => {
+    const startRad = (startDeg - 90) * Math.PI / 180;
+    const endRad = (endDeg - 90) * Math.PI / 180;
+    const x0 = cx + Math.cos(startRad) * r;
+    const y0 = cy + Math.sin(startRad) * r;
+    const x1 = cx + Math.cos(endRad) * r;
+    const y1 = cy + Math.sin(endRad) * r;
+    const span = ((endDeg - startDeg) % 360 + 360) % 360;
+    const largeArc = span > 180 ? 1 : 0;
+    return `M ${x0.toFixed(2)} ${y0.toFixed(2)} A ${r} ${r} 0 ${largeArc} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
   };
 
   const angleFromPointer = (evt) => {
@@ -495,6 +507,13 @@ const SolarDial = ({ onTermChange }) => {
   const yearBoxProgressEnd = -90 + (yearRingProgress * 360);
   const yearBoxProgressPath = annularGuidePath(200, 200, 98, 86, -90, yearBoxProgressEnd);
   const outerSnapGuidePath = annularGuidePath(200, 200, 186, 166, -10.5, 10.5);
+  const houCenterAngles = [270, 30, 150];
+  const houArcSpan = 104;
+  const houTextPaths = houCenterAngles.map((centerDeg) => {
+    const startDeg = centerDeg - (houArcSpan / 2);
+    const endDeg = centerDeg + (houArcSpan / 2);
+    return arcPathFromAngles(200, 200, 150, startDeg, endDeg);
+  });
   const enWords = (term?.en || 'Winter Solstice').split(/\s+/);
   const enStartY = -24 - (Math.max(1, enWords.length) - 1) * 5.5;
   const centerLabel = term?.en ? `Open ${term.en}` : 'Open term details';
@@ -575,6 +594,9 @@ const SolarDial = ({ onTermChange }) => {
           <path id="pDate" d="M 200 72  A 128 128 0 1 1 199.9 72" fill="none" />
           <path id="pLon" d="M 292 200 A 92 92 0 1 1 108 200 A 92 92 0 1 1 292 200" fill="none" />
           <path id="pDayN" d="M 350 200 A 150 150 0 1 1 50 200 A 150 150 0 1 1 350 200" fill="none" />
+          <path id="pHou1" d={houTextPaths[0]} fill="none" />
+          <path id="pHou2" d={houTextPaths[1]} fill="none" />
+          <path id="pHou3" d={houTextPaths[2]} fill="none" />
         </defs>
 
         <circle cx="200" cy="200" r="170" className="dial-halo" filter="url(#dialBlur)" />
@@ -697,18 +719,18 @@ const SolarDial = ({ onTermChange }) => {
           <circle cx="200" cy="200" r="150" className="dial-hit dial-hit-hou" />
 
           <text className="dial-text en dial-text-daynight dial-text-hou">
-            <textPath href="#pDayN" startOffset="75%" textAnchor="middle" id="dialHou1">
-              {HOU_MAP[term?.id]?.[0]?.replace(' — ', ' / ') || `Hou 1`}
+            <textPath href="#pHou1" startOffset="50%" textAnchor="middle" id="dialHou1">
+              {HOU_MAP_LANDING[term?.id]?.[0]?.replace(' — ', ' / ') || `Hou 1`}
             </textPath>
           </text>
           <text className="dial-text en dial-text-daynight dial-text-hou">
-            <textPath href="#pDayN" startOffset="8.3%" textAnchor="middle" id="dialHou2">
-              {HOU_MAP[term?.id]?.[1]?.replace(' — ', ' / ') || `Hou 2`}
+            <textPath href="#pHou2" startOffset="50%" textAnchor="middle" id="dialHou2">
+              {HOU_MAP_LANDING[term?.id]?.[1]?.replace(' — ', ' / ') || `Hou 2`}
             </textPath>
           </text>
           <text className="dial-text en dial-text-daynight dial-text-hou">
-            <textPath href="#pDayN" startOffset="41.6%" textAnchor="middle" id="dialHou3">
-              {HOU_MAP[term?.id]?.[2]?.replace(' — ', ' / ') || `Hou 3`}
+            <textPath href="#pHou3" startOffset="50%" textAnchor="middle" id="dialHou3">
+              {HOU_MAP_LANDING[term?.id]?.[2]?.replace(' — ', ' / ') || `Hou 3`}
             </textPath>
           </text>
         </g>

@@ -1,31 +1,49 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAmbientAudio } from '../audio/AmbientAudioProvider';
 import { P5Wrapper, SolarDial } from '../components';
 import { getCurrentTermId } from '../data';
 import './Landing.css';
 
-const HANZI_DIGITS = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+const LUNAR_DAY_LABELS = [
+  '',
+  '初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十',
+  '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
+  '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'
+];
 
-const toHanziNumber = (value) => {
-  if (value <= 10) return value === 10 ? '十' : HANZI_DIGITS[value];
-  if (value < 20) return `十${HANZI_DIGITS[value - 10]}`;
-  const tens = Math.floor(value / 10);
-  const ones = value % 10;
-  return `${HANZI_DIGITS[tens]}十${ones ? HANZI_DIGITS[ones] : ''}`;
-};
+function formatLunarDateZh(date) {
+  try {
+    const fmt = new Intl.DateTimeFormat('zh-CN-u-ca-chinese', {
+      month: 'long',
+      day: 'numeric'
+    });
+    const parts = fmt.formatToParts(date);
+    const monthRaw = (parts.find((p) => p.type === 'month')?.value || '').replace(/\s+/g, '');
+    const dayRaw = parts.find((p) => p.type === 'day')?.value || '';
+    const dayNum = Number.parseInt(dayRaw, 10);
+    const monthLabel = monthRaw && monthRaw.includes('月') ? monthRaw : `${monthRaw}月`;
+    const dayLabel = Number.isFinite(dayNum) && dayNum >= 1 && dayNum <= 30 ? LUNAR_DAY_LABELS[dayNum] : '';
+
+    if (monthLabel && dayLabel) return `${monthLabel}${dayLabel}`;
+  } catch (_) {
+    // no-op: fallback below
+  }
+
+  return `${date.getMonth() + 1}月${date.getDate()}日`;
+}
 
 const Landing = () => {
   const { previewTermId, setActiveTermId } = useAmbientAudio();
-  const displayYear = useMemo(() => new Date().getFullYear(), []);
+  const [today, setToday] = useState(() => new Date());
+  const displayYear = useMemo(() => today.getFullYear(), [today]);
   const todayLabels = useMemo(() => {
-    const now = new Date();
-    const monthNames = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
+    const monthShortEn = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return {
-      dateEn: `${monthNames[now.getMonth()]} ${now.getDate()}`,
-      dateZh: `${toHanziNumber(now.getMonth() + 1)}月${toHanziNumber(now.getDate())}日`
+      dateEn: `${monthShortEn[today.getMonth()]}. ${today.getDate()}`,
+      dateZh: formatLunarDateZh(today)
     };
-  }, []);
+  }, [today]);
   const handleTermChange = useCallback((term, _termIndex, meta = {}) => {
     if (!term?.id) return;
     if (meta.isDragging) {
@@ -39,8 +57,34 @@ const Landing = () => {
   }, [previewTermId, setActiveTermId]);
 
   useEffect(() => {
-    setActiveTermId(getCurrentTermId());
+    const currentTermId = getCurrentTermId();
+    setActiveTermId(currentTermId);
   }, [setActiveTermId]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const timerId = window.setInterval(() => {
+      setToday(new Date());
+    }, 60000);
+
+    return () => {
+      window.clearInterval(timerId);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return undefined;
+    document.body.classList.add('landing-no-scroll');
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }
+    return () => {
+      document.body.classList.remove('landing-no-scroll');
+    };
+  }, []);
 
   return (
     <div className="landing-page">

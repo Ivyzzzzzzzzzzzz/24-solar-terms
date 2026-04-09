@@ -283,10 +283,6 @@
   opacity: 1;
 }
 
-.year-calendar-grid.is-year-scroll {
-  cursor: ns-resize;
-}
-
 .year-calendar-home-col {
   min-height: 100%;
   display: flex;
@@ -959,9 +955,8 @@
   letter-spacing: 0.02em;
 }
 
-.year-calendar-year-switch {
-  appearance: none;
-  border: 1px solid rgba(20, 18, 16, 0.38);
+.year-calendar-year-current {
+  border: 1px solid transparent;
   background: transparent;
   width: 28px;
   min-height: 72px;
@@ -970,20 +965,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: background-color 180ms ease, border-color 180ms ease;
-}
-
-.year-calendar-year-switch:hover,
-.year-calendar-year-switch:focus-visible {
-  background: rgba(255, 255, 255, 0.95);
-  border-color: rgba(20, 18, 16, 0.58);
-}
-
-.year-calendar-year-arrow {
-  font-size: 16px;
-  line-height: 1;
-  color: rgba(20, 18, 16, 0.64);
+  cursor: default;
 }
 
 .year-calendar-title-vertical {
@@ -1042,6 +1024,11 @@
   text-decoration: line-through;
   text-decoration-thickness: 1px;
   text-decoration-color: rgba(20, 18, 16, 0.72);
+}
+
+.year-day-scroll {
+  position: relative;
+  overflow: visible;
 }
 
 .year-day-stream {
@@ -1307,6 +1294,18 @@
   color: color-mix(in srgb, var(--year-term-text, rgba(20, 18, 16, 0.72)) 58%, rgba(255, 255, 255, 1) 42%);
 }
 
+@media (max-height: 900px) {
+  .year-day-scroll {
+    max-height: calc(100dvh - 152px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 4px;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-gutter: stable;
+  }
+}
+
 @media (max-width: 560px) {
   .year-calendar-page {
     --cols: 22;
@@ -1327,7 +1326,7 @@
     column-gap: 16px;
   }
 
-  .year-calendar-year-switch {
+  .year-calendar-year-current {
     width: 22px;
     min-height: 64px;
   }
@@ -1358,5 +1357,9 @@
 
   .year-day-stream {
     width: min(94vw, calc(980px * var(--grid-scale)));
+  }
+
+  .year-day-scroll {
+    max-height: calc(100dvh - 112px);
   }
 }

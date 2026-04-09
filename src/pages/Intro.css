@@ -1,8 +1,10 @@
 .intro-page {
   min-height: 100vh;
+  min-height: 100dvh;
   --landing-pad-top: 96px;
   --landing-pad-x: 136px;
-  padding: var(--landing-pad-top) var(--landing-pad-x);
+  --intro-corner-size: 108px;
+  padding: max(var(--landing-pad-top), calc(var(--intro-corner-size) - 8px)) var(--landing-pad-x) 56px;
   background: transparent;
   color: rgba(20, 18, 16, 0.9);
   position: relative;
@@ -14,8 +16,8 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 108px;
-  height: 108px;
+  width: var(--intro-corner-size);
+  height: var(--intro-corner-size);
   background: #ffffff;
   clip-path: polygon(0 0, 100% 0, 0 100%);
   border-right: 1px solid rgba(84, 80, 76, 0.12);
@@ -37,8 +39,8 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 108px;
-  height: 108px;
+  width: var(--intro-corner-size);
+  height: var(--intro-corner-size);
   z-index: 6;
   display: block;
   text-decoration: none;
@@ -46,11 +48,11 @@
 
 .intro-back-label {
   position: absolute;
-  top: 42px;
-  left: 18px;
+  top: calc(var(--intro-corner-size) * 0.39);
+  left: calc(var(--intro-corner-size) * 0.17);
   display: inline-block;
   font-family: "Roboto Mono", "Roboto Mono Regular", monospace;
-  font-size: 12px;
+  font-size: clamp(10px, 1vw, 12px);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: rgba(84, 80, 76, 0.9);
@@ -71,22 +73,22 @@
 
 .intro-title-zh {
   font-family: "FZZJ-YZDKJW", "FZZJ-YZDKJW-Regular", "FZFangSong-Z02S", "FangSong", "Songti SC", serif;
-  font-size: 28px;
-  letter-spacing: 0.2em;
+  font-size: clamp(20px, 2.4vw, 28px);
+  letter-spacing: clamp(0.1em, 0.2vw, 0.2em);
 }
 
 .intro-title-en {
   font-family: "Stoke", "Stoke-Light", Helvetica, sans-serif;
-  font-size: 16px;
-  letter-spacing: 0.28em;
+  font-size: clamp(12px, 1.4vw, 16px);
+  letter-spacing: clamp(0.16em, 0.22vw, 0.28em);
   color: rgba(84, 80, 76, 0.85);
   margin-top: 6px;
 }
 
 .intro-content {
   margin: clamp(36px, 9vh, 92px) auto 0;
-  width: min(74vw, 640px);
-  max-height: min(54vh, 364px);
+  width: min(74vw, 680px);
+  max-height: min(56vh, 420px);
   padding: 22px 26px 26px;
   overflow-y: auto;
   /* border: 1px solid rgba(84, 80, 76, 0.22); */
@@ -95,12 +97,43 @@
   background: color-mix(in srgb, var(--term-bg-color, rgb(246, 241, 234)) 76%, rgba(255, 255, 255, 0.24));
   box-shadow: 0 10px 24px rgba(20, 18, 16, 0.08); */
   font-family: "Stoke", "Stoke-Light", Helvetica, sans-serif;
-  font-size: 12pt;
+  font-size: clamp(11pt, 1.22vw, 12pt);
   line-height: 1.8;
   position: relative;
   z-index: 2;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  --intro-content-fade-start: 80%;
+  --intro-content-fade-end: 100%;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) var(--intro-content-fade-start),
+    rgba(0, 0, 0, 0) var(--intro-content-fade-end)
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) var(--intro-content-fade-start),
+    rgba(0, 0, 0, 0) var(--intro-content-fade-end)
+  );
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+@media (min-width: 861px) {
+  .intro-header {
+    position: absolute;
+    top: max(var(--landing-pad-top), calc(var(--intro-corner-size) - 8px));
+    left: var(--landing-pad-x);
+    right: var(--landing-pad-x);
+  }
+
+  .intro-content {
+    margin-top: 40px;
+  }
 }
 
 .intro-content::-webkit-scrollbar {
@@ -131,7 +164,9 @@
 
 @media (max-width: 860px) {
   .intro-page {
-    padding: 56px 32px;
+    --landing-pad-top: 56px;
+    --landing-pad-x: 32px;
+    --intro-corner-size: 96px;
   }
 
   .intro-header {
@@ -146,10 +181,42 @@
 
   .intro-content {
     width: min(100%, 680px);
-    margin-top: 28px;
+    margin-top: 40px;
     max-height: min(58vh, 480px);
     padding: 18px 18px 22px;
     font-size: 11.5pt;
     line-height: 1.75;
+  }
+}
+
+@media (max-width: 560px) {
+  .intro-page {
+    --landing-pad-top: max(18px, env(safe-area-inset-top));
+    --landing-pad-x: 14px;
+    --intro-corner-size: 82px;
+    padding-bottom: 18px;
+  }
+
+  .intro-header {
+    gap: 14px;
+  }
+
+  .intro-content {
+    margin-top: 30px;
+    max-height: min(58dvh, 460px);
+    padding: 14px 14px 18px;
+    font-size: 11pt;
+    line-height: 1.68;
+  }
+}
+
+@media (max-width: 420px) {
+  .intro-page {
+    --intro-corner-size: 72px;
+  }
+
+  .intro-content {
+    max-height: min(60dvh, 480px);
+    padding: 12px 12px 16px;
   }
 }

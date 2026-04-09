@@ -5,7 +5,6 @@ import { getCurrentTermId } from '../data';
 import {
   claimTermBackgroundOwner,
   ensureTermBackgroundScript,
-  isTermBackgroundOwnerActive,
   leaveTermBackgroundPointer,
   moveTermBackgroundPointer,
   pressTermBackgroundPointer,
@@ -15,6 +14,7 @@ import {
 import './Intro.css';
 
 const SEASON_LOOP_DURATION_MS = 60000;
+const LOOP_ENSURE_INTERVAL_MS = 320;
 
 const Intro = () => {
   const navigate = useNavigate();
@@ -31,17 +31,25 @@ const Intro = () => {
   useEffect(() => {
     let alive = true;
     const owner = claimTermBackgroundOwner(backgroundOwnerRef.current);
-    const restartTimers = [];
+    let lastLoopEnsureAt = 0;
+    const ensureSeasonLoopActive = (force = false) => {
+      const now = (typeof performance !== 'undefined' && typeof performance.now === 'function')
+        ? performance.now()
+        : Date.now();
+      if (!force && now - lastLoopEnsureAt < LOOP_ENSURE_INTERVAL_MS) return;
+      lastLoopEnsureAt = now;
+      claimTermBackgroundOwner(owner);
+      startTermBackgroundSeasonLoop({ durationMs: SEASON_LOOP_DURATION_MS });
+    };
     const handlePointerMove = (event) => {
-      if (!isTermBackgroundOwnerActive(owner)) return;
+      ensureSeasonLoopActive();
       moveTermBackgroundPointer({ x: event.clientX, y: event.clientY });
     };
     const handlePointerDown = (event) => {
-      if (!isTermBackgroundOwnerActive(owner)) return;
+      ensureSeasonLoopActive(true);
       pressTermBackgroundPointer({ x: event.clientX, y: event.clientY });
     };
     const handlePointerLeave = () => {
-      if (!isTermBackgroundOwnerActive(owner)) return;
       leaveTermBackgroundPointer();
     };
 
@@ -51,22 +59,13 @@ const Intro = () => {
 
     ensureTermBackgroundScript()
       .then(() => {
-        if (!alive || !isTermBackgroundOwnerActive(owner)) return;
-        startTermBackgroundSeasonLoop({ durationMs: SEASON_LOOP_DURATION_MS, forceRecreate: true });
-        restartTimers.push(window.setTimeout(() => {
-          if (!alive || !isTermBackgroundOwnerActive(owner)) return;
-          startTermBackgroundSeasonLoop({ durationMs: SEASON_LOOP_DURATION_MS });
-        }, 120));
-        restartTimers.push(window.setTimeout(() => {
-          if (!alive || !isTermBackgroundOwnerActive(owner)) return;
-          startTermBackgroundSeasonLoop({ durationMs: SEASON_LOOP_DURATION_MS });
-        }, 420));
+        if (!alive) return;
+        ensureSeasonLoopActive(true);
       })
       .catch(() => {});
 
     return () => {
       alive = false;
-      restartTimers.forEach((timerId) => window.clearTimeout(timerId));
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('pointerdown', handlePointerDown);
       window.removeEventListener('blur', handlePointerLeave);

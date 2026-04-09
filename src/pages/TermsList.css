@@ -1,26 +1,80 @@
 /* Terms list page */
+.terms-page {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+.terms-header {
+    position: sticky;
+    top: 0;
+    z-index: 4;
+}
+
+.terms-main {
+    width: min(1100px, 100%);
+    margin: 0 auto;
+    padding: 40px 28px 56px;
+    flex: 1 0 auto;
+}
+
+.terms-title {
+    font-family: "Stoke", "Stoke-Light", Helvetica, sans-serif;
+    font-size: clamp(22px, 3.2vw, 34px);
+    line-height: 1.2;
+    margin: 0;
+}
+
+.terms-subtitle {
+    margin-top: 10px;
+    margin-bottom: clamp(16px, 3vw, 22px);
+    color: rgba(27, 27, 27, 0.76);
+}
+
 .terms-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1rem;
+    gap: clamp(10px, 1.8vw, 16px);
 }
 
 .term-card {
     display: block;
-    padding: 1rem;
+    padding: clamp(12px, 1.8vw, 16px);
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 12px;
     background: #fdfbf4;
     text-decoration: none;
     color: #1b1b1b;
+    transition: border-color 160ms ease, transform 160ms ease;
 }
 
 .term-card:hover {
     border-color: rgba(0, 0, 0, 0.18);
+    transform: translateY(-1px);
 }
 
 .term-card-summary {
     margin-top: 6px;
     font-size: 13px;
     color: #555;
+}
+
+.terms-footer {
+    flex: 0 0 auto;
+}
+
+@media (max-width: 680px) {
+    .terms-main {
+        padding: 24px 16px 36px;
+    }
+
+    .terms-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .terms-header {
+        position: static;
+    }
 }

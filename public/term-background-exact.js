@@ -375,7 +375,7 @@ function createIntroSeasonTheme(progress) {
     //   frostAlphaMax: 0
     // },
     {
-      at: 0.4,
+      at: 0.2,
       name: 'summer',
       bg: { r: 241, g: 238, b: 224 },
       grassCol: '#2f7f35',
@@ -421,7 +421,7 @@ function createIntroSeasonTheme(progress) {
       frostAlphaMax: 0
     },
     {
-      at: 0.65,
+      at: 0.7,
       name: 'autumn',
       bg: { r: 238, g: 228, b: 210 },
       grassCol: '#8e640f',
@@ -467,7 +467,7 @@ function createIntroSeasonTheme(progress) {
       frostAlphaMax: 8
     },
     {
-      at: 0.79,
+      at: 0.90,
       name: 'winter',
       bg: { r: 247, g: 246, b: 243 },
       grassCol: '#c5c8bd',
@@ -1059,9 +1059,12 @@ function handlePointerDown(event) {
 }
 
 function handlePointerReset() {
+  POINTER.hasPoint = false;
   POINTER.speed = 0;
   POINTER.energy = 0;
   POINTER.active = false;
+  POINTER.lastMoveAt = 0;
+  POINTER.lastSampleAt = 0;
 }
 
 function bindPointerInteractions() {
@@ -1557,6 +1560,14 @@ function initWindSystem() {
 }
 
 function startSeasonLoop(durationMs = 160000, forceRecreate = false) {
+  const previousMode = BACKGROUND_MODE;
+  const wasIntroLoopActive =
+    previousMode === 'season-loop' &&
+    p5Ready &&
+    ACTIVE_THEME === 'intro-season-loop' &&
+    Number.isFinite(seasonLoopStartMs) &&
+    seasonLoopStartMs > 0;
+
   BACKGROUND_MODE = 'season-loop';
   seasonLoopDurationMs = durationMs;
 
@@ -1573,6 +1584,14 @@ function startSeasonLoop(durationMs = 160000, forceRecreate = false) {
   if (!p5Ready || typeof width === 'undefined' || typeof height === 'undefined') {
     pendingMode = 'season-loop';
     pendingThemeKey = null;
+    return;
+  }
+
+  if (wasIntroLoopActive && !forceRecreate) {
+    // Keep the current intro loop state when redundant start calls arrive
+    // (e.g. StrictMode/dev mount replay), so we avoid visible startup jumps.
+    syncTermBgCanvasMount();
+    bindPointerInteractions();
     return;
   }
 

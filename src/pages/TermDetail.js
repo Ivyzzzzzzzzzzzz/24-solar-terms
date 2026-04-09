@@ -19,100 +19,100 @@ const MENU_ITEMS = [
 
 const SOLAR_PANEL_COPY = {
   lichun: {
-    en: 'Sun begins its northward return. Shadows still long.',
-    zh: '太阳开始北归，影子仍然修长。'
+    en: 'As the sun climbs higher, shadows begin to shorten.',
+    zh: '日升影渐短'
   },
   yushui: {
-    en: 'The Sun climbs slightly higher. Shadows begin to soften.',
-    zh: '太阳略升，影子开始收敛。'
+    en: 'With the sun rising further, shadows continue to shorten.',
+    zh: '日高影续短'
   },
   jingzhe: {
-    en: 'Light gains strength. Shadows shorten quietly.',
-    zh: '光渐有力，影子悄然变短。'
+    en: 'As the sun advances, the shadow draws in further.',
+    zh: '日进影更收'
   },
   chunfen: {
-    en: 'Day and night balance. Shadow rests at mid-length.',
-    zh: '昼夜平分，影子长短适中。'
+    en: 'At the equinox, shadow and sunlight move toward balance.',
+    zh: '日中影近平'
   },
   qingming: {
-    en: 'The Sun rises clear and bright. Shadow grows lighter.',
-    zh: '阳光清朗，影子愈发轻盈。'
+    en: 'With a higher sun, shadows appear clearer and shorter.',
+    zh: '日高影清短'
   },
   guyu: {
-    en: 'Light deepens toward summer. Shadows continue to contract.',
-    zh: '阳气渐盛，影子继续收短。'
+    en: 'As the sun continues forward, shadows tighten slightly.',
+    zh: '日进影微收'
   },
   lixia: {
-    en: 'The Sun stands higher each day. Shadow pulls inward.',
-    zh: '太阳日高，影子内收。'
+    en: 'As solar height increases, shadows grow shorter.',
+    zh: '日盛影渐短'
   },
   xiaoman: {
-    en: 'Light approaches fullness. Shadow grows compact.',
-    zh: '光近盈满，影子紧致。'
+    en: 'The higher sun makes the noon shadow compact.',
+    zh: '日高中影实'
   },
   mangzhong: {
-    en: 'Sunlight sharpens at noon. Shadow becomes brief.',
-    zh: '正午日烈，影子更短。'
+    en: 'A stronger overhead sun produces a short, sharp shadow.',
+    zh: '日强影短锐'
   },
   xiazhi: {
-    en: 'The Sun reaches its highest point. The shortest shadow of the year.',
-    zh: '太阳至高，全年最短的影子。'
+    en: 'At the solstice, the shadow reaches its shortest length.',
+    zh: '日极影最短'
   },
   xiaoshu: {
-    en: 'The Sun begins its slow descent. Shadow lengthens slightly.',
-    zh: '太阳微降，影子略长。'
+    en: 'As the sun begins to withdraw, shadows lengthen slightly.',
+    zh: '日退影微长'
   },
   dashu: {
-    en: 'Light remains strong. Shadow holds its shortness.',
-    zh: '光仍炽盛，影子依旧短促。'
+    en: 'As the sun shifts away, shadows begin to grow again.',
+    zh: '日移影稍长'
   },
   liqiu: {
-    en: 'The Sun lowers toward autumn. Shadow grows noticeable.',
-    zh: '太阳渐低，影子渐显。'
+    en: 'With the sun lowering, shadows turn longer.',
+    zh: '日退影转长'
   },
   chushu: {
-    en: 'Heat recedes. Shadow stretches a little farther.',
-    zh: '暑气退去，影子稍长。'
+    en: 'As solar altitude drops, shadows continue to lengthen.',
+    zh: '日降影渐长'
   },
   bailu: {
-    en: 'Light cools. Shadow lengthens with clarity.',
-    zh: '光色转凉，影子愈发分明。'
+    en: 'With a lower sun angle, morning shadows grow long.',
+    zh: '日斜晨影长'
   },
   qiufen: {
-    en: 'Balance returns. Shadow rests at mid-length again.',
-    zh: '昼夜再平，影子再次适中。'
+    en: 'At the equinox, shadow and sunlight return to balance.',
+    zh: '日中影复平'
   },
   hanlu: {
-    en: 'The Sun drops lower. Shadow grows longer.',
-    zh: '太阳渐低，影子渐长。'
+    en: 'A lower sun creates a clearer, longer shadow.',
+    zh: '日低影清长'
   },
   shuangjiang: {
-    en: 'Light thins. Shadow extends across the ground.',
-    zh: '阳光渐薄，影子铺展。'
+    en: 'As the sun slants further, shadows lengthen more.',
+    zh: '日斜影更长'
   },
   lidong: {
-    en: 'The Sun descends toward winter. Shadow stretches outward.',
-    zh: '太阳入冬，影子延伸。'
+    en: 'A lower seasonal sun makes shadows noticeably longer.',
+    zh: '日低影明显长'
   },
   xiaoxue: {
-    en: 'Light weakens. Shadow becomes pronounced.',
-    zh: '光势减弱，影子更加明显。'
+    en: 'As the sun weakens, the shadow extends outward.',
+    zh: '日弱影延伸'
   },
   daxue: {
-    en: 'The Sun stands low at noon. Shadow grows long and sharp.',
-    zh: '正午日低，影子修长而清晰。'
+    en: 'The low sun produces a long, distinct shadow.',
+    zh: '日低影长清'
   },
   dongzhi: {
-    en: 'The Sun reaches its lowest height. The longest shadow of the year.',
-    zh: '太阳至低，全年最长的影子。'
+    en: 'At the solstice, the shadow reaches its greatest length.',
+    zh: '日极影最长'
   },
   xiaohan: {
-    en: 'Light slowly begins to return. Shadow remains long.',
-    zh: '阳气初回，影子仍长。'
+    en: 'As the sun returns, shadows begin to draw back.',
+    zh: '日回影微收'
   },
   dahan: {
-    en: 'The Sun prepares to rise again. Shadow at its winter depth.',
-    zh: '太阳将升，影子仍在冬的深处。'
+    en: 'With the sun rising again, shadows shorten slightly.',
+    zh: '日升影稍短'
   }
 };
 
@@ -231,8 +231,11 @@ const TermDetail = () => {
   const [isContentHover, setIsContentHover] = useState(false);
   const [isMenuRingHover, setIsMenuRingHover] = useState(false);
   const [isTermNavHover, setIsTermNavHover] = useState(false);
+  const [isSolarPanelHover, setIsSolarPanelHover] = useState(false);
   const [navPulseOn, setNavPulseOn] = useState(false);
   const [solarPanelCopyHeight, setSolarPanelCopyHeight] = useState(null);
+  const [solarCaptionLang, setSolarCaptionLang] = useState('en');
+  const [isWindowedHeight, setIsWindowedHeight] = useState(false);
   const isMenuAutoAdvancePausedRef = useRef(false);
   const navWheelTsRef = useRef(0);
   const navWheelAccumRef = useRef(0);
@@ -398,13 +401,53 @@ const TermDetail = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const updateWindowedHeightState = () => {
+      const viewportHeight = window.innerHeight || 0;
+      const fullscreenHeight = window.screen?.availHeight || viewportHeight;
+      const isDesktopViewport = window.innerWidth > 760;
+      setIsWindowedHeight(isDesktopViewport && viewportHeight < (fullscreenHeight - 2));
+    };
+
+    updateWindowedHeightState();
+    window.addEventListener('resize', updateWindowedHeightState);
+    return () => window.removeEventListener('resize', updateWindowedHeightState);
+  }, []);
+
+  useEffect(() => {
+    if (typeof document === 'undefined' || !document.body) return undefined;
+    const hoverClass = 'term-solar-panel-hovering';
+    if (isSolarPanelHover) {
+      document.body.classList.add(hoverClass);
+    } else {
+      document.body.classList.remove(hoverClass);
+    }
+
+    return () => {
+      document.body.classList.remove(hoverClass);
+    };
+  }, [isSolarPanelHover]);
+
   if (!term) return <div>Loading...</div>;
 
   const hou = HOU_MAP[term.id] || [];
   const content = TERM_CONTENT_MAP[term.id] || TERM_CONTENT_MAP.default;
-  const phaseRows = content.phasesRows || hou.slice(0, 3).map((phase) => {
-    const parts = phase.split(' — ');
-    return { zh: `${parts[0] || ''} /`, en: parts[1] || '' };
+  const rawPhaseRows = (hou && hou.length ? hou.slice(0, 3) : (content.phasesRows || []));
+  const phaseRows = rawPhaseRows.map((phase) => {
+    if (typeof phase === 'string') {
+      const [zhPart, ...enParts] = phase.split(' — ');
+      return {
+        zh: (zhPart || '').trim(),
+        en: enParts.join(' — ').trim()
+      };
+    }
+
+    return {
+      zh: String(phase?.zh || '').replace(/\s*\/\s*$/, '').trim(),
+      en: String(phase?.en || '').trim()
+    };
   });
 
   const normalizedRotation = ((menuRotation % 360) + 360) % 360;
@@ -458,15 +501,14 @@ const TermDetail = () => {
   };
 
   const handleTermNavWheel = (e) => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 760) return;
     e.preventDefault();
-
-    const axisDelta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-    if (Math.abs(axisDelta) < 0.6) return;
+    if (Math.abs(e.deltaY) < 0.6) return;
 
     const now = Date.now();
     if (now < navWheelTsRef.current) return;
 
-    navWheelAccumRef.current += axisDelta;
+    navWheelAccumRef.current += e.deltaY;
     if (navWheelResetTimerRef.current) window.clearTimeout(navWheelResetTimerRef.current);
     navWheelResetTimerRef.current = window.setTimeout(() => {
       navWheelAccumRef.current = 0;
@@ -504,8 +546,9 @@ const TermDetail = () => {
 
   return (
     <div
-      className="term-page"
+      className={`term-page${isWindowedHeight ? ' is-windowed-height' : ''}${isSolarPanelHover ? ' is-solar-panel-hover' : ''}`}
       style={{ '--term-detail-outline-color': termBaseColor }}
+      onWheel={handleTermNavWheel}
     >
       <TermBackground termId={term.id} />
         <div className="frame term-frame">
@@ -547,7 +590,6 @@ const TermDetail = () => {
             aria-label="Term navigator"
             onMouseEnter={() => setIsTermNavHover(true)}
             onMouseLeave={() => setIsTermNavHover(false)}
-            onWheel={handleTermNavWheel}
             onKeyDown={handleTermNavKeyDown}
           >
             <div className="term-term-nav-visual" aria-hidden="true">
@@ -584,12 +626,12 @@ const TermDetail = () => {
             </div>
 
             <div className="term-term-nav-pop" aria-hidden={!isTermNavHover}>
-              <div className="term-term-nav-pop-title">Solar Longitude</div>
-              <div className="term-term-nav-pop-value">{Number(term.solarLon || 0).toFixed(0)}° · {term.zh}</div>
-              <div className="term-term-nav-pop-hint">Scroll horizontally to see other terms</div>
-              <div className="term-term-nav-pop-next">Next: {nextTerm?.zh || ''} ({Number(nextTerm?.solarLon || 0).toFixed(0)}°)</div>
-            </div>
+            <div className="term-term-nav-pop-title">Solar Longitude</div>
+            <div className="term-term-nav-pop-value">{Number(term.solarLon || 0).toFixed(0)}° · {term.zh}</div>
+            <div className="term-term-nav-pop-hint">Scroll to switch term</div>
+            <div className="term-term-nav-pop-next">Next: {nextTerm?.zh || ''} ({Number(nextTerm?.solarLon || 0).toFixed(0)}°)</div>
           </div>
+        </div>
         </div>
 
         <Link className="term-grid-link" to="/calendar" aria-label="Year calendar grid">
@@ -597,15 +639,23 @@ const TermDetail = () => {
         </Link>
 
         <div className={`term-solar-panel-wrap${isTermNavHover ? ' is-hover' : ''}`}>
+          <div
+            className="term-solar-panel-hover-zone"
+            onMouseEnter={() => {
+              setIsTermNavHover(true);
+              setIsSolarPanelHover(true);
+            }}
+            onMouseLeave={() => {
+              setIsTermNavHover(false);
+              setIsSolarPanelHover(false);
+            }}
+          >
           <aside
             className="term-solar-panel"
             role="button"
             tabIndex={0}
             aria-label="Term navigator panel"
             style={solarPanelStyle}
-            onMouseEnter={() => setIsTermNavHover(true)}
-            onMouseLeave={() => setIsTermNavHover(false)}
-            onWheel={handleTermNavWheel}
             onKeyDown={handleTermNavKeyDown}
           >
             <div className="term-solar-panel-value">{Number(term.solarLon || 0).toFixed(0)}°</div>
@@ -614,16 +664,40 @@ const TermDetail = () => {
               <div className="term-solar-panel-note-zh">{panelCopy.zh}</div>
             </div>
           </aside>
-          <p className="term-solar-panel-caption" lang="en">
-            The solar longitude is a way scientists describe the Sun&apos;s position along its apparent path in the sky (called the ecliptic). It is measured in degrees from 0° to 360°, starting at the spring equinox (0°) and increasing as the Earth orbits the Sun. Rather than using calendar dates, solar longitude gives a precise, continuous way to track seasonal change based on the Earth&apos;s position in space.
-          </p>
-          <p className="term-solar-panel-caption term-solar-panel-caption-zh" lang="zh-Hans">
-            太阳黄经是科学上用来描述太阳在天空中沿黄道（太阳视运动路径）位置的一种方式。它以春分点为0°起点，按照地球绕太阳运行的过程，从0°到360°逐渐增加。与使用日历日期不同，太阳黄经提供了一种更精确、连续的方式，用来根据地球在空间中的位置追踪季节变化。
-          </p>
+          <div className="term-solar-panel-caption-wrap">
+            <div className="term-solar-panel-caption-toggle" role="group" aria-label="Caption language">
+              <button
+                type="button"
+                className={`term-solar-panel-caption-toggle-btn${solarCaptionLang === 'zh' ? ' is-active' : ''}`}
+                aria-pressed={solarCaptionLang === 'zh'}
+                onClick={() => setSolarCaptionLang('zh')}
+              >
+                CN
+              </button>
+              <button
+                type="button"
+                className={`term-solar-panel-caption-toggle-btn${solarCaptionLang === 'en' ? ' is-active' : ''}`}
+                aria-pressed={solarCaptionLang === 'en'}
+                onClick={() => setSolarCaptionLang('en')}
+              >
+                EN
+              </button>
+            </div>
+            {solarCaptionLang === 'en' ? (
+              <p className="term-solar-panel-caption-body" lang="en">
+                The solar longitude is a way scientists describe the Sun&apos;s position along its apparent path in the sky (the ecliptic). Solar longitude can be understood through the changing length of a shadow. As the sun&apos;s apparent position shifts along the ecliptic through the year, the sun&apos;s height in the sky changes, and the shadow cast at the same time of day becomes longer or shorter. In this way, shadow length becomes a visible trace of solar longitude.
+              </p>
+            ) : (
+              <p className="term-solar-panel-caption-body term-solar-panel-caption-body-zh" lang="zh-Hans">
+                太阳黄经是科学上用来描述太阳在天空中沿黄道（太阳运动路径）位置的一种方式。太阳黄经可以通过影长的变化来理解。随着太阳在黄道上的视位置于一年中不断移动，太阳在天空中的高度也随之变化，因此在同一时刻投下的影子会变长或变短。由此，影长成为太阳黄经的一种可见痕迹。
+              </p>
+            )}
+          </div>
 
           <div className="term-solar-panel-instruction" aria-hidden={!isTermNavHover}>
             <div className="term-solar-panel-instruction-zh">滚动切换节气</div>
-            <div className="term-solar-panel-instruction-en">Scroll to switch terms</div>
+            <div className="term-solar-panel-instruction-en">Scroll to switch term</div>
+          </div>
           </div>
         </div>
 

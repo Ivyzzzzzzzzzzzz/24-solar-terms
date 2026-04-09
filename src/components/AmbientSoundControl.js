@@ -1,6 +1,6 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAmbientAudio } from '../audio/AmbientAudioProvider';
-import { TERM_LIST } from '../data';
 import './AmbientSoundControl.css';
 
 const STATUS_LABEL = {
@@ -12,19 +12,26 @@ const STATUS_LABEL = {
 };
 
 const AmbientSoundControl = () => {
+  const location = useLocation();
   const {
-    activeTermId,
     enabled,
     status,
     supported,
     toggleEnabled
   } = useAmbientAudio();
 
-  const activeTerm = TERM_LIST.find((term) => term.id === activeTermId);
   const stateLabel = STATUS_LABEL[status] || STATUS_LABEL.idle;
+  const path = location.pathname || '/';
+  const pageClass = path.startsWith('/term/')
+    ? 'is-term'
+    : path === '/calendar'
+      ? 'is-calendar'
+      : (path === '/' || path === '/intro')
+        ? 'is-landing'
+        : 'is-default';
 
   return (
-    <div className="ambient-sound-control-shell">
+    <div className={`ambient-sound-control-shell ${pageClass}`}>
       <button
         type="button"
         className={`ambient-sound-control${enabled ? ' is-on' : ''}`}
@@ -33,14 +40,7 @@ const AmbientSoundControl = () => {
         aria-pressed={enabled}
         aria-label={supported ? stateLabel : 'Audio unavailable in this browser'}
       >
-        <span className="ambient-sound-control-kicker">Ambient</span>
         <span className="ambient-sound-control-state">{stateLabel}</span>
-        {activeTerm ? (
-          <span className="ambient-sound-control-term">
-            <span className="ambient-sound-control-term-zh">{activeTerm.zh}</span>
-            <span className="ambient-sound-control-term-en">{activeTerm.en}</span>
-          </span>
-        ) : null}
       </button>
     </div>
   );

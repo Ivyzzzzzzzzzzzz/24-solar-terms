@@ -10,14 +10,14 @@ const TermsList = () => {
   const terms = TERM_LIST;
 
   return (
-    <div>
-      <header className="site-header">
+    <div className="terms-page">
+      <header className="site-header terms-header">
         <div className="site-title">24 Solar Terms</div>
       </header>
 
-      <main>
-        <h1>Term List</h1>
-        <p>Select a term to open its detail page.</p>
+      <main className="terms-main">
+        <h1 className="terms-title">Term List</h1>
+        <p className="terms-subtitle">Select a term to open its detail page.</p>
         <div id="termsList" className="terms-grid">
           {terms.map((term) => (
             <Link
@@ -35,7 +35,7 @@ const TermsList = () => {
         </div>
       </main>
 
-      <footer>24 Solar Terms</footer>
+      <footer className="terms-footer">24 Solar Terms</footer>
     </div>
   );
 };
