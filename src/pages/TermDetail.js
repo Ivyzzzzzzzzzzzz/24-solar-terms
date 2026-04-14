@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAmbientAudio, useAmbientTerm } from '../audio/AmbientAudioProvider';
-import { TERM_LIST, HOU_MAP, TERM_CONTENT_MAP, TERM_COLORS } from '../data';
+import { TERM_LIST, HOU_MAP, TERM_CONTENT_MAP, TERM_POEM_MAP, TERM_POEM_META_EN_MAP, TERM_COLORS } from '../data';
 import { TermBackground } from '../components';
 import TermMenuRing from './termDetail/TermMenuRing';
 import TermCenterPanels from './termDetail/TermCenterPanels';
@@ -433,7 +433,15 @@ const TermDetail = () => {
   if (!term) return <div>Loading...</div>;
 
   const hou = HOU_MAP[term.id] || [];
-  const content = TERM_CONTENT_MAP[term.id] || TERM_CONTENT_MAP.default;
+  const termContentOverrides = TERM_CONTENT_MAP[term.id] || {};
+  const poemContent = TERM_POEM_MAP[term.id] || TERM_POEM_MAP.default;
+  const poemMetaEn = TERM_POEM_META_EN_MAP[term.id] || TERM_POEM_META_EN_MAP.default;
+  const content = {
+    ...TERM_CONTENT_MAP.default,
+    ...termContentOverrides,
+    ...poemContent,
+    ...poemMetaEn
+  };
   const rawPhaseRows = (hou && hou.length ? hou.slice(0, 3) : (content.phasesRows || []));
   const phaseRows = rawPhaseRows.map((phase) => {
     if (typeof phase === 'string') {
@@ -571,15 +579,14 @@ const TermDetail = () => {
                   </span>
                 </span>
               </Link>
-              <div className="term-title-zh" id="termTitleZh">{term.zh || term.nameZh}</div>
-
+              <div className="term-title-stack">
+                <div className="term-title-zh" id="termTitleZh">{term.zh || term.nameZh}</div>
+                <div className="term-title-en" id="termTitleEn">{term.en || term.nameEn}</div>
+              </div>
             </div>
-
-            <div className="term-summary">
-              <div className="term-title-en" id="termTitleEn">{term.en || term.nameEn}</div>
-              <p className="term-summary-text" id="termSummary">
-                {term.summary}
-              </p>
+            <div className="term-title-switch-hint" aria-label="Scroll to switch term hint">
+              <div className="term-title-switch-hint-zh">滚动切换节气</div>
+              <div className="term-title-switch-hint-en">Scroll to switch term</div>
             </div>
           </div>
 
@@ -694,10 +701,6 @@ const TermDetail = () => {
             )}
           </div>
 
-          <div className="term-solar-panel-instruction" aria-hidden={!isTermNavHover}>
-            <div className="term-solar-panel-instruction-zh">滚动切换节气</div>
-            <div className="term-solar-panel-instruction-en">Scroll to switch term</div>
-          </div>
           </div>
         </div>
 

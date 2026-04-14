@@ -260,9 +260,9 @@
     font-size: 16px;
     font-weight: 700;
     color: black;
-    writing-mode: vertical-rl;
-    text-orientation: upright;
-    white-space: nowrap;
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
+    white-space: normal;
 }
 
 .term-solar-panel-instruction-en {

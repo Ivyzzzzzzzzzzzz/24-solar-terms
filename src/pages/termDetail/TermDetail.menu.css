@@ -1,10 +1,10 @@
 .term-menu-ring {
     position: fixed;
-    left: calc(var(--term-frame-pad-left) - 22px);
+    left: var(--term-orb-left);
     top: var(--term-shared-center-y, 50%);
     transform: translateY(-50%);
-    width: 116px;
-    height: 116px;
+    width: var(--term-menu-ring-size, 116px);
+    height: var(--term-menu-ring-size, 116px);
     z-index: 3;
 }
 
@@ -456,9 +456,7 @@
 
 @media (max-width: 980px) {
     .term-menu-ring {
-        left: calc(var(--term-frame-pad-left) - 8px);
-        width: 104px;
-        height: 104px;
+        left: var(--term-orb-left);
     }
 
     .term-menu-path-zh {
@@ -477,8 +475,6 @@
         top: auto;
         bottom: max(10px, env(safe-area-inset-bottom));
         transform: translateX(-50%);
-        width: 96px;
-        height: 96px;
         z-index: 9;
     }
 
@@ -497,11 +493,6 @@
 }
 
 @media (max-width: 460px) {
-    .term-menu-ring {
-        width: 88px;
-        height: 88px;
-    }
-
     .term-menu-path-zh {
         font-size: 19px;
     }

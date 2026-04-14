@@ -2,10 +2,12 @@
 .landing-page {
     height: 100%;
     overflow: hidden;
-    --landing-pad-top: 96px;
-    --landing-pad-x: 136px;
-    --landing-grid-top: max(12px, calc(160px - 74px));
-    --landing-grid-right: 160px;
+    --landing-frame-pad-top-base: 172px;
+    --landing-orb-top: max(12px, calc(var(--landing-frame-pad-top-base) - 74px));
+    --landing-pad-top: var(--landing-orb-top);
+    --landing-pad-x: calc(var(--landing-orb-top) + 30px);
+    --landing-grid-top: var(--landing-orb-top);
+    --landing-grid-right: calc(var(--landing-orb-top) + 30px);
     --landing-grid-size: 34px;
 }
 
@@ -251,20 +253,27 @@
 
 @media (max-width: 1024px) {
     .landing-page {
-        --landing-grid-top: max(12px, calc(130px - 74px));
-        --landing-grid-right: 108px;
+        --landing-frame-pad-top-base: 142px;
+        --landing-pad-x: calc(var(--landing-orb-top) + 24px);
+        --landing-grid-top: var(--landing-orb-top);
+        --landing-grid-right: calc(var(--landing-orb-top) + 24px);
     }
 }
 
 @media (max-width: 980px) {
     .landing-page {
-        --landing-grid-top: max(12px, calc(106px - 74px));
-        --landing-grid-right: 32px;
+        --landing-frame-pad-top-base: 118px;
+        --landing-pad-x: calc(var(--landing-orb-top) + 18px);
+        --landing-grid-top: var(--landing-orb-top);
+        --landing-grid-right: calc(var(--landing-orb-top) + 18px);
     }
 }
 
 @media (max-width: 760px) {
     .landing-page {
+        --landing-frame-pad-top-base: max(82px, calc(env(safe-area-inset-top) + 70px));
+        --landing-pad-top: max(16px, env(safe-area-inset-top));
+        --landing-pad-x: 24px;
         --landing-grid-top: max(8px, env(safe-area-inset-top));
         --landing-grid-right: 10px;
         --landing-grid-size: 30px;
@@ -274,7 +283,7 @@
 @media (max-width: 560px) {
     .landing-page {
         --landing-pad-top: max(16px, env(safe-area-inset-top));
-        --landing-pad-x: 14px;
+        --landing-pad-x: 24px;
     }
 
     .landing-title-row {

@@ -132,6 +132,262 @@ export const TERM_LIST = TERM_LIST_RAW.map(term => ({
   nightH: 24 - estimateDayHours(term.doy)
 }));
 
+export const TERM_POEM_MAP = {
+  default: {
+    poemVerse: '四时有序，节气自明',
+    poemAuthor: '佚名',
+    poemTitle: '节气记',
+    poemNote: 'Seasonal rhythms reveal themselves in small daily changes.'
+  },
+  lichun: {
+    poemVerse: '律回岁晚冰霜少，春到人间草木知。便觉眼前生意满，东风吹水绿参差。',
+    poemAuthor: '宋·张榫',
+    poemTitle: '《立春偶成》',
+    poemNote: "Frost thins as the old year ebbs away, and spring is known by leaf and spray. Life rises full before the eye; east winds ripple green where waters lie."
+  },
+  yushui: {
+    poemVerse: '天街小雨润如酥，草色遥看近却无。最是一年春好处，绝胜烟柳满皇都。',
+    poemAuthor: '唐·韩愈',
+    poemTitle: '《初春小雨》',
+    poemNote: "On city streets the light rain gleams, the grass appears, then fades like dreams. This is the finest hour of spring's return, beyond the misty willows the capitals burn."
+  },
+  jingzhe: {
+    poemVerse: '天街小雨润如酥，草色遥看近却无。最是一年春好处，绝胜烟柳满皇都。',
+    poemAuthor: '唐·韩愈',
+    poemTitle: '《初春小雨》',
+    poemNote: "A tender rain on the roadway lies, soft as cream beneath the skies. Far-off grass shows green anew-the fairest spring the year yet knew."
+  },
+  chunfen: {
+    poemVerse: '碧玉妆成一树高，万条垂下绿丝绦。不知细叶谁裁出，二月春风似剪刀。',
+    poemAuthor: '唐·贺知章',
+    poemTitle: '《咏柳》',
+    poemNote: "A willow stands in jade array, long green silks all drift and sway. Who cut these tender leaves so bright? The second month's wind, sharp and light."
+  },
+  qingming: {
+    poemVerse: '清明时节雨纷纷，路上行人欲断魂。借问酒家何处有？牧童遥指杏花村。',
+    poemAuthor: '唐·杜牧',
+    poemTitle: '《清明》',
+    poemNote: "In Qingming rain falls fine, unending; on travelers' hearts a sorrow bending. 'Where is the tavern?' someone cries-a boy points where Apricot Village lies."
+  },
+  guyu: {
+    poemVerse: '谷雨洗纤素，裁为白牡丹。异香开玉合，轻粉泥银盘。',
+    poemAuthor: '唐·王贞白',
+    poemTitle: '《白牡丹》',
+    poemNote: 'Grain Rain has washed her white more fair, and shaped a peony from the air. Strange fragrance stirs from jade apart; pale powder rests in a silver heart.'
+  },
+  lixia: {
+    poemVerse: '梅子流酸软齿牙，芭蕉分绿与窗纱。日长睡起无情思，闲看儿童捉柳花。',
+    poemAuthor: '宋·杨万里',
+    poemTitle: '《闲居初夏午睡起》',
+    poemNote: "Sour plums set teeth and tongue astir, green banana leaves veil the window's blur. I wake from noon with no thought to borrow, and watch children chase willow down till tomorrow."
+  },
+  xiaoman: {
+    poemVerse: '夜莺啼绿柳，皓月醒长空。最爱垄头麦，迎风笑落红。',
+    poemAuthor: '宋·欧阳修',
+    poemTitle: '《小满》',
+    poemNote: 'Nightingales sing through willow shade, a bright moon wakes the sky outspread. Best loved of all, the wheat in rows-laughing to the wind as red bloom goes.'
+  },
+  mangzhong: {
+    poemVerse: '时雨及芒种，四野皆插秧。家家麦饭美，处处菱歌长。',
+    poemAuthor: '宋·陆游',
+    poemTitle: '《时雨》',
+    poemNote: 'Timely rain meets Grain in Ear, seedlings fill the fields far and near. Each household savors the season\'s fare; long songs drift up through the summer air.'
+  },
+  xiazhi: {
+    poemVerse: '夕凉恰恰好溪行，暮色催人底急生。半路蛙声迎步止，一荧松火隔篱明。',
+    poemAuthor: '宋·杨万里',
+    poemTitle: '《夏至雨霁与陈履常暮行溪上二首》其一',
+    poemNote: 'Evening cool invites a walk by the stream, while dusk urges life like a tightening dream. Midway I stop where the frogs reply; beyond the fence one pine-flame glows shy.'
+  },
+  xiaoshu: {
+    poemVerse: '倏忽温风至，因循小暑来。竹喧先觉雨，山暗已闻雷。',
+    poemAuthor: '唐·元稹',
+    poemTitle: '《咏廿四气诗·小暑六月节》',
+    poemNote: 'Warm winds arrive in a sudden sweep; Minor Heat steals in, soft and deep. Bamboo first knows the coming rain; dark hills listen for thunder again.'
+  },
+  dashu: {
+    poemVerse: '大暑三秋近，林钟九夏移。桂轮开子夜，萤火照空时。',
+    poemAuthor: '唐·元稹',
+    poemTitle: '《咏廿四气诗·大暑六月中》',
+    poemNote: 'Great Heat tells autumn is drawing near, though summer still rules the turning year. At midnight the moon-wheel opens bright; fireflies kindle the empty night.'
+  },
+  liqiu: {
+    poemVerse: '乳鸦啼散玉屏空，一枕新凉一扇风。睡起秋色无觅处，满阶梧桐月明中。',
+    poemAuthor: '宋·刘翰',
+    poemTitle: '《立秋》',
+    poemNote: "Young crows fall silent, the jade room bare; new coolness stirs through fan and air. Waking, I search for autumn's trace-moonlit parasol leaves fill the stairway space."
+  },
+  chushu: {
+    poemVerse: '处暑无三日，新凉直万金。白头更世事，青草印禅心。',
+    poemAuthor: '宋·苏迥',
+    poemTitle: '《长江二首（其一）》',
+    poemNote: 'Barely three days, and heat is gone; new cool is worth ten thousand gold alone. White-haired, I face the world once more; green grass receives a quiet spirit at its door.'
+  },
+  bailu: {
+    poemVerse: '蒹葭苍苍，白露为霜。所谓伊人，在水一方。',
+    poemAuthor: '先秦·佚名',
+    poemTitle: '《诗经·蒹葭》第一章',
+    poemNote: 'Reed and rush in pale grace stand; white dew turns frost across the land. The one I seek, the one I know, lies beyond the water\'s flow.'
+  },
+  qiufen: {
+    poemVerse: '中庭地白树栖鸦，冷露无声湿桂花。今夜月明人尽望，不知秋思落谁家。',
+    poemAuthor: '唐·王建',
+    poemTitle: '《十五夜望月寄杜郎中》',
+    poemNote: "White lies the court where dark crows rest, cold dew soaks osmanthus without a breath. Tonight all gaze at the moon's clear dome-whose house will autumn longing roam?"
+  },
+  hanlu: {
+    poemVerse: '野店星河在，行人道路长。草色多寒露，虫声似故乡。',
+    poemAuthor: '唐·李郢',
+    poemTitle: '《早发》',
+    poemNote: 'At the inn the river of stars still stays, while the traveler follows long, dim ways. Cold dew weighs down the grass by dawn; insect cries make home live on.'
+  },
+  shuangjiang: {
+    poemVerse: '薄雾浓云愁永昼，瑞脑销金兽。东篱把酒黄昏后，有暗香盈袖。',
+    poemAuthor: '宋·李清照',
+    poemTitle: '《醉花阴·薄雾浓云愁永昼》',
+    poemNote: 'Thin mist, thick cloud, a day grown long; the incense fades, the gold beast gone. At dusk by eastern hedge I raise my wine; hidden fragrance fills my sleeves like time.'
+  },
+  lidong: {
+    poemVerse: '冻笔新诗懒写，寒炉美酒时温。醉看墨花月白，恍疑雪满前村。',
+    poemAuthor: '明·王稚登',
+    poemTitle: '《立冬》',
+    poemNote: 'My frozen brush leaves fresh verse unwritten; wine warms by the stove in a hush half-hidden. Drunk, I watch ink-blossoms pale in moonlight gleam-and think the village ahead is snow, not dream.'
+  },
+  xiaoxue: {
+    poemVerse: '绿蚁新醅酒，红泥小火炉。晚来天欲雪，能饮一杯无？',
+    poemAuthor: '唐·白居易',
+    poemTitle: '《问刘十九》',
+    poemNote: 'New wine foams green, the small stove glows red; evening draws near, and snow clouds spread. Since night is cold and the fire burns low, will you come share one cup before the snow?'
+  },
+  daxue: {
+    poemVerse: '千山鸟飞绝，万径人踪灭。孤舟蓑笠翁，独钓寒江雪。',
+    poemAuthor: '唐·柳宗元',
+    poemTitle: '《江雪》',
+    poemNote: 'On thousand hills no bird takes flight, on ten thousand paths no trace in sight. In a lonely boat, in cape and cone, an old man fishes the cold snow alone.'
+  },
+  dongzhi: {
+    poemVerse: '黄钟应律好风催，阴伏阳升淑气回。葵影便移长至日，梅花先趁小寒开。',
+    poemAuthor: '宋·朱淑真',
+    poemTitle: '《冬至》',
+    poemNote: 'The season turns on a kindly breeze; hidden yin yields, and bright breaths ease. Sunflower shadows lean toward lengthening light; plum blossoms arrive through the edge of night.'
+  },
+  xiaohan: {
+    poemVerse: '小寒连大吕，欢鹊垒新巢。拾食寻河曲，衔紫绕树梢。',
+    poemAuthor: '唐·元稹',
+    poemTitle: '《咏廿四气诗·小寒十二月节》',
+    poemNote: 'Minor Cold joins the tuning sky; magpies build their new nests high. Along bent riverbanks they feed and call, bearing twigs of purple through the treetop wall.'
+  },
+  dahan: {
+    poemVerse: '腊酒自盈樽，金炉兽炭温。大寒宜近火，无事莫开门。',
+    poemAuthor: '唐·元稹',
+    poemTitle: '《咏廿四气诗·大寒十二月中》',
+    poemNote: 'Winter wine fills the waiting cup; brazier coals in golden chambers glow up. In Great Cold, stay close where warm fires are-with nothing to do, keep shut the door ajar.'
+  }
+};
+
+export const TERM_POEM_META_EN_MAP = {
+  default: {
+    poemAuthorEn: 'Anonymous',
+    poemTitleEn: 'Seasonal Notes'
+  },
+  lichun: {
+    poemAuthorEn: 'Zhang Shi (Song)',
+    poemTitleEn: 'An Impromptu Verse on Beginning of Spring'
+  },
+  yushui: {
+    poemAuthorEn: 'Han Yu (Tang)',
+    poemTitleEn: 'Light Rain in Early Spring'
+  },
+  jingzhe: {
+    poemAuthorEn: 'Han Yu (Tang)',
+    poemTitleEn: 'Light Rain in Early Spring'
+  },
+  chunfen: {
+    poemAuthorEn: 'He Zhizhang (Tang)',
+    poemTitleEn: 'Ode to the Willow'
+  },
+  qingming: {
+    poemAuthorEn: 'Du Mu (Tang)',
+    poemTitleEn: 'Qingming'
+  },
+  guyu: {
+    poemAuthorEn: 'Wang Zhenbai (Tang)',
+    poemTitleEn: 'White Peony'
+  },
+  lixia: {
+    poemAuthorEn: 'Yang Wanli (Song)',
+    poemTitleEn: 'Waking from a Noon Nap in Early Summer Seclusion'
+  },
+  xiaoman: {
+    poemAuthorEn: 'Ouyang Xiu (Song)',
+    poemTitleEn: 'Grain Buds'
+  },
+  mangzhong: {
+    poemAuthorEn: 'Lu You (Song)',
+    poemTitleEn: 'Timely Rain'
+  },
+  xiazhi: {
+    poemAuthorEn: 'Yang Wanli (Song)',
+    poemTitleEn: 'After Rain at Summer Solstice, Walking by the Creek with Chen Luchang, No. 1'
+  },
+  xiaoshu: {
+    poemAuthorEn: 'Yuan Zhen (Tang)',
+    poemTitleEn: 'Poem on the Twenty-Four Solar Terms: Minor Heat, Sixth Month'
+  },
+  dashu: {
+    poemAuthorEn: 'Yuan Zhen (Tang)',
+    poemTitleEn: 'Poem on the Twenty-Four Solar Terms: Major Heat, Mid-Sixth Month'
+  },
+  liqiu: {
+    poemAuthorEn: 'Liu Han (Song)',
+    poemTitleEn: 'Beginning of Autumn'
+  },
+  chushu: {
+    poemAuthorEn: 'Su Jiong (Song)',
+    poemTitleEn: 'Two Poems on the Yangtze, No. 1'
+  },
+  bailu: {
+    poemAuthorEn: 'Anonymous (Pre-Qin)',
+    poemTitleEn: 'The Book of Songs: Reeds and Rushes, Stanza 1'
+  },
+  qiufen: {
+    poemAuthorEn: 'Wang Jian (Tang)',
+    poemTitleEn: 'Looking at the Moon on the Fifteenth Night, Sent to Director Du'
+  },
+  hanlu: {
+    poemAuthorEn: 'Li Ying (Tang)',
+    poemTitleEn: 'Departing Early'
+  },
+  shuangjiang: {
+    poemAuthorEn: 'Li Qingzhao (Song)',
+    poemTitleEn: 'Drunken in the Shadow of Flowers'
+  },
+  lidong: {
+    poemAuthorEn: 'Wang Zhideng (Ming)',
+    poemTitleEn: 'Beginning of Winter'
+  },
+  xiaoxue: {
+    poemAuthorEn: 'Bai Juyi (Tang)',
+    poemTitleEn: 'A Question for Liu the Nineteenth'
+  },
+  daxue: {
+    poemAuthorEn: 'Liu Zongyuan (Tang)',
+    poemTitleEn: 'River Snow'
+  },
+  dongzhi: {
+    poemAuthorEn: 'Zhu Shuzhen (Song)',
+    poemTitleEn: 'Winter Solstice'
+  },
+  xiaohan: {
+    poemAuthorEn: 'Yuan Zhen (Tang)',
+    poemTitleEn: 'Poem on the Twenty-Four Solar Terms: Minor Cold, Twelfth Month'
+  },
+  dahan: {
+    poemAuthorEn: 'Yuan Zhen (Tang)',
+    poemTitleEn: 'Poem on the Twenty-Four Solar Terms: Major Cold, Mid-Twelfth Month'
+  }
+};
+
 export const TERM_CONTENT_MAP = {
   default: {
     noteEn: [
@@ -150,18 +406,20 @@ export const TERM_CONTENT_MAP = {
     ritualNotes: [
       'Take a seasonal walk and observe one natural sign near you.',
       'Prepare a simple meal that fits the weather of this term.'
+    ],
+    ritualNotesZh: [
+      '沿着季节散步，留意身边一个自然变化的信号。',
+      '做一顿符合这个节气天气的简单饭食。'
     ]
   },
   dongzhi: {
     noteEn: [
-      'Observe today’s sunset. Notice how early night begins.',
+      'Observe today\'s sunset. Notice how early night begins.',
       'From tomorrow on, days lengthen.'
     ],
     noteZh: [
-      '看一看今天的日落。',
-      '感受夜色提前降临。',
-      '从明天起，',
-      '光会一点一点回来。'
+      '看看今天的日落，留意黑夜是多么早地开始。',
+      '从明天起，白昼会一点一点变长。'
     ],
     poemVerse: '冬至阳生春又来',
     poemAuthor: '唐·杜甫',
@@ -176,35 +434,50 @@ export const TERM_CONTENT_MAP = {
     ritualNotes: [
       'In northern China, dumplings are common, symbolizing warmth and gathering.',
       'In southern China, families share tangyuan, representing reunion and wholeness.'
+    ],
+    ritualNotesZh: [
+      '在中国北方，冬至常吃饺子，象征温暖与团聚。',
+      '在中国南方，家人常吃汤圆，寓意团圆与圆满。'
     ]
   },
-  guyu: {
+  xiaohan: {
     noteEn: [
-      'Rain now supports growth rather than cold.',
-      'Watch how fields and roadsides green quickly.'
+      'Step outside and feel the air on your face.',
+      'Cold becomes something physical, direct, and impossible to ignore.'
     ],
     noteZh: [
-      '此时的雨，不再只是寒意，',
-      '而是万物生长的条件。'
+      '走到室外，感受空气落在脸上的方式。',
+      '寒冷在这时变得具体、直接，也无法忽视。'
+    ]
+  },
+  dahan: {
+    noteEn: [
+      'Stay near warmth for a moment.',
+      'At the coldest point of the year, even a small fire, lamp, or cup can feel immense.'
     ],
-    poemVerse: '谷雨春光晓，山川黛色新',
-    poemAuthor: '佚名',
-    poemTitle: '《谷雨》',
-    poemNote: 'Late-spring rain turns waiting into visible growth.',
-    phasesNote: '',
-    ritualNotes: [
-      'Drink fresh spring tea and notice subtle taste changes.',
-      'Open windows after rain and let the moist air in briefly.'
+    noteZh: [
+      '靠近温暖的地方停一会儿。',
+      '在一年最冷的时候，一点点火光、灯光，或一只热杯子，都会显得格外珍贵。'
+    ]
+  },
+  lichun: {
+    noteEn: [
+      'Look closely at bare branches.',
+      'Some buds may already be forming before the season feels ready.'
+    ],
+    noteZh: [
+      '仔细看看仍然光裸的枝条。',
+      '有些芽苞，也许会比季节更早一步出现。'
     ]
   },
   yushui: {
     noteEn: [
-      'The ground softens with brief rain, then clears.',
-      'Listen for early seasonal sounds after rainfall.'
+      'Notice the ground after rain.',
+      'The earth begins to loosen, soften, and hold a different kind of light.'
     ],
     noteZh: [
-      '细雨润地，旋即天清。',
-      '万物在湿润中慢慢苏醒。'
+      '留意雨后的地面。',
+      '泥土开始变得松动、柔软，也映出一种不同的光。'
     ],
     poemVerse: '天街小雨润如酥',
     poemAuthor: '唐·韩愈',
@@ -214,7 +487,214 @@ export const TERM_CONTENT_MAP = {
     ritualNotes: [
       'Walk after light rain and observe sprouts near paths and walls.',
       'Keep routines gentle and aligned with the still-cool weather.'
+    ],
+    ritualNotesZh: [
+      '小雨后去走一走，观察路边与墙角的新芽。',
+      '作息放缓一些，顺应仍带寒意的天气。'
     ]
+  },
+  jingzhe: {
+    noteEn: [
+      'Pause and listen outdoors.',
+      'The world may still look quiet, but small lives are beginning to stir beneath it.'
+    ],
+    noteZh: [
+      '在户外停一停，听一听。',
+      '世界看起来也许仍然安静，但细小的生命已经在其下开始活动。'
+    ]
+  },
+  chunfen: {
+    noteEn: [
+      'Notice how balanced the day feels.',
+      'Light and dark sit beside each other for a brief moment of near-equality.'
+    ],
+    noteZh: [
+      '感受这一天的均衡。',
+      '明与暗在这一刻短暂并置，几乎相等。'
+    ]
+  },
+  qingming: {
+    noteEn: [
+      'Take a slower walk today.',
+      'Look for fresh green, soft rain, and the clarity that appears in early spring air.'
+    ],
+    noteZh: [
+      '今天不妨走慢一点。',
+      '留意新绿、细雨，以及初春空气里出现的清明感。'
+    ]
+  },
+  guyu: {
+    noteEn: [
+      'Observe new leaves or young plants.',
+      'This is a time when growth feels tender, fast, and almost visible.'
+    ],
+    noteZh: [
+      '观察新叶，或刚长出的植物。',
+      '这是一个生长显得柔软、迅速，几乎肉眼可见的时节。'
+    ],
+    poemVerse: '谷雨春光晓，山川黛色新',
+    poemAuthor: '佚名',
+    poemTitle: '《谷雨》',
+    poemNote: 'Late-spring rain turns waiting into visible growth.',
+    phasesNote: '',
+    ritualNotes: [
+      'Drink fresh spring tea and notice subtle taste changes.',
+      'Open windows after rain and let the moist air in briefly.'
+    ],
+    ritualNotesZh: [
+      '喝一杯新采的春茶，感受细微的滋味变化。',
+      '雨后短暂开窗，让潮润的空气流进室内。'
+    ]
+  },
+  lixia: {
+    noteEn: [
+      'Stand in the sun for a moment longer than usual.',
+      'You may begin to feel the season shift not in color, but in temperature.'
+    ],
+    noteZh: [
+      '在阳光下多停留一会儿。',
+      '你也许会先从温度，而不是颜色，感到季节的转变。'
+    ]
+  },
+  xiaoman: {
+    noteEn: [
+      'Look at grasses, grains, or any field-like planting.',
+      'Things are not fully ripe, but they are no longer small.'
+    ],
+    noteZh: [
+      '看看草木、麦粒，或任何像田野一样生长的植物。',
+      '万物尚未成熟，但已经不再幼小。'
+    ]
+  },
+  mangzhong: {
+    noteEn: [
+      'Do something with your hands today.',
+      'This term carries the feeling of sowing, planting, gathering, and being in motion.'
+    ],
+    noteZh: [
+      '今天动手做一点什么。',
+      '这个节气里有播种、栽种、收取，以及持续行动的感觉。'
+    ]
+  },
+  xiazhi: {
+    noteEn: [
+      'Notice how late the light stays.',
+      'Even evening seems reluctant to end.'
+    ],
+    noteZh: [
+      '留意光停留到多晚。',
+      '连傍晚都像有些不愿结束。'
+    ]
+  },
+  xiaoshu: {
+    noteEn: [
+      'Pay attention to shade, breeze, and moving air.',
+      'Small reliefs become easier to notice when the heat begins to build.'
+    ],
+    noteZh: [
+      '留意树荫、微风，与流动的空气。',
+      '当热意开始累积，细小的凉意会变得更容易被察觉。'
+    ]
+  },
+  dashu: {
+    noteEn: [
+      'Drink something cold slowly.',
+      'Let yourself feel how intense summer can become at its fullest.'
+    ],
+    noteZh: [
+      '慢慢喝一点冰凉的东西。',
+      '感受夏天在最盛的时候，能够变得多么强烈。'
+    ]
+  },
+  liqiu: {
+    noteEn: [
+      'Notice the morning or night air.',
+      'Even before the landscape changes, the temperature may tell you autumn is near.'
+    ],
+    noteZh: [
+      '留意清晨或夜晚的空气。',
+      '即使景色还没改变，温度可能已经先告诉你秋天快到了。'
+    ]
+  },
+  chushu: {
+    noteEn: [
+      'Step outside in the evening.',
+      'See whether the heat has loosened its grip, even just a little.'
+    ],
+    noteZh: [
+      '傍晚时走到外面去。',
+      '看看热气是否已经稍稍松开了它的掌控。'
+    ]
+  },
+  bailu: {
+    noteEn: [
+      'Look at grass or leaves early in the day.',
+      'Moisture may gather there before the sun has time to erase it.'
+    ],
+    noteZh: [
+      '在清晨看看草叶或树叶。',
+      '太阳还来不及将它抹去之前，水气可能已经静静停在上面。'
+    ]
+  },
+  qiufen: {
+    noteEn: [
+      'Notice the evenness of the day.',
+      'The year pauses again in balance before moving deeper into autumn.'
+    ],
+    noteZh: [
+      '感受这一天的平分。',
+      '一年再次短暂停在均衡之中，然后继续走向更深的秋天。'
+    ]
+  },
+  hanlu: {
+    noteEn: [
+      'Touch the air in the early morning.',
+      'Coolness is no longer a suggestion; it has become part of the day.'
+    ],
+    noteZh: [
+      '在清晨触摸空气。',
+      '凉意不再只是暗示，它已经成为这一天的一部分。'
+    ]
+  },
+  shuangjiang: {
+    noteEn: [
+      'Look closely at leaves, edges, and surfaces.',
+      'The season begins to sharpen, and everything feels a little more fragile.'
+    ],
+    noteZh: [
+      '仔细看看叶片、边缘与各种表面。',
+      '季节开始变得清晰而锐利，万物也显得更脆弱一些。'
+    ]
+  },
+  lidong: {
+    noteEn: [
+      'Notice what has fallen away.',
+      'Branches, fields, and air begin to show their structure more clearly.'
+    ],
+    noteZh: [
+      '留意那些已经落下或褪去的东西。',
+      '枝条、田野与空气，都开始更清楚地显出它们的结构。'
+    ]
+  },
+  xiaoxue: {
+    noteEn: [
+      'Watch the sky carefully.',
+      'Even if snow does not arrive, the light may already carry its feeling.'
+    ],
+    noteZh: [
+      '认真看看天空。',
+      '即使雪还没有来，光线里也可能已经带着雪的感觉。'
+    ]
+  },
+  daxue: {
+    noteEn: [
+      'Listen to how quiet the world can become.',
+      'Snow, when it comes, changes not only the ground, but also sound.'
+    ],
+    noteZh: [
+      '听一听世界能变得多么安静。',
+      '雪到来时，改变的不只是地面，还有声音。'
+    ],
   }
 };
 
@@ -241,13 +721,13 @@ export const HOU_MAP = {
   ],
   qingming: [
     "桐始华 — Paulownia trees flower as the season turns clear and mild.",
-    "田鼠化为鴽 — Burrowing animals retreat as birds become more active in the open fields.",
+    "田鼠化鹌鹑 — Burrowing animals retreat as birds become more active in the open fields.",
     "虹始见 — Rainbows appear as sunlight breaks through spring rain."
   ],
   guyu: [
     "萍始生 — Duckweed spreads as the water grows warmer.",
-    "鸣鸠拂其羽 — Cuckoos grow active as the air turns soft and damp.",
-    "戴胜降于桑 — Hoopoes appear in mulberry trees as late spring settles in."
+    "鸣鸠拂羽 — Cuckoos grow active as the air turns soft and damp.",
+    "戴胜降桑 — Hoopoes appear in mulberry trees as late spring settles in."
   ],
   lixia: [
     "蝼蝈鸣 — Summer insects begin to chirp as the days grow warmer.",
@@ -261,7 +741,7 @@ export const HOU_MAP = {
   ],
   mangzhong: [
     "螳螂生 — Praying mantises appear as early summer deepens.",
-    "鵙始鸣 — Shrikes begin to call as the fields grow active with life.",
+    "伯劳始鸣 — Shrikes begin to call as the fields grow active with life.",
     "反舌无声 — Some birds fall silent as the season grows hotter."
   ],
   xiazhi: [
@@ -317,10 +797,10 @@ export const HOU_MAP = {
   xiaoxue: [
     "虹藏不见 — Rainbows disappear as cold air replaces warm seasonal rain.",
     "天气上腾地气下降 — The energies of heaven and earth separate as winter deepens.",
-    "闭塞而成冬 — The world closes inward as winter fully sets in."
+    "闭塞成冬 — The world closes inward as winter fully sets in."
   ],
   daxue: [
-    "鹖鴠不鸣 — Cold-weather birds fall silent as the air turns harsher.",
+    "寒鸟不鸣 — Cold-weather birds fall silent as the air turns harsher.",
     "虎始交 — Tigers begin to mate as life responds to deep winter cycles.",
     "荔挺出 — Hardy shoots emerge as hidden vitality persists beneath the cold."
   ],
@@ -364,13 +844,13 @@ export const HOU_MAP_LANDING = {
   ],
   qingming: [
     "桐始华 — Paulownia blooms",
-    "田鼠化为鴽 — Field mice yield to quails",
+    "田鼠化鹌鹑 — Field mice yield to quails",
     "虹始见 — Rainbows appear"
   ],
   guyu: [
     "萍始生 — Duckweed grows",
-    "鸣鸠拂其羽 — Cuckoos preen",
-    "戴胜降于桑 — Hoopoes perch in mulberries"
+    "鸣鸠拂羽 — Cuckoos preen",
+    "戴胜降桑 — Hoopoes perch in mulberries"
   ],
   lixia: [
     "蝼蝈鸣 — Insects chirp",
@@ -384,7 +864,7 @@ export const HOU_MAP_LANDING = {
   ],
   mangzhong: [
     "螳螂生 — Mantises appear",
-    "鵙始鸣 — Shrikes call",
+    "伯劳始鸣 — Shrikes call",
     "反舌无声 — Mockingbirds fall silent"
   ],
   xiazhi: [

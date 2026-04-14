@@ -4,6 +4,7 @@
   bottom: 96px;
   z-index: 120;
   pointer-events: none;
+  transform: translateY(-14px);
 }
 
 .ambient-sound-control-shell.is-calendar {
@@ -13,6 +14,14 @@
 
 .ambient-sound-control-shell.is-default {
   bottom: 20px;
+}
+
+.ambient-sound-control-shell.is-term {
+  right: 128px;
+}
+
+.ambient-sound-control-shell.is-landing {
+  right: 128px;
 }
 
 .ambient-sound-control {
@@ -66,9 +75,26 @@ body.term-solar-panel-hovering .ambient-sound-control-shell.is-term .ambient-sou
 }
 
 .ambient-sound-control-state {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
   font-size: 13px;
   line-height: 1.24;
+}
+
+.ambient-sound-control-state-en {
+  order: 2;
+  font-family: "Roboto Mono", Helvetica, sans-serif;
   letter-spacing: 0.07em;
+}
+
+.ambient-sound-control-state-zh {
+  order: 1;
+  font-family: "FZFangSong-Z02S", "FZFangSong-Z02S-Regular", Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 1.2;
+  letter-spacing: 0;
 }
 
 @keyframes ambientSoundOnBreath {
@@ -105,11 +131,27 @@ body.term-solar-panel-hovering .ambient-sound-control-shell.is-term .ambient-sou
   .ambient-sound-control-shell:not(.is-calendar) {
     right: 108px;
   }
+
+  .ambient-sound-control-shell.is-term {
+    right: 92px;
+  }
+
+  .ambient-sound-control-shell.is-landing {
+    right: 92px;
+  }
 }
 
 @media (max-width: 980px) {
   .ambient-sound-control-shell:not(.is-calendar) {
     right: 32px;
+  }
+
+  .ambient-sound-control-shell.is-term {
+    right: 62px;
+  }
+
+  .ambient-sound-control-shell.is-landing {
+    right: 62px;
   }
 }
 
@@ -117,12 +159,20 @@ body.term-solar-panel-hovering .ambient-sound-control-shell.is-term .ambient-sou
   .ambient-sound-control-shell {
     right: 10px;
   }
+
+  .ambient-sound-control-shell.is-term {
+    right: 24px;
+  }
+
+  .ambient-sound-control-shell.is-landing {
+    right: 24px;
+  }
 }
 
 @media (max-width: 560px) {
   .ambient-sound-control-shell.is-landing,
   .ambient-sound-control-shell.is-term {
-    right: 14px;
+    right: 24px;
     bottom: max(16px, env(safe-area-inset-top));
   }
 

@@ -1,8 +1,9 @@
 .term-center-content {
     position: fixed;
-    left: 50%;
+    --term-panel-box-width: min(400px, calc((100vw - 360px) * 0.8));
+    left: calc(var(--term-frame-pad-left) + clamp(52px, 7vw, 60px) + clamp(28px, 5vw, 80px) + var(--term-content-shift-right, 0px));
     top: var(--term-shared-center-y, 50%);
-    transform: translate(-50%, -50%);
+    transform: translateY(-50%);
     width: min(760px, 68vw);
     max-width: calc(100vw - 240px);
     min-height: 280px;
@@ -15,16 +16,34 @@
     --term-detail-outline: var(--term-detail-outline-color, #54504c);
 }
 
+.term-cn-content-typestyle {
+    font-family: "FZFangSong-Z02S", "FZFangSong-Z02S-Regular", Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 30px;
+}
+
+.term-en-content-typestyle {
+    color: #54504c;
+    font-family: "Roboto Mono", Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: -0.48px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
 .term-center-content .term-note,
 .term-center-content .term-poem,
 .term-center-content .term-phases,
 .term-center-content .term-ritual {
     position: absolute;
-    left: 50%;
+    left: 0;
     top: 50%;
     right: auto;
     bottom: auto;
-    transform: translate(-50%, -50%);
+    transform: translateY(-50%);
     pointer-events: none;
 }
 
@@ -37,45 +56,37 @@
 
 .term-center-content .term-note {
     display: inline-block;
-    width: auto;
-    max-width: none;
+    width: var(--term-panel-box-width);
+    max-width: var(--term-panel-box-width);
     min-width: 0;
     padding: 10px 14px;
     box-sizing: border-box;
 }
 
-.term-center-content .term-note:hover {
-    transform: translate(-50%, -50%);
-}
-
 .term-center-content .term-phases {
-    width: 461px;
-    transform: translate(-50%, calc(-50% + 42px));
-}
-
-.term-center-content .term-poem {
-    left: 50%;
-    top: 50%;
-}
-
-.term-center-content .term-poem:hover {
-    transform: translate(-50%, -50%);
+    width: var(--term-panel-box-width);
+    max-width: var(--term-panel-box-width);
+    transform: translateY(-50%);
 }
 
 .term-center-content .term-ritual {
-    width: 445.5px;
+    width: fit-content;
+    max-width: min(980px, calc(100vw - 220px));
+}
+
+.term-center-content .term-poem {
+    width: fit-content;
+    max-width: min(840px, calc(100vw - 220px));
 }
 
 .term-note {
-    position: absolute;
-    right: 674px;
-    bottom: 433px;
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     padding: 4px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    width: 178px;
+    align-items: start;
+    gap: 14px;
+    width: 100%;
+    max-width: 100%;
     color: #54504C;
     font-family: "Roboto Mono", Helvetica, sans-serif;
     font-size: 16px;
@@ -88,25 +99,19 @@
     opacity: 0;
     pointer-events: none;
     text-align: left;
-    transition: opacity 180ms ease, background-color 160ms ease, transform 220ms ease;
+    transition: opacity 180ms ease, background-color 160ms ease;
 }
 
 .term-note-en {
     text-align: left;
-    display: inline-block;
-    width: 19ch;
-    max-width: 19ch;
-    transition: transform 220ms ease;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .term-note-en-text {
-    display: inline;
+    display: block;
     text-wrap: pretty;
-}
-
-.term-note:hover {
-    background: var(--term-detail-surface);
-    transform: translateX(-10px);
 }
 
 .term-note.is-visible {
@@ -115,20 +120,36 @@
 }
 
 .term-poem {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 18px;
-    padding: 12px 10px;
+    display: inline-grid;
+    grid-template-columns: fit-content(180px) minmax(0, 1fr);
+    align-items: flex-start;
+    gap: 16px;
+    padding: 12px 12px 10px;
+    width: fit-content;
+    max-width: 100%;
     border: 0.5px solid var(--term-detail-outline);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 180ms ease, background-color 160ms ease, transform 220ms ease;
+    transition: opacity 180ms ease, background-color 160ms ease;
     background: var(--term-detail-surface);
+}
+
+.term-poem-zh {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    width: 100%;
+    min-width: 0;
+}
+
+.term-poem-zh-meta {
+    min-height: 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 2px;
+    max-width: 8em;
 }
 
 .term-poem.is-visible {
@@ -137,78 +158,105 @@
 }
 
 .term-poem-verse {
-    align-self: stretch;
+    align-self: auto;
     color: #54504c;
-    font-family: "FZZJ-YZDKJW-Regular", "Noto Serif SC", Helvetica, sans-serif;
-    font-size: 20px;
-    font-weight: 400;
     letter-spacing: 0;
-    line-height: normal;
-    margin-top: -1px;
-    text-align: center;
-    writing-mode: vertical-rl;
-    text-orientation: upright;
+    margin-top: 0;
+    text-align: left;
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
 }
 
 .term-poem-author {
     color: #54504c;
-    font-family: "FZFangSong-Z02S", "FZFangSong-Z02S-Regular", Helvetica, sans-serif;
     font-size: 16px;
-    font-weight: 400;
+    font-weight: 600;
+    line-height: 1.35;
     letter-spacing: 0;
-    line-height: normal;
-    margin-top: 2px;
-    writing-mode: vertical-rl;
-    text-orientation: upright;
+    margin-top: 0;
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
 }
 
 .term-poem-title {
+    display: block;
+    max-width: 8em;
     color: #54504c;
-    font-family: "FZFangSong-Z02S", "FZFangSong-Z02S-Regular", Helvetica, sans-serif;
     font-size: 16px;
-    font-weight: 400;
+    font-weight: 600;
+    line-height: 1.35;
     letter-spacing: 0;
-    line-height: normal;
-    writing-mode: vertical-rl;
-    text-orientation: upright;
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
+    white-space: normal;
+    word-break: break-all;
+    overflow-wrap: anywhere;
+}
+
+.term-poem-title-no-widow {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.term-no-widow {
+    display: inline-block;
+    white-space: nowrap;
 }
 
 .term-poem-note {
-    position: absolute;
-    left: calc(100% + 18px);
-    top: 8px;
-    width: 260px;
-    color: #54504C;
-    font-family: "Roboto Mono", Helvetica, sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    letter-spacing: -0.48px;
-    line-height: 22px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 220ms ease;
-}
-
-.term-poem:hover {
-    background: var(--term-detail-surface);
-    transform: translate(-50%, -50%) translateX(-10px);
-}
-
-.term-poem:hover .term-poem-note,
-.term-poem:focus-within .term-poem-note {
+    position: static;
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     opacity: 1;
+    pointer-events: auto;
+}
+
+.term-poem-note-meta-en {
+    min-height: 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 2px;
+    line-height: 40pt;
+}
+
+.term-poem-note-author-en {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.term-poem-note-title-en {
+    width: auto;
+    max-width: 100%;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: calc(1.35em + 1pt);
+    display: block;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-wrap: pretty;
+}
+
+.term-poem-note-translation {
+    position: relative;
+    top: 1pt;
+    width: 460px;
+    max-width: 100%;
+    line-height: calc(22px + 1pt);
+    text-wrap: pretty;
 }
 
 .term-phases {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: 16px;
-    width: 461px;
+    width: 100%;
+    max-width: 100%;
     min-height: 190px;
     opacity: 0;
     pointer-events: none;
@@ -222,104 +270,73 @@
 
 .term-phases-row {
     border: 1px solid var(--term-detail-outline);
-    height: 26px;
+    min-height: 26px;
+    height: auto;
     box-sizing: border-box;
     display: flex;
-    align-items: center;
-    padding: 3px 8px;
-    width: max-content;
+    align-items: stretch;
+    padding: 6px 8px;
+    width: 100%;
+    max-width: 100%;
     position: relative;
-    overflow: visible;
+    overflow: hidden;
     background: var(--term-detail-surface);
-    transform: translateX(0);
-    transition: background-color 160ms ease, transform 240ms cubic-bezier(.22, .8, .24, 1);
+    transition: background-color 160ms ease;
 }
 
 .term-phases-row-1 {
-    width: max-content;
+    width: 100%;
     background: var(--term-detail-surface);
 }
 
 .term-phases-row-2 {
-    width: max-content;
+    width: 100%;
 }
 
 .term-phases-row-3 {
-    width: max-content;
+    width: 100%;
 }
 
 .term-phases-row-inner {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    max-width: 100%;
+    align-items: start;
+    gap: 4px;
+}
+
+.term-phases-cell {
+    min-width: 0;
+    width: 100%;
+}
+
+.term-phases-cell-zh {
+    width: 100%;
+    min-width: 0;
 }
 
 .term-phases-zh {
+    display: block;
+    width: 100%;
     color: #54504c;
-    font-family: "FZFangSong-Z02S", "FZFangSong-Z02S-Regular", Helvetica, sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 18px;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
 }
 
 .term-phases-en {
-    color: #54504c;
-    font-family: "Roboto Mono", Helvetica, sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-    line-height: 16.2px;
-    letter-spacing: -0.54px;
-    white-space: nowrap;
-}
-
-.term-phases-row-3 .term-phases-en {
-    letter-spacing: 0.18px;
-    line-height: 17px;
-}
-
-.term-phases-hover-note {
-    position: absolute;
-    left: calc(100% + 16px);
-    top: 50%;
-    width: min(320px, calc(50vw - 96px));
-    color: #54504c;
-    font-family: "Roboto Mono", Helvetica, sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 18px;
-    letter-spacing: -0.54px;
-    background: transparent;
-    opacity: 0;
-    pointer-events: none;
-    filter: blur(3px);
-    transform: translate(14px, -50%);
-    transform-origin: left center;
-    transition: opacity 220ms ease, transform 240ms cubic-bezier(.22, .8, .24, 1), filter 220ms ease;
-}
-
-.term-phases-row:hover,
-.term-phases-row:focus-within {
-    background: var(--term-detail-surface);
-    transform: translateX(-18px);
-    z-index: 2;
-}
-
-.term-phases-row:hover .term-phases-hover-note,
-.term-phases-row:focus-within .term-phases-hover-note {
-    opacity: 1;
-    filter: blur(0);
-    transform: translate(0, -50%);
+    width: 100%;
 }
 
 .term-ritual {
-    position: absolute;
-    left: 533px;
-    top: 346px;
-    display: flex;
-    width: 445.5px;
-    justify-content: space-between;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(240px, auto));
+    width: 100%;
+    max-width: 100%;
+    align-items: start;
+    column-gap: var(--term-menu-content-gap, 120px);
+    row-gap: 16px;
     opacity: 0;
     pointer-events: none;
     transition: opacity 180ms ease;
@@ -332,107 +349,65 @@
 
 .term-ritual-col {
     display: flex;
-    width: 125px;
+    width: auto;
+    min-width: 240px;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     gap: 10px;
-    flex-shrink: 0;
     position: relative;
-}
-
-.term-ritual-trigger {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    min-height: 18px;
-    overflow: visible;
-}
-
-.term-ritual-marker {
-    width: 18px;
-    height: 18px;
-    border: 1px solid var(--term-detail-outline);
-    background: transparent;
-    transition: opacity 180ms ease, transform 200ms ease;
 }
 
 .term-ritual-artboard {
     width: 125px;
     height: 125px;
     aspect-ratio: 1 / 1;
-    align-self: stretch;
+    align-self: center;
     background: transparent;
 }
 
-.term-ritual-note {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 50%;
-    width: 260px;
-    padding: 0 8px;
-    border: 1px solid transparent;
-    color: #54504c;
-    font-family: "Roboto Mono", Helvetica, sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 22px;
-    letter-spacing: -0.48px;
-    background: var(--term-detail-surface);
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    pointer-events: none;
-    transform: translateX(-50%) scaleY(0.92);
-    transform-origin: top center;
-    transition: opacity 200ms ease, max-height 240ms ease, transform 240ms ease, padding 200ms ease, border-color 200ms ease, background 200ms ease;
+.term-ritual-copy {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    width: min(236px, 100%);
+    max-width: 236px;
+    margin: 0 auto;
 }
 
-.term-ritual-trigger:hover .term-ritual-note,
-.term-ritual-trigger:focus-within .term-ritual-note {
-    opacity: 1;
-    max-height: 160px;
+.term-ritual-note {
+    position: static;
+    width: 100%;
+    max-width: 100%;
     padding: 6px 8px;
-    border-color: var(--term-detail-outline);
+    border: 1px solid var(--term-detail-outline);
+    box-sizing: border-box;
+    color: #54504c;
+    letter-spacing: 0;
     background: var(--term-detail-surface);
-    transform: translateX(-50%) scaleY(1);
     pointer-events: auto;
 }
 
-.term-ritual-trigger:hover .term-ritual-marker,
-.term-ritual-trigger:focus-within .term-ritual-marker {
-    opacity: 0.35;
-    transform: scale(0.86);
+.term-ritual-note-combined {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+}
+
+.term-ritual-note-line {
+    width: 100%;
+    max-width: 100%;
 }
 
 .term-note-zh {
-    position: absolute;
-    left: calc(100% + 12px);
-    top: 50%;
-    transform: translateY(-50%) translateX(8px);
-    width: 178px;
+    position: static;
+    width: 100%;
+    max-width: 100%;
     color: #54504C;
-    font-family: "FZZJ-YZDKJW", "FZZJ-YZDKJW-Regular", "Noto Serif SC", Helvetica, sans-serif;
-    font-size: 16px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 28px;
-    opacity: 0;
-    filter: blur(6px);
-    pointer-events: none;
-    transition: opacity 240ms ease, filter 260ms ease, transform 260ms ease;
-}
-
-.term-note:hover .term-note-zh,
-.term-note:focus-within .term-note-zh {
     opacity: 1;
-    filter: blur(0);
-    transform: translateY(-50%) translateX(0);
-}
-
-.term-note:hover .term-note-en,
-.term-note:focus-within .term-note-en {
-    transform: translateX(0);
+    filter: none;
+    pointer-events: auto;
+    transform: none;
 }
 
 /* TEMP: disable all term-nav UI/interactions */
@@ -448,21 +423,15 @@
 
 @media (max-width: 1024px) {
     .term-center-content {
+        --term-panel-box-width: min(352px, calc((100vw - 200px) * 0.8));
         width: min(700px, 74vw);
         max-width: calc(100vw - 160px);
-    }
-
-    .term-center-content .term-phases {
-        width: min(430px, 58vw);
-    }
-
-    .term-center-content .term-ritual {
-        width: min(410px, 54vw);
     }
 }
 
 @media (max-width: 760px) {
     .term-center-content {
+        --term-panel-box-width: min(94vw, 256px);
         position: relative;
         left: auto;
         top: auto;
@@ -475,64 +444,71 @@
     }
 
     .term-center-content .term-note,
-    .term-center-content .term-poem,
     .term-center-content .term-phases,
     .term-center-content .term-ritual {
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
-        max-width: min(94vw, 380px);
-    }
-
-    .term-center-content .term-note {
-        width: min(94vw, 360px);
-        padding: 8px 10px;
-    }
-
-    .term-note:hover {
-        transform: translate(-50%, -50%);
-    }
-
-    .term-note-en {
-        width: auto;
-        max-width: none;
-    }
-
-    .term-note-zh {
-        display: none;
+        width: var(--term-panel-box-width);
+        max-width: var(--term-panel-box-width);
     }
 
     .term-center-content .term-poem {
-        width: min(94vw, 340px);
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: min(94vw, 520px);
+        max-width: min(94vw, 520px);
+    }
+
+    .term-center-content .term-note {
+        padding: 8px 10px;
+    }
+
+    .term-note-en {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .term-note-zh {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .term-note {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .term-center-content .term-poem {
+        grid-template-columns: 1fr;
         gap: 14px;
-        padding: 10px 8px;
+        padding: 12px 12px 10px;
     }
 
-    .term-poem-verse {
-        font-size: 18px;
-    }
-
-    .term-poem-author,
-    .term-poem-title {
-        font-size: 14px;
+    .term-poem-zh {
+        justify-content: flex-start;
     }
 
     .term-poem-note {
         position: static;
         width: 100%;
-        margin-top: 8px;
-        font-size: 12px;
-        line-height: 1.4;
+        margin-top: 0;
         opacity: 1;
         pointer-events: auto;
     }
 
-    .term-poem:hover {
-        transform: translate(-50%, -50%);
+    .term-poem-zh-meta,
+    .term-poem-note-meta-en {
+        min-height: 38px;
+    }
+
+    .term-poem-note-translation {
+        width: 100%;
     }
 
     .term-center-content .term-phases {
-        width: min(94vw, 380px);
         transform: translate(-50%, -50%);
     }
 
@@ -554,59 +530,29 @@
     }
 
     .term-phases-row-inner {
-        left: 0;
-        top: 0;
+        grid-template-columns: 1fr;
         gap: 6px;
-        flex-wrap: wrap;
     }
 
-    .term-phases-zh,
-    .term-phases-en {
-        font-size: 13px;
-        line-height: 1.35;
+    .term-phases-cell-zh {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .term-phases-zh {
+        width: 100%;
         white-space: normal;
     }
 
-    .term-phases-row-2 .term-phases-en,
-    .term-phases-row-2 .term-phases-zh,
-    .term-phases-row-3 .term-phases-en,
-    .term-phases-row-3 .term-phases-zh {
-        position: static;
-        left: auto;
-        top: auto;
-        width: auto;
-        line-height: 1.35;
-        letter-spacing: 0;
-    }
-
-    .term-phases-row:hover,
-    .term-phases-row:focus-within {
-        transform: none;
-    }
-
-    .term-phases-hover-note {
-        position: static;
-        left: auto;
-        top: auto;
-        width: 100%;
-        margin-top: 6px;
-        font-size: 12px;
-        line-height: 1.4;
-        letter-spacing: 0;
-        opacity: 1;
-        filter: none;
-        transform: none;
-        pointer-events: auto;
-    }
-
     .term-center-content .term-ritual {
-        width: min(94vw, 360px);
-        justify-content: space-between;
-        gap: 10px;
+        grid-template-columns: 1fr;
+        column-gap: 0;
+        row-gap: 10px;
     }
 
     .term-ritual-col {
-        width: min(44vw, 140px);
+        width: 100%;
+        min-width: 0;
     }
 
     .term-ritual-artboard {
@@ -614,46 +560,26 @@
         height: auto;
     }
 
-    .term-ritual-trigger {
+    .term-ritual-copy {
+        grid-template-columns: 1fr;
         width: 100%;
-        align-items: stretch;
-    }
-
-    .term-ritual-marker {
-        display: none;
+        max-width: 100%;
     }
 
     .term-ritual-note {
         position: static;
-        left: auto;
-        top: auto;
         width: 100%;
-        max-height: none;
         padding: 4px 6px;
-        border-color: var(--term-detail-outline);
-        font-size: 12px;
-        line-height: 1.4;
         letter-spacing: 0;
         opacity: 1;
         pointer-events: auto;
-        transform: none;
     }
+
 }
 
 @media (max-width: 460px) {
     .term-center-content {
+        --term-panel-box-width: min(94vw, 224px);
         min-height: min(400px, 54dvh);
-    }
-
-    .term-center-content .term-note,
-    .term-center-content .term-poem,
-    .term-center-content .term-phases,
-    .term-center-content .term-ritual {
-        max-width: min(94vw, 330px);
-    }
-
-    .term-phases-zh,
-    .term-phases-en {
-        font-size: 12px;
     }
 }
