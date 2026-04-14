@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAmbientTerm } from '../audio/AmbientAudioProvider';
 import { getCurrentTermId } from '../data';
@@ -15,11 +15,29 @@ import './Intro.css';
 
 const SEASON_LOOP_DURATION_MS = 60000;
 const LOOP_ENSURE_INTERVAL_MS = 320;
+const INTRO_COPY = {
+  en: [
+    "The 24 Solar Terms are a traditional East Asian calendrical system that divides the solar year into 24 seasonal markers. Developed in ancient China, the system tracks the sun's movement through the year and names recurring changes in climate, daylight, temperature, weather, and ecological activity. Rather than measuring time only through numbered dates or months, the 24 Solar Terms describe time through observable transformation in the natural world: the first rain of spring, the ripening of grain, the height of heat, the arrival of frost, or the lengthening and shortening of days.",
+    'Historically, the 24 Solar Terms were used to guide agricultural labor and seasonal decision-making, helping people know when to sow, harvest, prepare, rest, or adapt to environmental change. Over time, they also became embedded in everyday life through calendars, food customs, poetry, festivals, and local practices of observation. In this sense, the system functions not only as a way of counting time, but as a way of living with it.',
+    'The title A Living Calendar comes from this understanding. Unlike a conventional calendar, which often feels fixed, abstract, and detached from lived experience, the 24 Solar Terms describe time as something dynamic, sensory, and relational. They are "living" because they emerge from the ongoing interaction between the sun, the earth, climate, human activity, and other forms of life. Time here is not simply read on a grid; it is seen in leaves, felt in temperature, heard in insects, tasted in seasonal food, and remembered through cultural practice.',
+    "This project is an interactive website that reinterprets the Chinese 24 Solar Terms through ecological data, cultural practices, and personal reflection. By visualizing seasonal changes such as daylight, temperature, and natural rhythms, the website helps users reconnect calendar time with the environment around them. The 24 Solar Terms are recognized as an item of Intangible Cultural Heritage, and part of this project's intention is to help preserve and carry this knowledge forward. Through visual storytelling and interactive exploration, the project translates traditional knowledge into a contemporary experience that encourages people today to notice seasonal change and keep this cultural memory alive into the future."
+  ],
+  zh: [
+    '二十四节气是一种传统的东亚历法系统，将一个太阳年划分为二十四个季节性的时间标记。它起源于中国古代，通过追踪太阳在一年中的运行，来命名气候、日照、温度、天气与生态活动中反复出现的变化。与其说它只是用数字日期或月份来计算时间，不如说二十四节气是通过自然界中可被观察到的转变来描述时间：例如春天的第一场雨、谷物的成熟、暑热的高点、霜的降临，或白昼长短的变化。',
+    '在历史上，二十四节气被用来指导农业劳作与季节性的生活判断，帮助人们知道何时播种、收获、准备、休养，或因应环境变化。随着时间推移，它也逐渐嵌入日常生活之中，体现在历书、饮食习俗、诗歌、节庆以及各地的观察传统里。从这个意义上来说，它不仅是一种计时方式，也是一种与时间共同生活的方式。',
+    '“时序有声”这个标题正是来自这样的理解。与传统日历常常给人固定、抽象、并且脱离生活经验的感觉不同，二十四节气所描述的时间是动态的、可感知的、也是关系性的。它之所以是“活着的”，是因为它来自太阳、地球、气候、人类活动以及其他生命形式之间持续发生的互动。这里的时间并不只是被读在一个网格上；它可以在树叶中被看见，在温度中被感知，在虫鸣中被听见，在时令食物中被品尝，也在文化实践中被记忆。',
+    '这个项目是一个互动网站，通过生态数据、文化习俗与个人感受，重新诠释中国的二十四节气。网站通过可视化白昼时长、气温变化与自然节律等季节性变化，帮助使用者重新将日历中的时间与周围的环境连接起来。二十四节气已被列入非物质文化遗产，而本项目的其中一个意图，也是希望帮助保存并延续这份知识。通过视觉叙事与互动式探索，这个项目将传统知识转译为一种当代体验，鼓励今天的人们重新注意季节变化，并让这份文化记忆继续活在未来。'
+  ]
+};
 
 const Intro = () => {
   const navigate = useNavigate();
   useAmbientTerm(getCurrentTermId());
   const backgroundOwnerRef = useRef(Symbol('intro-term-background'));
+  const introContentRef = useRef(null);
+  const [introLang, setIntroLang] = useState('en');
+  const [showTopFade, setShowTopFade] = useState(false);
+  const [showBottomFade, setShowBottomFade] = useState(true);
 
   const handleBackClick = (event) => {
     event.preventDefault();
@@ -74,6 +92,40 @@ const Intro = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof document === 'undefined') return undefined;
+    document.body.classList.add('landing-no-scroll');
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }
+    return () => {
+      document.body.classList.remove('landing-no-scroll');
+    };
+  }, []);
+
+  useEffect(() => {
+    const contentEl = introContentRef.current;
+    if (!contentEl) return;
+    const scrollTop = contentEl.scrollTop;
+    const maxScrollTop = Math.max(0, contentEl.scrollHeight - contentEl.clientHeight);
+    const nextShowTop = scrollTop > 1;
+    const nextShowBottom = maxScrollTop - scrollTop > 1;
+    setShowTopFade(nextShowTop);
+    setShowBottomFade(nextShowBottom);
+  }, [introLang]);
+
+  const handleIntroScroll = (event) => {
+    const contentEl = event.currentTarget;
+    const scrollTop = contentEl.scrollTop;
+    const maxScrollTop = Math.max(0, contentEl.scrollHeight - contentEl.clientHeight);
+    const nextShowTop = scrollTop > 1;
+    const nextShowBottom = maxScrollTop - scrollTop > 1;
+    setShowTopFade((prev) => (prev === nextShowTop ? prev : nextShowTop));
+    setShowBottomFade((prev) => (prev === nextShowBottom ? prev : nextShowBottom));
+  };
+
   return (
     <div className="intro-page">
       <div id="termP5Mount" className="intro-p5" aria-hidden="true"></div>
@@ -82,25 +134,40 @@ const Intro = () => {
           <span className="intro-back-label">Back</span>
         </Link>
         <div className="intro-title">
-          <div className="intro-title-zh">二十四节气</div>
-          <div className="intro-title-en">24 Solar Terms</div>
+          <div className="intro-title-zh">时序有声</div>
+          <div className="intro-title-en">A Living Calendar</div>
         </div>
       </header>
 
-      <main className="intro-content">
-        <p className="intro-lead">
-          The 24 Solar Terms (Jieqi) divide the solar year into 24 seasonal markers.
-          They were developed in ancient China to track changes in climate, guide farming,
-          and mark shifts in light, temperature, and weather.
-        </p>
-        <p>
-          Each term begins at a precise solar longitude and helps describe the rhythm of the year:
-          from the first warming of spring, to the height of summer, to the deep of winter.
-          The system is still used today in calendars, cultural practices, and traditional knowledge.
-        </p>
-        <p>
-          This project is an interactive website that reinterprets the Chinese 24 Solar Terms through ecological data, cultural practices, and personal reflection. By visualizing seasonal changes such as daylight, temperature, and natural rhythms, the website helps users reconnect calendar time with the environment around them. The 24 Solar Terms are recognized as an item of Intangible Cultural Heritage, and part of this project&apos;s intention is to help preserve and carry this knowledge forward. Through visual storytelling and interactive exploration, the project translates traditional knowledge into a contemporary experience that encourages people today to notice seasonal change and keep this cultural memory alive into the future.
-        </p>
+      <div className="intro-lang-toggle" role="group" aria-label="Intro language">
+        <button
+          type="button"
+          className={`intro-lang-toggle-btn${introLang === 'zh' ? ' is-active' : ''}`}
+          aria-pressed={introLang === 'zh'}
+          onClick={() => setIntroLang('zh')}
+        >
+          CN
+        </button>
+        <button
+          type="button"
+          className={`intro-lang-toggle-btn${introLang === 'en' ? ' is-active' : ''}`}
+          aria-pressed={introLang === 'en'}
+          onClick={() => setIntroLang('en')}
+        >
+          EN
+        </button>
+      </div>
+
+      <main
+        ref={introContentRef}
+        className={`intro-content${introLang === 'zh' ? ' is-zh' : ''}${showTopFade ? ' has-top-fade' : ''}${showBottomFade ? ' has-bottom-fade' : ''}`}
+        onScroll={handleIntroScroll}
+      >
+        {INTRO_COPY[introLang].map((paragraph, index) => (
+          <p key={`intro-copy-${introLang}-${index}`} className={index === 0 ? 'intro-lead' : ''} lang={introLang === 'zh' ? 'zh-Hans' : 'en'}>
+            {paragraph}
+          </p>
+        ))}
       </main>
     </div>
   );

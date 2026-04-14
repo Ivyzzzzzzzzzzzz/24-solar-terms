@@ -92,10 +92,10 @@ const Landing = () => {
       
       <section className="landing" id="landingPage">
         <div className="landing-title-wrap">
-          <Link className="landing-title-link" to="/intro" aria-label="Introduction to the 24 solar terms">
+          <Link className="landing-title-link" to="/intro" aria-label="Introduction to A Living Calendar">
             <div className="landing-title-row">
-              <div className="landing-title-zh">二十四节气</div>
-              <div className="landing-title">24 Solar Terms</div>
+              <div className="landing-title-zh">时序有声</div>
+              <div className="landing-title">A Living Calendar</div>
             </div>
           </Link>
           <div className="landing-meta" aria-live="polite">

@@ -1,13 +1,20 @@
 .intro-page {
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
   min-height: 100dvh;
   --landing-pad-top: 96px;
   --landing-pad-x: 136px;
   --intro-corner-size: 108px;
+  --intro-content-offset-top: clamp(36px, 9vh, 92px);
+  --intro-content-pad-x: 26px;
+  --intro-header-top: max(var(--landing-pad-top), calc(var(--intro-corner-size) - 8px));
+  --intro-content-left: max(13vw, calc((100vw - 680px) / 2));
   padding: max(var(--landing-pad-top), calc(var(--intro-corner-size) - 8px)) var(--landing-pad-x) 56px;
   background: transparent;
   color: rgba(20, 18, 16, 0.9);
-  position: relative;
+  position: fixed;
+  inset: 0;
+  box-sizing: border-box;
   overflow: hidden;
 }
 
@@ -75,52 +82,138 @@
   font-family: "FZZJ-YZDKJW", "FZZJ-YZDKJW-Regular", "FZFangSong-Z02S", "FangSong", "Songti SC", serif;
   font-size: clamp(20px, 2.4vw, 28px);
   letter-spacing: clamp(0.1em, 0.2vw, 0.2em);
+  color: rgba(84, 80, 76, 0.85);
+  writing-mode: horizontal-tb;
+  transform: none;
 }
 
 .intro-title-en {
   font-family: "Stoke", "Stoke-Light", Helvetica, sans-serif;
-  font-size: clamp(12px, 1.4vw, 16px);
+  font-size: clamp(13px, 1.55vw, 18px);
   letter-spacing: clamp(0.16em, 0.22vw, 0.28em);
   color: rgba(84, 80, 76, 0.85);
   margin-top: 6px;
 }
 
 .intro-content {
-  margin: clamp(36px, 9vh, 92px) auto 0;
+  margin: var(--intro-content-offset-top) auto 0;
   width: min(74vw, 680px);
   max-height: min(56vh, 420px);
   padding: 22px 26px 26px;
   overflow-y: auto;
+  overflow-x: hidden;
   /* border: 1px solid rgba(84, 80, 76, 0.22); */
   /* border-radius: 6px; */
   /* background: rgba(246, 241, 234, 0.82);
   background: color-mix(in srgb, var(--term-bg-color, rgb(246, 241, 234)) 76%, rgba(255, 255, 255, 0.24));
   box-shadow: 0 10px 24px rgba(20, 18, 16, 0.08); */
   font-family: "Stoke", "Stoke-Light", Helvetica, sans-serif;
-  font-size: clamp(11pt, 1.22vw, 12pt);
+  font-size: clamp(10.6pt, 1.12vw, 11.4pt);
   line-height: 1.8;
   position: relative;
   z-index: 2;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  --intro-content-fade-start: 80%;
-  --intro-content-fade-end: 100%;
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 1) var(--intro-content-fade-start),
-    rgba(0, 0, 0, 0) var(--intro-content-fade-end)
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 1) var(--intro-content-fade-start),
-    rgba(0, 0, 0, 0) var(--intro-content-fade-end)
-  );
+  --intro-content-fade-top-end: 20%;
+  --intro-content-fade-bottom-start: 80%;
+  -webkit-mask-image: none;
+  mask-image: none;
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.intro-content.has-bottom-fade {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) var(--intro-content-fade-bottom-start),
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) var(--intro-content-fade-bottom-start),
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.intro-content.has-top-fade.has-bottom-fade {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 1) var(--intro-content-fade-top-end),
+    rgba(0, 0, 0, 1) var(--intro-content-fade-bottom-start),
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 1) var(--intro-content-fade-top-end),
+    rgba(0, 0, 0, 1) var(--intro-content-fade-bottom-start),
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.intro-content.has-top-fade:not(.has-bottom-fade) {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 1) var(--intro-content-fade-top-end),
+    rgba(0, 0, 0, 1) 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 1) var(--intro-content-fade-top-end),
+    rgba(0, 0, 0, 1) 100%
+  );
+}
+
+.intro-lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  position: fixed;
+  top: var(--intro-header-top);
+  left: calc(var(--intro-content-left) + var(--intro-content-pad-x));
+  z-index: 4;
+}
+
+.intro-lang-toggle-btn {
+  appearance: none;
+  border: 1px solid rgba(84, 80, 76, 0.38);
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(84, 80, 76, 0.86);
+  font-family: "Roboto Mono", Helvetica, sans-serif;
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  cursor: pointer;
+}
+
+.intro-lang-toggle-btn.is-active {
+  background: rgba(84, 80, 76, 0.12);
+  border-color: rgba(84, 80, 76, 0.62);
+}
+
+.intro-lang-toggle-btn:focus-visible {
+  outline: 1px solid rgba(84, 80, 76, 0.7);
+  outline-offset: 1px;
+}
+
+.intro-content.is-zh {
+  font-family: "FZFangSong-Z02S", "FZFangSong-Z02S-Regular", Helvetica, sans-serif;
+  font-size: clamp(11.8pt, 1.34vw, 13pt);
+  font-weight: 700;
+  line-height: 1.86;
+  color: rgba(40, 36, 32, 0.96);
+  letter-spacing: 0;
 }
 
 @media (min-width: 861px) {
@@ -167,6 +260,9 @@
     --landing-pad-top: 56px;
     --landing-pad-x: 32px;
     --intro-corner-size: 96px;
+    --intro-content-offset-top: 40px;
+    --intro-content-pad-x: 18px;
+    --intro-content-left: var(--landing-pad-x);
   }
 
   .intro-header {
@@ -187,6 +283,10 @@
     font-size: 11.5pt;
     line-height: 1.75;
   }
+
+  .intro-lang-toggle {
+    left: calc(var(--landing-pad-x) + var(--intro-content-pad-x));
+  }
 }
 
 @media (max-width: 560px) {
@@ -194,6 +294,8 @@
     --landing-pad-top: max(18px, env(safe-area-inset-top));
     --landing-pad-x: 14px;
     --intro-corner-size: 82px;
+    --intro-content-offset-top: 30px;
+    --intro-content-pad-x: 14px;
     padding-bottom: 18px;
   }
 
@@ -208,11 +310,13 @@
     font-size: 11pt;
     line-height: 1.68;
   }
+
 }
 
 @media (max-width: 420px) {
   .intro-page {
     --intro-corner-size: 72px;
+    --intro-content-pad-x: 12px;
   }
 
   .intro-content {

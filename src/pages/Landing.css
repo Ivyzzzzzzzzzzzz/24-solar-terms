@@ -40,8 +40,8 @@
 
 .landing-title {
     font-family: "Stoke", "Stoke-Light", Helvetica, sans-serif;
-    font-size: clamp(12px, 1.4vw, 16px);
-  letter-spacing: clamp(0.16em, 0.22vw, 0.28em);
+    font-size: clamp(13px, 1.55vw, 18px);
+    letter-spacing: clamp(0.16em, 0.22vw, 0.28em);
     color: rgba(84, 80, 76, 0.8);
     margin: 0;
 }
