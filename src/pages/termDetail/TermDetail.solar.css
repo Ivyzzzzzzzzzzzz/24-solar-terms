@@ -216,9 +216,9 @@
 
 .term-solar-panel-caption-body-zh {
     font-family: "FZFangSong-Z02S", "FZFangSong-Z02S-Regular", Helvetica, sans-serif;
-    color: black;
+    color: rgb(80, 80, 80);
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 300;
     line-height: 25px;
     letter-spacing: 0;
 }
