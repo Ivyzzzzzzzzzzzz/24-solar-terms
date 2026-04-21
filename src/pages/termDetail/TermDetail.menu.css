@@ -454,6 +454,36 @@
     }
 }
 
+@media (min-width: 1440px) {
+    .term-menu-selector-box {
+        filter: blur(9px);
+    }
+
+    .term-menu-path-zh {
+        font-size: 30px;
+    }
+
+    .term-menu-path-en {
+        font-size: 21px;
+        letter-spacing: 0.96px;
+    }
+}
+
+@media (min-width: 1920px) {
+    .term-menu-selector-box {
+        filter: blur(10px);
+    }
+
+    .term-menu-path-zh {
+        font-size: 32px;
+    }
+
+    .term-menu-path-en {
+        font-size: 22.5px;
+        letter-spacing: 1.02px;
+    }
+}
+
 @media (max-width: 980px) {
     .term-menu-ring {
         left: var(--term-orb-left);

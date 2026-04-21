@@ -460,6 +460,164 @@
     pointer-events: none !important;
 }
 
+@media (min-width: 1440px) {
+    .term-center-content {
+        --term-panel-box-width: min(460px, calc((100vw - 420px) * 0.78));
+        width: min(920px, 66vw);
+        max-width: calc(100vw - 300px);
+        min-height: 320px;
+    }
+
+    .term-center-content.is-ritual-active {
+        width: min(1260px, calc(100vw - 140px));
+        max-width: calc(100vw - 140px);
+    }
+
+    .term-cn-content-typestyle {
+        font-size: 20px;
+        line-height: 33px;
+    }
+
+    .term-en-content-typestyle {
+        font-size: 17px;
+        line-height: 24px;
+        letter-spacing: -0.36px;
+    }
+
+    .term-center-content .term-note {
+        padding: 12px 16px;
+    }
+
+    .term-note {
+        gap: 18px;
+        padding: 6px;
+    }
+
+    .term-center-content .term-poem {
+        max-width: min(920px, calc(100vw - 260px));
+    }
+
+    .term-poem {
+        gap: 20px;
+        padding: 14px 16px 12px;
+    }
+
+    .term-poem-author,
+    .term-poem-title {
+        font-size: 17px;
+    }
+
+    .term-poem-note-meta-en {
+        min-height: 48px;
+    }
+
+    .term-poem-note-author-en,
+    .term-poem-note-title-en {
+        font-size: 15px;
+    }
+
+    .term-poem-note-translation {
+        width: 520px;
+        line-height: 24px;
+    }
+
+    .term-phases {
+        gap: 18px;
+        min-height: 208px;
+    }
+
+    .term-phases-row {
+        min-height: 30px;
+        padding: 8px 10px;
+    }
+
+    .term-phases-row-inner {
+        gap: 6px;
+    }
+
+    .term-center-content .term-ritual {
+        --term-ritual-copy-width-default: 292px;
+        max-width: min(1260px, calc(100vw - 140px));
+    }
+
+    .term-ritual {
+        grid-template-columns: repeat(2, minmax(280px, auto));
+        column-gap: calc(var(--term-menu-content-gap, 120px) + 12px);
+        row-gap: 18px;
+    }
+
+    .term-ritual-col {
+        min-width: 280px;
+        gap: 12px;
+    }
+
+    .term-ritual-artboard {
+        width: 140px;
+        height: 140px;
+    }
+
+    .term-ritual-note {
+        padding: 8px 10px;
+    }
+
+    .term-ritual-note-stack {
+        gap: 6px;
+    }
+}
+
+@media (min-width: 1920px) {
+    .term-center-content {
+        --term-panel-box-width: min(500px, calc((100vw - 500px) * 0.74));
+        width: min(1040px, 62vw);
+        max-width: calc(100vw - 360px);
+        min-height: 340px;
+    }
+
+    .term-center-content.is-ritual-active {
+        width: min(1380px, calc(100vw - 180px));
+        max-width: calc(100vw - 180px);
+    }
+
+    .term-cn-content-typestyle {
+        font-size: 21px;
+        line-height: 35px;
+    }
+
+    .term-en-content-typestyle {
+        font-size: 18px;
+        line-height: 26px;
+        letter-spacing: -0.28px;
+    }
+
+    .term-center-content .term-poem {
+        max-width: min(980px, calc(100vw - 320px));
+    }
+
+    .term-poem-note-translation {
+        width: 560px;
+        line-height: 26px;
+    }
+
+    .term-center-content .term-ritual {
+        --term-ritual-copy-width-default: 316px;
+        max-width: min(1380px, calc(100vw - 180px));
+    }
+
+    .term-ritual {
+        grid-template-columns: repeat(2, minmax(304px, auto));
+        column-gap: calc(var(--term-menu-content-gap, 120px) + 20px);
+    }
+
+    .term-ritual-col {
+        min-width: 304px;
+    }
+
+    .term-ritual-artboard {
+        width: 152px;
+        height: 152px;
+    }
+}
+
 @media (max-width: 1024px) {
     .term-center-content {
         --term-panel-box-width: min(352px, calc((100vw - 200px) * 0.8));
