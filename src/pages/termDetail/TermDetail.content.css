@@ -11,6 +11,11 @@
     pointer-events: none;
 }
 
+.term-center-content.is-ritual-active {
+    width: min(1120px, calc(100vw - 96px));
+    max-width: calc(100vw - 96px);
+}
+
 .term-page {
     --term-detail-surface: var(--term-bg-color, rgb(246, 241, 232));
     --term-detail-outline: var(--term-detail-outline-color, #54504c);
@@ -70,8 +75,11 @@
 }
 
 .term-center-content .term-ritual {
+    --term-ritual-note-height: 214px;
+    --term-ritual-note-gap: 8px;
+    --term-ritual-copy-width-default: 258px;
     width: fit-content;
-    max-width: min(980px, calc(100vw - 220px));
+    max-width: min(1120px, calc(100vw - 96px));
 }
 
 .term-center-content .term-poem {
@@ -342,6 +350,10 @@
     transition: opacity 180ms ease;
 }
 
+.term-ritual.is-single {
+    grid-template-columns: minmax(240px, auto);
+}
+
 .term-ritual.is-visible {
     opacity: 1;
     pointer-events: auto;
@@ -363,21 +375,35 @@
     aspect-ratio: 1 / 1;
     align-self: center;
     background: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
 }
 
 .term-ritual-copy {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 8px;
-    width: min(236px, 100%);
-    max-width: 236px;
+    display: inline-flex;
+    width: fit-content;
+    min-width: 0;
+    max-width: min(var(--ritual-copy-width, var(--term-ritual-copy-width-default)), calc(100vw - 140px));
+    flex: 0 0 auto;
+    align-self: center;
     margin: 0 auto;
+}
+
+.term-ritual.is-single .term-ritual-copy {
+    width: fit-content;
+    min-width: 0;
+    max-width: min(var(--ritual-copy-width, var(--term-ritual-copy-width-default)), calc(100vw - 140px));
 }
 
 .term-ritual-note {
     position: static;
-    width: 100%;
-    max-width: 100%;
+    display: inline-flex;
+    width: var(--ritual-copy-width, var(--term-ritual-copy-width-default));
+    max-width: min(var(--ritual-copy-width, var(--term-ritual-copy-width-default)), calc(100vw - 140px));
+    min-height: var(--term-ritual-note-height);
+    height: var(--term-ritual-note-height);
+    max-height: var(--term-ritual-note-height);
     padding: 6px 8px;
     border: 1px solid var(--term-detail-outline);
     box-sizing: border-box;
@@ -387,15 +413,28 @@
     pointer-events: auto;
 }
 
-.term-ritual-note-combined {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 8px;
+.term-ritual-note-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    align-content: flex-start;
+    gap: var(--term-ritual-note-gap);
+    width: 100%;
 }
 
-.term-ritual-note-line {
+.term-ritual-textbox {
     width: 100%;
     max-width: 100%;
+    box-sizing: border-box;
+    border: none;
+    padding: 0;
+    background: transparent;
+}
+
+.term-ritual-textbox-zh,
+.term-ritual-textbox-en {
+    overflow-wrap: anywhere;
 }
 
 .term-note-zh {
@@ -441,6 +480,11 @@
         min-height: min(420px, 52dvh);
         margin: 8px auto 0;
         pointer-events: auto;
+    }
+
+    .term-center-content.is-ritual-active {
+        width: 100%;
+        max-width: none;
     }
 
     .term-center-content .term-note,
@@ -561,14 +605,18 @@
     }
 
     .term-ritual-copy {
-        grid-template-columns: 1fr;
-        width: 100%;
-        max-width: 100%;
+        width: fit-content;
+        min-width: 0;
+        max-width: min(var(--ritual-copy-width, var(--term-ritual-copy-width-default)), calc(100vw - 28px));
     }
 
     .term-ritual-note {
         position: static;
-        width: 100%;
+        width: var(--ritual-copy-width, var(--term-ritual-copy-width-default));
+        max-width: min(var(--ritual-copy-width, var(--term-ritual-copy-width-default)), calc(100vw - 28px));
+        min-height: var(--term-ritual-note-height);
+        height: var(--term-ritual-note-height);
+        max-height: var(--term-ritual-note-height);
         padding: 4px 6px;
         letter-spacing: 0;
         opacity: 1;

@@ -34,6 +34,7 @@ const SolarDial = ({ onTermChange }) => {
   const moveRafRef = useRef(null);
   const pendingMoveRef = useRef(null);
   const currentTermIndexRef = useRef(0);
+  const allTermsRotationRef = useRef(0);
   const dragMovedRef = useRef(false);
   const lastPointerWasDragRef = useRef(false);
   const dragDeltaSumRef = useRef(0);
@@ -235,6 +236,7 @@ const SolarDial = ({ onTermChange }) => {
   const applyTermToAll = (idx) => {
     const term = TERM_LIST[idx];
     setTermTheme(term);
+    currentTermIndexRef.current = idx;
 
     setState(prev => ({
       ...prev,
@@ -311,6 +313,9 @@ const SolarDial = ({ onTermChange }) => {
           setTermTheme(TERM_LIST[pending.nextIdx]);
           currentTermIndexRef.current = pending.nextIdx;
         }
+        if (pending.kind === 'outer') {
+          allTermsRotationRef.current = pending.newRot;
+        }
 
         setState(prev => ({
           ...prev,
@@ -365,6 +370,8 @@ const SolarDial = ({ onTermChange }) => {
     const outerRotation = typeof opts.outerRotation === 'number'
       ? opts.outerRotation
       : outerRotationForIndex(idx);
+    currentTermIndexRef.current = idx;
+    allTermsRotationRef.current = outerRotation;
 
     setState(prev => ({
       ...prev,
@@ -411,11 +418,42 @@ const SolarDial = ({ onTermChange }) => {
     snapAllRings(idx, { outerRotation: clockwiseRotation });
   };
 
+  const navigateByArrowKey = (direction) => {
+    if (dragRef.current) return;
+
+    const dir = direction >= 0 ? 1 : -1;
+    const nextIdx = mod(currentTermIndexRef.current + dir, N);
+    const nextTerm = TERM_LIST[nextIdx];
+    if (!nextTerm) return;
+
+    const step = 360 / N;
+    const nextOuterRotation = allTermsRotationRef.current - (dir * step);
+
+    setHasUserInteracted(true);
+    setTermTheme(nextTerm);
+    currentTermIndexRef.current = nextIdx;
+    allTermsRotationRef.current = nextOuterRotation;
+
+    setState(prev => ({
+      ...prev,
+      ringRotations: {
+        ...prev.ringRotations,
+        date: rotationForTerm('date', nextIdx),
+        allTerms: nextOuterRotation
+      },
+      currentTermIndex: nextIdx,
+      isDragging: false
+    }));
+  };
+
   // Initialize on mount
   useEffect(() => {
     const todayInfo = getTodayInfo();
     const initialIdx = TERM_LIST.findIndex(t => t.id === todayInfo.currentTerm.id);
     const startIdx = initialIdx >= 0 ? initialIdx : 0;
+    const initialOuterRotation = outerRotationForIndex(startIdx);
+    currentTermIndexRef.current = startIdx;
+    allTermsRotationRef.current = initialOuterRotation;
 
     applyTermToAll(startIdx);
 
@@ -427,7 +465,7 @@ const SolarDial = ({ onTermChange }) => {
         lon: 0,
         daynight: 0,
         hou: 0,
-        allTerms: outerRotationForIndex(startIdx)
+        allTerms: initialOuterRotation
       },
       currentTermIndex: startIdx
     }));
@@ -453,8 +491,44 @@ const SolarDial = ({ onTermChange }) => {
   }, [state]);
 
   useEffect(() => {
+    const isEditableTarget = (target) => {
+      if (typeof HTMLElement === 'undefined' || !(target instanceof HTMLElement)) return false;
+      if (target.isContentEditable) return true;
+      const tag = target.tagName;
+      return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.defaultPrevented) return;
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      if (isEditableTarget(event.target)) return;
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        navigateByArrowKey(1);
+        return;
+      }
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        navigateByArrowKey(-1);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+    // Keyboard listener intentionally reads refs for latest dial state.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     currentTermIndexRef.current = state.currentTermIndex;
   }, [state.currentTermIndex]);
+
+  useEffect(() => {
+    allTermsRotationRef.current = state.ringRotations.allTerms;
+  }, [state.ringRotations.allTerms]);
 
   useEffect(() => {
     if (typeof onTermChange === 'function') {

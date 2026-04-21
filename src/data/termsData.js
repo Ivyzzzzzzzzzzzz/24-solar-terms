@@ -448,6 +448,12 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '走到室外，感受空气落在脸上的方式。',
       '寒冷在这时变得具体、直接，也无法忽视。'
+    ],
+    ritualNotes: [
+      'Laba porridge: Winter-stored grains and beans come together in one hot bowl.'
+    ],
+    ritualNotesZh: [
+      '腊八粥：把冬季储备食材熬成一碗热粥。'
     ]
   },
   dahan: {
@@ -458,6 +464,12 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '靠近温暖的地方停一会儿。',
       '在一年最冷的时候，一点点火光、灯光，或一只热杯子，都会显得格外珍贵。'
+    ],
+    ritualNotes: [
+      'Lantern: Hung near the turn of the year, it signals the coming new year.'
+    ],
+    ritualNotesZh: [
+      '灯笼：常在岁末年初出现，提示新年将近。'
     ]
   },
   lichun: {
@@ -468,6 +480,12 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '仔细看看仍然光裸的枝条。',
       '有些芽苞，也许会比季节更早一步出现。'
+    ],
+    ritualNotes: [
+      'Spring pancake: Seasonal vegetables wrapped in a thin pancake mark the start of spring farming.'
+    ],
+    ritualNotesZh: [
+      '春饼：把新鲜时蔬卷进薄饼，以“咬春”迎接农事新始。'
     ]
   },
   yushui: {
@@ -485,12 +503,10 @@ export const TERM_CONTENT_MAP = {
     poemNote: 'Early rain is light, but it changes everything quietly.',
     phasesNote: '',
     ritualNotes: [
-      'Walk after light rain and observe sprouts near paths and walls.',
-      'Keep routines gentle and aligned with the still-cool weather.'
+      'Rain-water tea: Tea brewed with early spring rain becomes a small ritual of seasonal renewal.'
     ],
     ritualNotesZh: [
-      '小雨后去走一走，观察路边与墙角的新芽。',
-      '作息放缓一些，顺应仍带寒意的天气。'
+      '雨水茶：以初春雨水入茶，把饮茶变成迎新的季节动作。'
     ]
   },
   jingzhe: {
@@ -501,6 +517,12 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '在户外停一停，听一听。',
       '世界看起来也许仍然安静，但细小的生命已经在其下开始活动。'
+    ],
+    ritualNotes: [
+      'Fried beans: Their crisp cracking sound echoes the season\'s sudden awakening.'
+    ],
+    ritualNotesZh: [
+      '炒豆：清脆爆裂的声音呼应万物被惊醒的意象。'
     ]
   },
   chunfen: {
@@ -511,6 +533,12 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '感受这一天的均衡。',
       '明与暗在这一刻短暂并置，几乎相等。'
+    ],
+    ritualNotes: [
+      'Kite: A spring outing custom that also suggests release and uplift.'
+    ],
+    ritualNotesZh: [
+      '风筝：既是春日出游活动，也带有舒展与放松之意。'
     ]
   },
   qingming: {
@@ -521,6 +549,14 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '今天不妨走慢一点。',
       '留意新绿、细雨，以及初春空气里出现的清明感。'
+    ],
+    ritualNotes: [
+      'Qingtuan: Its green color brings traces of fresh spring growth into the food.',
+      'Tomb-sweeping: Qingming has long been tied to ancestor remembrance and family memory.'
+    ],
+    ritualNotesZh: [
+      '青团：草叶染出的青色，把春天的新生带进食物里。',
+      '扫墓：清明长期与祭祖和家族纪念相连。'
     ]
   },
   guyu: {
@@ -538,12 +574,10 @@ export const TERM_CONTENT_MAP = {
     poemNote: 'Late-spring rain turns waiting into visible growth.',
     phasesNote: '',
     ritualNotes: [
-      'Drink fresh spring tea and notice subtle taste changes.',
-      'Open windows after rain and let the moist air in briefly.'
+      'Tea picking: It falls in one of the key harvest periods for spring tea.'
     ],
     ritualNotesZh: [
-      '喝一杯新采的春茶，感受细微的滋味变化。',
-      '雨后短暂开窗，让潮润的空气流进室内。'
+      '采茶：正值重要春茶采摘时节。'
     ]
   },
   lixia: {
@@ -554,6 +588,12 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '在阳光下多停留一会儿。',
       '你也许会先从温度，而不是颜色，感到季节的转变。'
+    ],
+    ritualNotes: [
+      'Egg competition: Eggs are both a seasonal food and a playful custom at this time.'
+    ],
+    ritualNotesZh: [
+      '斗蛋：鸡蛋既是时令食物，也发展成可参与的节令游戏。'
     ]
   },
   xiaoman: {
@@ -564,6 +604,12 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '看看草木、麦粒，或任何像田野一样生长的植物。',
       '万物尚未成熟，但已经不再幼小。'
+    ],
+    ritualNotes: [
+      'Silkworm: Their active growth at this time shaped related seasonal rituals.'
+    ],
+    ritualNotesZh: [
+      '蚕：此时桑蚕生长旺盛，也带出相关祈愿习俗。'
     ]
   },
   mangzhong: {
@@ -574,6 +620,12 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '今天动手做一点什么。',
       '这个节气里有播种、栽种、收取，以及持续行动的感觉。'
+    ],
+    ritualNotes: [
+      'Green plums: Ripening plums are often pickled or made into tart early-summer foods.'
+    ],
+    ritualNotesZh: [
+      '梅子：青梅成熟，常被腌渍或做成初夏酸味食物。'
     ]
   },
   xiazhi: {
@@ -584,6 +636,14 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '留意光停留到多晚。',
       '连傍晚都像有些不愿结束。'
+    ],
+    ritualNotes: [
+      'First-wheat noodles: Newly harvested wheat turns a bowl of noodles into a first taste of the season.',
+      'Round fan: Used for cooling, it naturally belongs to midsummer seasonal life.'
+    ],
+    ritualNotesZh: [
+      '尝新面：新麦初成，一碗面成为“尝新”的节令记忆。',
+      '团扇：既能消暑，也常见于夏日时令生活。'
     ]
   },
   xiaoshu: {
@@ -594,6 +654,14 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '留意树荫、微风，与流动的空气。',
       '当热意开始累积，细小的凉意会变得更容易被察觉。'
+    ],
+    ritualNotes: [
+      'Lotus seeds: Common in summer soups and desserts, they suggest calm seasonal nourishment.',
+      'Lotus leaf: Seen in objects, wrapping, and imagery, it became a symbol of midsummer.'
+    ],
+    ritualNotesZh: [
+      '莲子：常入夏季汤品和甜品，带出清润平和的联想。',
+      '莲叶：常见于器物、包裹与图像中，成为盛夏意象。'
     ]
   },
   dashu: {
@@ -604,6 +672,14 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '慢慢喝一点冰凉的东西。',
       '感受夏天在最盛的时候，能够变得多么强烈。'
+    ],
+    ritualNotes: [
+      'Sun-curing ginger: Ginger dried with brown sugar under the summer sun turns heat into part of the food.',
+      'Sending off the Major Heat boat: A ceremonial boat is sent out to sea to send away heat and pray for safety.'
+    ],
+    ritualNotesZh: [
+      '晒伏姜：生姜与红糖在伏日曝晒，把炎热做进食物里。',
+      '送大暑船：以送船出海的方式送暑并祈求平安。'
     ]
   },
   liqiu: {
@@ -614,6 +690,12 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '留意清晨或夜晚的空气。',
       '即使景色还没改变，温度可能已经先告诉你秋天快到了。'
+    ],
+    ritualNotes: [
+      'Putting on autumn weight: Rich food helps the body recover from summer and enter autumn.'
+    ],
+    ritualNotesZh: [
+      '贴秋膘：以丰盛饮食补回夏日消耗，迎接秋天。'
     ]
   },
   chushu: {
@@ -624,6 +706,14 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '傍晚时走到外面去。',
       '看看热气是否已经稍稍松开了它的掌控。'
+    ],
+    ritualNotes: [
+      'Duck: In some regions, it is a familiar seasonal food at this time.',
+      'Fishing net: It connects the term to waterside harvest and fishing labor.'
+    ],
+    ritualNotesZh: [
+      '鸭：在一些地方，它是这一时节常见的家常食物。',
+      '渔网：让这个节气联想到水边收获与捕鱼。'
     ]
   },
   bailu: {
@@ -634,6 +724,12 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '在清晨看看草叶或树叶。',
       '太阳还来不及将它抹去之前，水气可能已经静静停在上面。'
+    ],
+    ritualNotes: [
+      'Gathering "Ten Whites": Herbs with "white" in their names are gathered and cooked into a White Dew custom.'
+    ],
+    ritualNotesZh: [
+      '采十样白：采集名字带“白”的草药入菜，形成白露习俗。'
     ]
   },
   qiufen: {
@@ -644,6 +740,12 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '感受这一天的平分。',
       '一年再次短暂停在均衡之中，然后继续走向更深的秋天。'
+    ],
+    ritualNotes: [
+      'Moon offering: Autumn Equinox was once tied to moon rituals that turned seasonal fullness into ceremony.'
+    ],
+    ritualNotesZh: [
+      '祭月：古时秋分曾与祭月相关，把秋意转化为礼仪。'
     ]
   },
   hanlu: {
@@ -654,6 +756,12 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '在清晨触摸空气。',
       '凉意不再只是暗示，它已经成为这一天的一部分。'
+    ],
+    ritualNotes: [
+      'Floral cake: Often paired with climbing, it carries the auspicious idea of rising higher.'
+    ],
+    ritualNotesZh: [
+      '花糕：常与登高相连，也寄托“步步高升”的吉意。'
     ]
   },
   shuangjiang: {
@@ -664,6 +772,12 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '仔细看看叶片、边缘与各种表面。',
       '季节开始变得清晰而锐利，万物也显得更脆弱一些。'
+    ],
+    ritualNotes: [
+      'Persimmon: Its season, color, and fullness make it a natural sign of late autumn.'
+    ],
+    ritualNotesZh: [
+      '柿子：成熟时节、色彩和饱满感都很像深秋。'
     ]
   },
   lidong: {
@@ -674,6 +788,12 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '留意那些已经落下或褪去的东西。',
       '枝条、田野与空气，都开始更清楚地显出它们的结构。'
+    ],
+    ritualNotes: [
+      'Mutton hot pot: Warming mutton and shared hot pot make it a fitting food for early winter.'
+    ],
+    ritualNotesZh: [
+      '羊肉火锅：温补的羊肉和围坐共食都很适合入冬。'
     ]
   },
   xiaoxue: {
@@ -684,6 +804,12 @@ export const TERM_CONTENT_MAP = {
     noteZh: [
       '认真看看天空。',
       '即使雪还没有来，光线里也可能已经带着雪的感觉。'
+    ],
+    ritualNotes: [
+      'Cured meat: It belongs to the time when households begin preserving food for winter.'
+    ],
+    ritualNotesZh: [
+      '腊肉：正值开始准备冬季储藏食物的时候。'
     ]
   },
   daxue: {
@@ -695,6 +821,12 @@ export const TERM_CONTENT_MAP = {
       '听一听世界能变得多么安静。',
       '雪到来时，改变的不只是地面，还有声音。'
     ],
+    ritualNotes: [
+      'Roasted sweet potato: Its warmth is felt immediately, from the hands to the body.'
+    ],
+    ritualNotesZh: [
+      '红薯：是一种从手到胃都能感到暖意的冬日食物。'
+    ]
   }
 };
 

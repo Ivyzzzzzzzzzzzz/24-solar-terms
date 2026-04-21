@@ -1,4 +1,47 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+
+const RITUAL_IMAGE_FILE_BY_NAME = {
+  春饼: '春饼 : Spring pancake copy.svg',
+  雨水茶: '雨水茶 : Rain-water tea copy.svg',
+  炒豆: 'fried beans copy.svg',
+  风筝: 'kite copy.svg',
+  青团: '青团 : Qingtuan copy.svg',
+  扫墓: 'tomb-sweeping copy.svg',
+  采茶: 'tea picking copy.svg',
+  斗蛋: 'egg competition copy.svg',
+  蚕: 'silkworm copy.svg',
+  梅子: 'green plums copy.svg',
+  尝新面: 'First-wheat noodles copy.svg',
+  团扇: 'round fan copy.svg',
+  莲子: 'loyus seeds copy.svg',
+  莲叶: 'lotus leaf copy.svg',
+  晒伏姜: 'sun-curing ginger copy.svg',
+  送大暑船: 'sending off the Major Heat boat copy.svg',
+  贴秋膘: 'putting on autumn weight copy.svg',
+  鸭: 'duck copy.svg',
+  渔网: 'fishing net copy.svg',
+  采十样白: 'Gathering "ten whites" copy.svg',
+  祭月: 'moon offering copy.svg',
+  花糕: 'floral cake copy.svg',
+  柿子: 'persimmon copy.svg',
+  羊肉火锅: 'mutton hot pot copy.svg',
+  肉火锅: 'mutton hot pot copy.svg',
+  腊肉: 'cured meat copy.svg',
+  红薯: 'roasted sweet potato copy.svg',
+  腊八粥: 'laba porridge copy.svg',
+  灯笼: 'lattern copy.svg'
+};
+
+const getRitualLabel = (text = '') => String(text).split(/[：:]/u)[0].trim();
+
+const getRitualImageUrl = (zhText = '', idx = 0) => {
+  const ritualLabel = getRitualLabel(zhText);
+  const fileName = RITUAL_IMAGE_FILE_BY_NAME[ritualLabel];
+  if (fileName) {
+    return `${process.env.PUBLIC_URL}/assets/images/${encodeURIComponent(fileName)}`;
+  }
+  return `${process.env.PUBLIC_URL}/assets/images/artboard-${(idx % 2) + 1}-2.svg`;
+};
 
 const TermCenterPanels = ({
   activeMenu,
@@ -47,16 +90,38 @@ const TermCenterPanels = ({
     );
   };
 
-  const renderZhNoWidowText = (text = '') => {
+  const getZhNoWidowParts = (text = '') => {
     const chars = Array.from(String(text).trim());
-    if (chars.length <= 2) return chars.join('');
+    if (chars.length <= 2) {
+      return {
+        head: chars.join(''),
+        tail: '',
+        hasTail: false
+      };
+    }
+
     const normalized = chars.join('');
     const trailingPunctuation = normalized.match(/[，。！？；：、,.!?;:）】》」』”’]+$/u)?.[0] || '';
     const punctuationCount = Array.from(trailingPunctuation).length;
     const keepCount = Math.min(chars.length, 2 + punctuationCount);
-    if (chars.length <= keepCount) return chars.join('');
-    const head = chars.slice(0, -keepCount).join('');
-    const tail = chars.slice(-keepCount).join('');
+    if (chars.length <= keepCount) {
+      return {
+        head: chars.join(''),
+        tail: '',
+        hasTail: false
+      };
+    }
+
+    return {
+      head: chars.slice(0, -keepCount).join(''),
+      tail: chars.slice(-keepCount).join(''),
+      hasTail: true
+    };
+  };
+
+  const renderZhNoWidowText = (text = '') => {
+    const { head, tail, hasTail } = getZhNoWidowParts(text);
+    if (!hasTail) return head;
     return (
       <>
         {head}
@@ -74,12 +139,32 @@ const TermCenterPanels = ({
     ))
   );
 
+  const getRitualCopyWidth = (zhText = '', enText = '') => {
+    const zhLen = Array.from(String(zhText)).length;
+    const enLen = Array.from(String(enText)).length;
+    const weightedLen = enLen + zhLen * 1.3;
+    const minLen = 88;
+    const maxLen = 140;
+    const normalized = Math.max(0, Math.min(1, (weightedLen - minLen) / (maxLen - minLen)));
+    const minWidth = 238;
+    const maxWidth = 288;
+    return Math.round(minWidth + normalized * (maxWidth - minWidth));
+  };
+
   const noteZhLines = Array.isArray(content.noteZh) ? content.noteZh : [];
   const noteEnLines = Array.isArray(content.noteEn) ? content.noteEn : [];
   const noteZhText = noteZhLines.join('');
   const noteEnText = noteEnLines.join(' ');
-  const ritualNotesEn = Array.isArray(content.ritualNotes) ? content.ritualNotes : [];
-  const ritualNotesZh = Array.isArray(content.ritualNotesZh) ? content.ritualNotesZh : ritualNotesEn;
+  const ritualNotesEn = useMemo(
+    () => (Array.isArray(content.ritualNotes) ? content.ritualNotes : []),
+    [content.ritualNotes]
+  );
+  const ritualNotesZh = useMemo(
+    () => (Array.isArray(content.ritualNotesZh) ? content.ritualNotesZh : ritualNotesEn),
+    [content.ritualNotesZh, ritualNotesEn]
+  );
+  const ritualCount = Math.max(ritualNotesEn.length, ritualNotesZh.length, 1);
+  const ritualIndices = Array.from({ length: ritualCount }, (_, idx) => idx);
   const poemZhLines = splitPoemZhLines(content.poemVerse);
   const poemTitleZh = String(content.poemTitle || '').replace(/[《》]/g, '').trim();
   const poemAuthorEn = String(content.poemAuthorEn || '').trim();
@@ -392,7 +477,7 @@ const TermCenterPanels = ({
   };
 
   return (
-    <div className="term-center-content">
+    <div className={`term-center-content${activeMenu === 'ritual' ? ' is-ritual-active' : ''}`}>
       <div
         className={`term-note ${activeMenu === 'note' ? 'is-visible' : ''}`}
         id="termNoteContent"
@@ -473,30 +558,39 @@ const TermCenterPanels = ({
       </div>
 
       <div
-        className={`term-ritual ${activeMenu === 'ritual' ? 'is-visible' : ''}`}
+        className={`term-ritual${ritualCount === 1 ? ' is-single' : ''} ${activeMenu === 'ritual' ? 'is-visible' : ''}`}
         id="termRitualContent"
         aria-hidden={activeMenu !== 'ritual'}
         {...panelHoverProps}
       >
-        {[0, 1].map((idx) => (
-          <div className="term-ritual-col" key={`ritual-col-${idx}`}>
-            <div
-              className="term-ritual-artboard"
-              style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/assets/images/artboard-${idx + 1}-2.svg)` }}
-              aria-hidden="true"
-            ></div>
-            <div className="term-ritual-copy">
-              <div className="term-ritual-note term-ritual-note-combined">
-                <div className="term-ritual-note-line term-ritual-note-line-zh term-cn-content-typestyle">
-                  {renderZhNoWidowText(ritualNotesZh[idx] || '')}
-                </div>
-                <div className="term-ritual-note-line term-ritual-note-line-en term-en-content-typestyle">
-                  {preventWidow(ritualNotesEn[idx] || '')}
+        {ritualIndices.map((idx) => {
+          const zhText = ritualNotesZh[idx] || '';
+          const enText = ritualNotesEn[idx] || '';
+          const ritualCopyWidth = getRitualCopyWidth(zhText, enText);
+          const ritualImageUrl = getRitualImageUrl(zhText, idx);
+
+          return (
+            <div className="term-ritual-col" key={`ritual-col-${idx}`}>
+              <div
+                className="term-ritual-artboard"
+                style={{ backgroundImage: `url("${ritualImageUrl}")` }}
+                aria-hidden="true"
+              ></div>
+              <div className="term-ritual-copy" style={{ '--ritual-copy-width': `${ritualCopyWidth}px` }}>
+                <div className="term-ritual-note">
+                  <div className="term-ritual-note-stack">
+                    <div className="term-ritual-textbox term-ritual-textbox-zh term-cn-content-typestyle">
+                      {renderZhNoWidowText(zhText)}
+                    </div>
+                    <div className="term-ritual-textbox term-ritual-textbox-en term-en-content-typestyle">
+                      {preventWidow(enText)}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
