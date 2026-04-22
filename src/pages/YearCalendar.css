@@ -316,9 +316,9 @@
   opacity: 0.92;
   aspect-ratio: 1 / 1;
   --orb-outer-dot-size: 2.55px;
-  --orb-outer-dot-r: 29px;
-  --orb-outer-dot-m: 25.1px;
-  --orb-outer-dot-h: 14.5px;
+  --orb-outer-dot-r: 25px;
+  --orb-outer-dot-m: 21.65px;
+  --orb-outer-dot-h: 12.5px;
   --orb-outer-dot-color: rgb(var(--year-orb-ring-rgb, 0 0 0));
 }
 
@@ -1443,9 +1443,9 @@
     width: 40px;
     height: 40px;
     flex-basis: 40px;
-    --orb-outer-dot-r: 32px;
-    --orb-outer-dot-m: 27.7px;
-    --orb-outer-dot-h: 16px;
+    --orb-outer-dot-r: 28px;
+    --orb-outer-dot-m: 24.25px;
+    --orb-outer-dot-h: 14px;
   }
 
   .year-calendar-home-link-inline .term-grid-icon {
@@ -1547,9 +1547,9 @@
     width: 44px;
     height: 44px;
     flex-basis: 44px;
-    --orb-outer-dot-r: 34px;
-    --orb-outer-dot-m: 29.45px;
-    --orb-outer-dot-h: 17px;
+    --orb-outer-dot-r: 30px;
+    --orb-outer-dot-m: 26px;
+    --orb-outer-dot-h: 15px;
   }
 
   .year-calendar-home-link-inline .term-grid-icon {

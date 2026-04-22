@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAmbientAudio, useAmbientTerm } from '../audio/AmbientAudioProvider';
 import { TERM_LIST, HOU_MAP, TERM_CONTENT_MAP, TERM_POEM_MAP, TERM_POEM_META_EN_MAP, TERM_COLORS } from '../data';
@@ -169,6 +169,12 @@ const TERM_NAV_TRACK = {
 
 const MENU_AUTO_ADVANCE_MS = 5000;
 const MENU_ROTATION_STEP = 90;
+const TERM_NAV_WHEEL_THRESHOLD = 3;
+const TERM_NAV_WHEEL_RESET_MS = 45;
+const TERM_NAV_WHEEL_GESTURE_RELEASE_MS = 90;
+const TERM_NAV_WHEEL_MOMENTUM_GUARD_MS = 640;
+const TERM_NAV_WHEEL_MOMENTUM_THRESHOLD = 18;
+const TERM_NAV_KEY_COOLDOWN_MS = 170;
 
 const hexToRgbChannels = (hex) => {
   const value = String(hex || '').replace('#', '').trim();
@@ -188,6 +194,45 @@ const darkenRgbChannels = (channels, factor = 0.78) => {
   return safeValues
     .map((channel) => Math.max(0, Math.min(255, Math.round(channel * factor))))
     .join(' ');
+};
+
+const getNormalizedWheelDelta = (event) => {
+  if (!event) return 0;
+  if (event.deltaMode === 1) return event.deltaY * 16;
+  if (event.deltaMode === 2) return event.deltaY * (window.innerHeight || 800);
+  return event.deltaY;
+};
+
+const getTermNavStepFromWheelDelta = (delta) => {
+  // Positive wheel delta is scroll down, which should reveal the later term.
+  return delta > 0 ? 1 : -1;
+};
+
+const TERM_NAV_WHEEL_GUARD_KEY = '__chronoformTermNavWheelGuard';
+const createTermNavWheelGuard = () => ({
+  gestureLocked: false,
+  gestureReleaseTimer: null,
+  lastSwitchAt: 0,
+  lastSwitchDirection: 0
+});
+let termNavWheelGuardFallback = createTermNavWheelGuard();
+
+const getTermNavWheelGuard = () => {
+  if (typeof window === 'undefined') return termNavWheelGuardFallback;
+  if (!window[TERM_NAV_WHEEL_GUARD_KEY]) {
+    window[TERM_NAV_WHEEL_GUARD_KEY] = createTermNavWheelGuard();
+  }
+  return window[TERM_NAV_WHEEL_GUARD_KEY];
+};
+
+const releaseTermNavWheelGestureAfterQuiet = () => {
+  if (typeof window === 'undefined') return;
+  const guard = getTermNavWheelGuard();
+  if (guard.gestureReleaseTimer) window.clearTimeout(guard.gestureReleaseTimer);
+  guard.gestureReleaseTimer = window.setTimeout(() => {
+    guard.gestureLocked = false;
+    guard.gestureReleaseTimer = null;
+  }, TERM_NAV_WHEEL_GESTURE_RELEASE_MS);
 };
 
 const getEvenlySpacedEllipsePoints = (count, cx, cy, rx, ry, startAngle = -Math.PI / 2) => {
@@ -249,6 +294,7 @@ const TermDetail = () => {
   const isMenuAutoAdvancePausedRef = useRef(false);
   const navWheelTsRef = useRef(0);
   const navWheelAccumRef = useRef(0);
+  const navWheelDirectionRef = useRef(0);
   const navWheelResetTimerRef = useRef(null);
   const navPulseTimerRef = useRef(null);
   const menuAutoAdvanceTimerRef = useRef(null);
@@ -280,7 +326,7 @@ const TermDetail = () => {
     clearMenuAutoAdvanceTimer();
   }, [clearMenuAutoAdvanceTimer]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Find term from the list
     const foundTerm = TERM_LIST.find(t => t.id === termId);
     
@@ -508,6 +554,8 @@ const TermDetail = () => {
     const targetTerm = TERM_LIST[targetIndex];
     if (!targetTerm) return;
     triggerNavPulse();
+    setTerm(targetTerm);
+    document.title = `${targetTerm.zh} | ${targetTerm.en} | 24 Solar Terms`;
     selectTermId(targetTerm.id);
     navigate(`/term/${targetTerm.id}`);
   };
@@ -515,22 +563,42 @@ const TermDetail = () => {
   const handleTermNavWheel = (e) => {
     if (typeof window !== 'undefined' && window.innerWidth <= 760) return;
     e.preventDefault();
-    if (Math.abs(e.deltaY) < 0.6) return;
+    const delta = getNormalizedWheelDelta(e);
+    if (Math.abs(delta) < 0.2) return;
 
     const now = Date.now();
-    if (now < navWheelTsRef.current) return;
+    const wheelGuard = getTermNavWheelGuard();
+    if (wheelGuard.gestureLocked || now < navWheelTsRef.current) {
+      releaseTermNavWheelGestureAfterQuiet();
+      return;
+    }
 
-    navWheelAccumRef.current += e.deltaY;
+    const direction = getTermNavStepFromWheelDelta(delta);
+    const isSameDirectionMomentumTail = wheelGuard.lastSwitchDirection === direction
+      && now - wheelGuard.lastSwitchAt < TERM_NAV_WHEEL_MOMENTUM_GUARD_MS
+      && Math.abs(delta) < TERM_NAV_WHEEL_MOMENTUM_THRESHOLD;
+    if (isSameDirectionMomentumTail) return;
+
+    if (navWheelDirectionRef.current && navWheelDirectionRef.current !== direction) {
+      navWheelAccumRef.current = 0;
+    }
+    navWheelDirectionRef.current = direction;
+    navWheelAccumRef.current += delta;
     if (navWheelResetTimerRef.current) window.clearTimeout(navWheelResetTimerRef.current);
     navWheelResetTimerRef.current = window.setTimeout(() => {
       navWheelAccumRef.current = 0;
-    }, 140);
+      navWheelDirectionRef.current = 0;
+    }, TERM_NAV_WHEEL_RESET_MS);
 
-    if (Math.abs(navWheelAccumRef.current) < 26) return;
+    if (Math.abs(navWheelAccumRef.current) < TERM_NAV_WHEEL_THRESHOLD) return;
 
-    const dir = navWheelAccumRef.current > 0 ? 1 : -1;
+    const dir = getTermNavStepFromWheelDelta(navWheelAccumRef.current);
     navWheelAccumRef.current = 0;
-    navWheelTsRef.current = now + 320;
+    navWheelDirectionRef.current = 0;
+    wheelGuard.lastSwitchAt = now;
+    wheelGuard.lastSwitchDirection = dir;
+    wheelGuard.gestureLocked = true;
+    releaseTermNavWheelGestureAfterQuiet();
     navigateByWheelDirection(dir);
   };
 
@@ -540,11 +608,11 @@ const TermDetail = () => {
 
     if (e.key === 'ArrowRight') {
       e.preventDefault();
-      navWheelTsRef.current = now + 220;
+      navWheelTsRef.current = now + TERM_NAV_KEY_COOLDOWN_MS;
       navigateByWheelDirection(1);
     } else if (e.key === 'ArrowLeft') {
       e.preventDefault();
-      navWheelTsRef.current = now + 220;
+      navWheelTsRef.current = now + TERM_NAV_KEY_COOLDOWN_MS;
       navigateByWheelDirection(-1);
     }
   };
@@ -717,6 +785,7 @@ const TermDetail = () => {
           activeMenu={activeMenu}
           content={content}
           phaseRows={phaseRows}
+          termId={term.id}
           onContentMouseEnter={() => setIsContentHover(true)}
           onContentMouseLeave={() => setIsContentHover(false)}
         />

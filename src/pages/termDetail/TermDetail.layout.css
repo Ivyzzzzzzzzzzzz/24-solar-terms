@@ -322,7 +322,7 @@
     align-items: flex-start;
     justify-content: flex-start;
     gap: 2px;
-    margin-left: clamp(70px, calc(5vw + 12px), 96px);
+    margin-left: clamp(78px, calc(5vw + 20px), 104px);
     margin-top: 18px;
     color: #54504c;
     text-align: left;
@@ -357,9 +357,9 @@
     text-decoration: none;
     opacity: 0.92;
     --orb-outer-dot-size: 2.55px;
-    --orb-outer-dot-r: 29px;
-    --orb-outer-dot-m: 25.1px;
-    --orb-outer-dot-h: 14.5px;
+    --orb-outer-dot-r: 25px;
+    --orb-outer-dot-m: 21.65px;
+    --orb-outer-dot-h: 12.5px;
     --orb-outer-dot-color: rgb(var(--term-orb-ring-rgb, 0 0 0));
 }
 
@@ -1184,9 +1184,9 @@
     .term-left-home-link {
         width: 38px;
         height: 38px;
-        --orb-outer-dot-r: 31px;
-        --orb-outer-dot-m: 26.85px;
-        --orb-outer-dot-h: 15.5px;
+        --orb-outer-dot-r: 27px;
+        --orb-outer-dot-m: 23.4px;
+        --orb-outer-dot-h: 13.5px;
     }
 
     .term-grid-icon {
@@ -1201,7 +1201,7 @@
 
     .term-title-switch-hint {
         gap: 4px;
-        margin-left: clamp(84px, calc(4vw + 12px), 110px);
+        margin-left: clamp(92px, calc(4vw + 20px), 118px);
         margin-top: 22px;
     }
 
@@ -1269,9 +1269,9 @@
     .term-left-home-link {
         width: 42px;
         height: 42px;
-        --orb-outer-dot-r: 33px;
-        --orb-outer-dot-m: 28.6px;
-        --orb-outer-dot-h: 16.5px;
+        --orb-outer-dot-r: 29px;
+        --orb-outer-dot-m: 25.1px;
+        --orb-outer-dot-h: 14.5px;
     }
 
     .term-grid-icon {
@@ -1284,7 +1284,7 @@
     }
 
     .term-title-switch-hint {
-        margin-left: clamp(92px, calc(4vw + 12px), 120px);
+        margin-left: clamp(100px, calc(4vw + 20px), 128px);
         margin-top: 24px;
     }
 
@@ -1357,7 +1357,7 @@
     }
 
     .term-title-switch-hint {
-        margin-left: 68px;
+        margin-left: 76px;
     }
 
     .term-title-zh {

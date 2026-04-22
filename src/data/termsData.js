@@ -152,10 +152,10 @@ export const TERM_POEM_MAP = {
     poemNote: "On city streets the light rain gleams, the grass appears, then fades like dreams. This is the finest hour of spring's return, beyond the misty willows the capitals burn."
   },
   jingzhe: {
-    poemVerse: '天街小雨润如酥，草色遥看近却无。最是一年春好处，绝胜烟柳满皇都。',
-    poemAuthor: '唐·韩愈',
-    poemTitle: '《初春小雨》',
-    poemNote: "A tender rain on the roadway lies, soft as cream beneath the skies. Far-off grass shows green anew-the fairest spring the year yet knew."
+    poemVerse: '微雨众卉新，一雷惊蛰始。田家几日闲，耕种从此起。',
+    poemAuthor: '唐·韦应物',
+    poemTitle: '《观田家》',
+    poemNote: 'A light rain makes all plants new; with one clap of thunder, Awakening of Insects begins. For farming households, idle days are few; from here, plowing and sowing begin.'
   },
   chunfen: {
     poemVerse: '碧玉妆成一树高，万条垂下绿丝绦。不知细叶谁裁出，二月春风似剪刀。',
@@ -299,8 +299,8 @@ export const TERM_POEM_META_EN_MAP = {
     poemTitleEn: 'Light Rain in Early Spring'
   },
   jingzhe: {
-    poemAuthorEn: 'Han Yu (Tang)',
-    poemTitleEn: 'Light Rain in Early Spring'
+    poemAuthorEn: 'Wei Yingwu (Tang)',
+    poemTitleEn: 'Watching the Farming Household'
   },
   chunfen: {
     poemAuthorEn: 'He Zhizhang (Tang)',

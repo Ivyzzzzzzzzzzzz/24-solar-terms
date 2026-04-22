@@ -78,8 +78,24 @@
     --term-ritual-note-height: 214px;
     --term-ritual-note-gap: 8px;
     --term-ritual-copy-width-default: 258px;
+    --term-ritual-artboard-size: 125px;
     width: fit-content;
     max-width: min(1120px, calc(100vw - 96px));
+}
+
+.term-center-content .term-ritual.term-ritual-lixia,
+.term-center-content .term-ritual.term-ritual-xiaoxue {
+    --term-ritual-artboard-size: 105px;
+}
+
+.term-center-content .term-ritual.term-ritual-xiazhi {
+    --term-ritual-artboard-size: 94px;
+}
+
+.term-center-content .term-ritual.term-ritual-lichun,
+.term-center-content .term-ritual.term-ritual-mangzhong,
+.term-center-content .term-ritual.term-ritual-yushui {
+    --term-ritual-artboard-size: 145px;
 }
 
 .term-center-content .term-poem {
@@ -370,8 +386,8 @@
 }
 
 .term-ritual-artboard {
-    width: 125px;
-    height: 125px;
+    width: var(--term-ritual-artboard-size);
+    height: var(--term-ritual-artboard-size);
     aspect-ratio: 1 / 1;
     align-self: center;
     background: transparent;
@@ -541,7 +557,23 @@
 
     .term-center-content .term-ritual {
         --term-ritual-copy-width-default: 292px;
+        --term-ritual-artboard-size: 140px;
         max-width: min(1260px, calc(100vw - 140px));
+    }
+
+    .term-center-content .term-ritual.term-ritual-lixia,
+    .term-center-content .term-ritual.term-ritual-xiaoxue {
+        --term-ritual-artboard-size: 118px;
+    }
+
+    .term-center-content .term-ritual.term-ritual-xiazhi {
+        --term-ritual-artboard-size: 106px;
+    }
+
+    .term-center-content .term-ritual.term-ritual-lichun,
+    .term-center-content .term-ritual.term-ritual-mangzhong,
+    .term-center-content .term-ritual.term-ritual-yushui {
+        --term-ritual-artboard-size: 162px;
     }
 
     .term-ritual {
@@ -556,8 +588,8 @@
     }
 
     .term-ritual-artboard {
-        width: 140px;
-        height: 140px;
+        width: var(--term-ritual-artboard-size);
+        height: var(--term-ritual-artboard-size);
     }
 
     .term-ritual-note {
@@ -608,7 +640,23 @@
 
     .term-center-content .term-ritual {
         --term-ritual-copy-width-default: 316px;
+        --term-ritual-artboard-size: 152px;
         max-width: min(1380px, calc(100vw - 180px));
+    }
+
+    .term-center-content .term-ritual.term-ritual-lixia,
+    .term-center-content .term-ritual.term-ritual-xiaoxue {
+        --term-ritual-artboard-size: 128px;
+    }
+
+    .term-center-content .term-ritual.term-ritual-xiazhi {
+        --term-ritual-artboard-size: 115px;
+    }
+
+    .term-center-content .term-ritual.term-ritual-lichun,
+    .term-center-content .term-ritual.term-ritual-mangzhong,
+    .term-center-content .term-ritual.term-ritual-yushui {
+        --term-ritual-artboard-size: 176px;
     }
 
     .term-ritual {
@@ -621,8 +669,8 @@
     }
 
     .term-ritual-artboard {
-        width: 152px;
-        height: 152px;
+        width: var(--term-ritual-artboard-size);
+        height: var(--term-ritual-artboard-size);
     }
 }
 

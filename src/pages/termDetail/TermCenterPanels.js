@@ -97,6 +97,7 @@ const TermCenterPanels = ({
   activeMenu,
   content,
   phaseRows,
+  termId,
   onContentMouseEnter,
   onContentMouseLeave
 }) => {
@@ -641,7 +642,7 @@ const TermCenterPanels = ({
       </div>
 
       <div
-        className={`term-ritual${ritualCount === 1 ? ' is-single' : ''} ${activeMenu === 'ritual' ? 'is-visible' : ''}`}
+        className={`term-ritual${ritualCount === 1 ? ' is-single' : ''}${termId ? ` term-ritual-${termId}` : ''} ${activeMenu === 'ritual' ? 'is-visible' : ''}`}
         id="termRitualContent"
         aria-hidden={activeMenu !== 'ritual'}
         {...panelHoverProps}
