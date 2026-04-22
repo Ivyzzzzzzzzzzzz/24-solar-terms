@@ -371,8 +371,6 @@ const YearCalendar = () => {
     const dateKey = keyFromDate(year, month, day);
     const term = termByDateKey[dateKey];
     const isToday = year === today.year && month === today.month && day === today.day;
-    const todayTooltipEn = `Today is ${MONTHS[month]} ${day}, ${year}`;
-    const todayTooltipZh = `今天是${year}年${month + 1}月${day}日`;
 
     if (term) {
       return (
@@ -381,7 +379,7 @@ const YearCalendar = () => {
           to={`/term/${term.id}`}
           className={`year-day is-term${isToday ? ' is-today' : ''}${isMonthStart ? ' is-month-start' : ''}`}
           style={termCellStyleById[term.id]}
-          aria-label={`${MONTHS[month]} ${day}, ${term.zh} ${term.en}`}
+          aria-label={`${MONTHS[month]} ${day}, ${year}, ${term.zh} ${term.en}`}
           onClick={() => selectTermId(term.id)}
           onMouseEnter={() => handleTermHover(term)}
           onMouseLeave={handleTermHoverExit}
@@ -391,17 +389,8 @@ const YearCalendar = () => {
           {isTextOn && <span className="year-day-num">{String(day).padStart(2, '0')}</span>}
           {isTextOn && isMonthStart && <span className="year-day-month">{MONTHS[month]}</span>}
           <span className="year-day-tooltip" aria-hidden="true">
-            {isToday ? (
-              <>
-                <span className="year-day-tooltip-zh">{todayTooltipZh}</span>
-                <span className="year-day-tooltip-en">{todayTooltipEn}</span>
-              </>
-            ) : (
-              <>
-                <span className="year-day-tooltip-zh">{term.zh}</span>
-                <span className="year-day-tooltip-en">{term.en}</span>
-              </>
-            )}
+            <span className="year-day-tooltip-zh">{term.zh}</span>
+            <span className="year-day-tooltip-en">{term.en}</span>
           </span>
         </Link>
       );
@@ -416,8 +405,8 @@ const YearCalendar = () => {
         {isTextOn && isMonthStart && <span className="year-day-month">{MONTHS[month]}</span>}
         {isToday && (
           <span className="year-day-tooltip" aria-hidden="true">
-            <span className="year-day-tooltip-zh">{todayTooltipZh}</span>
-            <span className="year-day-tooltip-en">{todayTooltipEn}</span>
+            <span className="year-day-tooltip-zh">今天</span>
+            <span className="year-day-tooltip-en">Today</span>
           </span>
         )}
       </span>

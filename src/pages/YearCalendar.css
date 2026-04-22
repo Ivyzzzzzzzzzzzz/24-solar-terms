@@ -1261,6 +1261,8 @@
 }
 
 .year-day {
+  --year-day-num-size: clamp(7px, 0.72vw, 11px);
+  --year-term-day-num-size: clamp(8px, 0.82vw, 12px);
   width: 100%;
   aspect-ratio: 1 / 1;
   min-width: 0;
@@ -1288,6 +1290,7 @@
 .year-day.is-today {
   outline: 1px solid rgba(159, 159, 159, 0.78);
   outline-offset: -1px;
+  contain: layout;
 }
 
 .year-day.is-seasonal {
@@ -1295,8 +1298,15 @@
 }
 
 .year-day.is-term {
+  contain: layout;
   color: var(--year-term-text, rgba(20, 18, 16, 0.86));
   z-index: 3;
+}
+
+.year-day.is-term:hover,
+.year-day.is-term:focus-visible,
+.year-day.is-today:hover {
+  z-index: 24;
 }
 
 .year-day.is-term:focus-visible {
@@ -1311,12 +1321,15 @@
   bottom: calc(100% + 10px);
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   min-width: max-content;
-  padding: 8px 10px;
-  border: 1px solid rgba(84, 80, 76, 0.22);
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 8px 18px rgba(20, 18, 16, 0.08);
+  max-width: 220px;
+  padding: 9px 11px 10px;
+  border: 1px solid color-mix(in srgb, var(--year-term-rim, rgba(84, 80, 76, 0.22)) 64%, rgba(84, 80, 76, 0.18) 36%);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.94), rgba(252, 250, 245, 0.9)),
+    color-mix(in srgb, var(--year-term-fill, rgba(255, 255, 255, 0.96)) 26%, rgba(255, 255, 255, 0.96) 74%);
+  box-shadow: 0 10px 22px rgba(20, 18, 16, 0.1);
   opacity: 0;
   pointer-events: none;
   transform: translate(-50%, 6px);
@@ -1332,8 +1345,8 @@
   width: 10px;
   height: 10px;
   background: rgba(255, 255, 255, 0.96);
-  border-right: 1px solid rgba(84, 80, 76, 0.18);
-  border-bottom: 1px solid rgba(84, 80, 76, 0.18);
+  border-right: 1px solid color-mix(in srgb, var(--year-term-rim, rgba(84, 80, 76, 0.18)) 64%, rgba(84, 80, 76, 0.14) 36%);
+  border-bottom: 1px solid color-mix(in srgb, var(--year-term-rim, rgba(84, 80, 76, 0.18)) 64%, rgba(84, 80, 76, 0.14) 36%);
   transform: translate(-50%, -50%) rotate(45deg);
 }
 
@@ -1369,7 +1382,7 @@
 .year-day-tooltip-zh {
   color: rgba(20, 18, 16, 0.9);
   font-family: "FZZJ-YZDKJW-Regular", "FZZJ-YZDKJW", serif;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1;
   letter-spacing: 0.06em;
   white-space: nowrap;
@@ -1378,7 +1391,7 @@
 .year-day-tooltip-en {
   color: rgba(20, 18, 16, 0.72);
   font-family: "Stoke", "Stoke-Light", Helvetica, sans-serif;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.25;
   letter-spacing: 0.06em;
   white-space: nowrap;
@@ -1386,14 +1399,16 @@
 
 .year-day-num {
   font-family: "IBM Plex Mono", "Roboto Mono", monospace;
-  font-size: clamp(7px, 0.72vw, 11px);
+  font-size: var(--year-day-num-size);
   line-height: 1;
   position: relative;
   z-index: 3;
 }
 
 .year-day.is-term .year-day-num {
-  color: var(--year-term-text, rgba(20, 18, 16, 0.86));
+  color: color-mix(in srgb, var(--year-term-text, rgba(20, 18, 16, 0.86)) 75%, rgba(252, 252, 250, 0.95) 54%);
+  font-size: var(--year-term-day-num-size);
+  font-weight: 700;
 }
 
 .year-day.is-month-start {
@@ -1498,13 +1513,15 @@
   }
 
   .year-day {
+    --year-day-num-size: clamp(8px, 0.58vw, 12px);
+    --year-term-day-num-size: clamp(9px, 0.66vw, 13px);
     min-height: 32px;
     padding: 3px;
     font-size: clamp(8px, 0.56vw, 12px);
   }
 
   .year-day-num {
-    font-size: clamp(8px, 0.58vw, 12px);
+    font-size: var(--year-day-num-size);
   }
 
   .year-day-month {
@@ -1517,11 +1534,11 @@
   }
 
   .year-day-tooltip-zh {
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .year-day-tooltip-en {
-    font-size: 15px;
+    font-size: 13px;
   }
 }
 
@@ -1595,20 +1612,22 @@
   }
 
   .year-day {
+    --year-day-num-size: clamp(9px, 0.5vw, 13px);
+    --year-term-day-num-size: clamp(10px, 0.58vw, 15px);
     min-height: 36px;
     font-size: clamp(9px, 0.48vw, 13px);
   }
 
   .year-day-num {
-    font-size: clamp(9px, 0.5vw, 13px);
+    font-size: var(--year-day-num-size);
   }
 
   .year-day-tooltip-zh {
-    font-size: 24px;
+    font-size: 22px;
   }
 
   .year-day-tooltip-en {
-    font-size: 16px;
+    font-size: 14px;
   }
 }
 
