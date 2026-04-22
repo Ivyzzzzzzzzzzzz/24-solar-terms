@@ -39,21 +39,6 @@
     }
 }
 
-.term-page::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: var(--term-corner-size);
-    height: var(--term-corner-size);
-    background: #ffffff;
-    clip-path: polygon(0 0, 100% 0, 0 100%);
-    border-right: 1px solid rgba(84, 80, 76, 0.12);
-    border-bottom: 1px solid rgba(84, 80, 76, 0.12);
-    pointer-events: none;
-    z-index: 1;
-}
-
 .term-frame {
     align-items: flex-start;
     display: flex;
@@ -87,37 +72,6 @@
     background: rgba(252, 250, 245, 0.08);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
-}
-
-.term-back-link {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: var(--term-corner-size);
-    height: var(--term-corner-size);
-    z-index: 6;
-    display: block;
-    text-decoration: none;
-}
-
-.term-back-link-label {
-    position: absolute;
-    top: calc(var(--term-corner-size) * 0.39);
-    left: calc(var(--term-corner-size) * 0.17);
-    display: inline-block;
-    font-family: "Roboto Mono", "Roboto Mono Regular", monospace;
-    font-size: clamp(9px, 1vw, 12px);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: rgba(84, 80, 76, 0.9);
-    transform: rotate(-45deg);
-    transform-origin: top left;
-    line-height: 1;
-}
-
-.term-back-link:focus-visible {
-    outline: 2px solid rgba(84, 80, 76, 0.35);
-    outline-offset: 4px;
 }
 
 .term-back-corner {
@@ -321,13 +275,6 @@
     }
 }
 
-@media (max-width: 860px) {
-    .term-back-link {
-        top: 0;
-        left: 0;
-    }
-}
-
 .term-main {
     align-items: flex-start;
     display: inline-flex;
@@ -411,9 +358,63 @@
     opacity: 0.92;
 }
 
+.term-left-home-link::before,
+.term-left-home-link::after {
+    content: "";
+    position: absolute;
+    inset: -7px;
+    border-radius: 999px;
+    pointer-events: none;
+    background:
+        conic-gradient(
+            from 18deg,
+            transparent 0deg 22deg,
+            rgba(0, 0, 0, 0.58) 22deg 62deg,
+            transparent 62deg 118deg,
+            rgba(0, 0, 0, 0.4) 118deg 156deg,
+            transparent 156deg 232deg,
+            rgba(0, 0, 0, 0.48) 232deg 282deg,
+            transparent 282deg 360deg
+        );
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1.7px), #000 calc(100% - 1.55px));
+    mask: radial-gradient(farthest-side, transparent calc(100% - 1.7px), #000 calc(100% - 1.55px));
+    opacity: 0.72;
+    transform-origin: center;
+    animation: orbBrokenRingDrift 18s linear infinite;
+}
+
+.term-left-home-link::after {
+    inset: -12px;
+    background:
+        conic-gradient(
+            from 128deg,
+            transparent 0deg 34deg,
+            rgba(0, 0, 0, 0.32) 34deg 78deg,
+            transparent 78deg 164deg,
+            rgba(0, 0, 0, 0.42) 164deg 214deg,
+            transparent 214deg 286deg,
+            rgba(0, 0, 0, 0.36) 286deg 318deg,
+            transparent 318deg 360deg
+        );
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1.35px), #000 calc(100% - 1.2px));
+    mask: radial-gradient(farthest-side, transparent calc(100% - 1.35px), #000 calc(100% - 1.2px));
+    opacity: 0.5;
+    animation: orbBrokenRingDriftReverse 26s linear infinite;
+}
+
 .term-left-home-link:hover,
 .term-left-home-link:focus-visible {
     opacity: 1;
+}
+
+.term-left-home-link:hover::before,
+.term-left-home-link:focus-visible::before {
+    opacity: 0.9;
+}
+
+.term-left-home-link:hover::after,
+.term-left-home-link:focus-visible::after {
+    opacity: 0.68;
 }
 
 .term-left-home-link:focus-visible {
@@ -849,7 +850,21 @@
     }
 }
 
+@keyframes orbBrokenRingDrift {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes orbBrokenRingDriftReverse {
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
+    .term-left-home-link::before,
+    .term-left-home-link::after,
     .term-left-home-orb-fluid,
     .term-left-home-orb-spectrum,
     .term-left-home-orb-stream,
@@ -1144,10 +1159,6 @@
         --term-content-shift-right: 58px;
     }
 
-    .term-back-link-label {
-        font-size: 13px;
-    }
-
     .term-grid-link,
     .term-left-home-link {
         width: 38px;
@@ -1228,10 +1239,6 @@
         --term-frame-pad-left: calc(var(--term-orb-top) + 46px);
         --term-menu-ring-size: 144px;
         --term-content-shift-right: 68px;
-    }
-
-    .term-back-link-label {
-        font-size: 14px;
     }
 
     .term-grid-link,
@@ -1450,7 +1457,4 @@
         font-size: clamp(16px, 6.8vw, 22px);
     }
 
-    .term-back-link-label {
-        letter-spacing: 0.12em;
-    }
 }

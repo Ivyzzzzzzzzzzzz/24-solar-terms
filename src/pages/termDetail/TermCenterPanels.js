@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 const RITUAL_IMAGE_FILE_BY_NAME = {
   春饼: '春饼 : Spring pancake copy.svg',
@@ -43,6 +43,56 @@ const getRitualImageUrl = (zhText = '', idx = 0) => {
   return `${process.env.PUBLIC_URL}/assets/images/artboard-${(idx % 2) + 1}-2.svg`;
 };
 
+const getRenderedLineCount = (element) => {
+  if (!element || typeof document === 'undefined') return 1;
+  const range = document.createRange();
+  range.selectNodeContents(element);
+  const rects = Array.from(range.getClientRects())
+    .filter((rect) => rect.width > 0 && rect.height > 0)
+    .sort((a, b) => a.top - b.top);
+  range.detach?.();
+
+  const lineHeight = parseFloat(window.getComputedStyle(element).lineHeight)
+    || Math.max(...rects.map((rect) => rect.height), 1);
+  const lineTolerance = Math.max(3, lineHeight * 0.45);
+  const lineTops = [];
+
+  rects.forEach((rect) => {
+    const top = rect.top;
+    const lastTop = lineTops[lineTops.length - 1];
+    if (lastTop === undefined || Math.abs(top - lastTop) > lineTolerance) {
+      lineTops.push(top);
+    }
+  });
+
+  return Math.max(1, lineTops.length);
+};
+
+const createMeasurementHost = () => {
+  const host = document.createElement('div');
+  host.setAttribute('aria-hidden', 'true');
+  Object.assign(host.style, {
+    position: 'fixed',
+    left: '-10000px',
+    top: '0',
+    visibility: 'hidden',
+    pointerEvents: 'none',
+    contain: 'layout style paint',
+    zIndex: '-1'
+  });
+  document.body.appendChild(host);
+  return host;
+};
+
+const createMeasurementClone = (sourceElement, host) => {
+  const clone = sourceElement.cloneNode(true);
+  clone.removeAttribute('id');
+  clone.style.transition = 'none';
+  clone.style.animation = 'none';
+  host.appendChild(clone);
+  return clone;
+};
+
 const TermCenterPanels = ({
   activeMenu,
   content,
@@ -55,6 +105,7 @@ const TermCenterPanels = ({
   const [poemMetaHeight, setPoemMetaHeight] = useState(null);
   const [poemTitleHeight, setPoemTitleHeight] = useState(null);
   const [poemTitleEnWidth, setPoemTitleEnWidth] = useState(null);
+  const [poemTitleEnFontSize, setPoemTitleEnFontSize] = useState(null);
   const notePanelRef = useRef(null);
   const noteZhRef = useRef(null);
   const noteEnTextRef = useRef(null);
@@ -309,13 +360,18 @@ const TermCenterPanels = ({
     };
   }, [activeMenu, noteZhText, noteEnText]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (typeof window === 'undefined') return undefined;
 
     let frameId = 0;
-    const scheduleMeasure = () => {
-      window.cancelAnimationFrame(frameId);
-      frameId = window.requestAnimationFrame(() => {
+    const measurePoemLayout = () => {
+        let measurementHost = null;
+
+        const getMeasurementHost = () => {
+          if (!measurementHost) measurementHost = createMeasurementHost();
+          return measurementHost;
+        };
+
         const zhMetaEl = poemZhMetaRef.current;
         const zhTitleEl = poemZhTitleRef.current;
         const zhVerseEl = poemZhVerseRef.current;
@@ -324,133 +380,159 @@ const TermCenterPanels = ({
         const enTranslationEl = poemEnTranslationRef.current;
         if (!zhMetaEl || !zhTitleEl || !zhVerseEl || !enNoteEl || !enTranslationEl) return;
 
-        const zhMetaHeight = Math.ceil(zhMetaEl.getBoundingClientRect().height);
-        if (zhMetaHeight) {
-          setPoemMetaHeight((prev) => (prev === zhMetaHeight ? prev : zhMetaHeight));
-        }
+        try {
+          const zhMetaHeight = Math.ceil(zhMetaEl.getBoundingClientRect().height);
+          if (zhMetaHeight) {
+            setPoemMetaHeight((prev) => (prev === zhMetaHeight ? prev : zhMetaHeight));
+          }
 
-        const zhTitleHeight = Math.ceil(zhTitleEl.getBoundingClientRect().height);
-        if (zhTitleHeight) {
-          setPoemTitleHeight((prev) => (prev === zhTitleHeight ? prev : zhTitleHeight));
-        }
+          const zhTitleHeight = Math.ceil(zhTitleEl.getBoundingClientRect().height);
+          if (zhTitleHeight) {
+            setPoemTitleHeight((prev) => (prev === zhTitleHeight ? prev : zhTitleHeight));
+          }
 
-        if (enTitleEl) {
-          const parentWidth = Math.floor(enTitleEl.parentElement?.clientWidth || enNoteEl.clientWidth);
-          const maxWidth = Math.max(0, parentWidth);
-          if (maxWidth > 0) {
-            const zhLineHeight = parseFloat(window.getComputedStyle(zhTitleEl).lineHeight) || 1;
-            const zhLineCount = Math.max(1, Math.round(zhTitleHeight / zhLineHeight));
-            const panelMaxWidth = Math.min(840, window.innerWidth - 220);
-            const titleMinWidth = Math.max(160, Math.floor(maxWidth * 0.45));
-            const titleCapWidth = Math.max(
-              maxWidth,
-              Math.floor(panelMaxWidth - 220)
-            );
-            const prevTitleWidth = enTitleEl.style.width;
-            const prevTitleMaxWidth = enTitleEl.style.maxWidth;
-            let chosenWidth = maxWidth;
-            let bestWidth = null;
-            let bestLineCount = 0;
-            let fallbackWidth = maxWidth;
-            let fallbackLineCount = Number.POSITIVE_INFINITY;
+          if (enTitleEl) {
+            const poemPanelEl = enTitleEl.closest('.term-poem');
+            const poemPanelStyle = poemPanelEl ? window.getComputedStyle(poemPanelEl) : null;
+            const parentWidth = Math.floor(enTitleEl.parentElement?.clientWidth || enNoteEl.clientWidth);
+            const maxWidth = Math.max(0, parentWidth);
+            if (maxWidth > 0) {
+              const zhLineCount = getRenderedLineCount(zhTitleEl);
+              const parsedPanelMaxWidth = parseFloat(poemPanelStyle?.maxWidth || '');
+              const panelMaxWidth = Number.isFinite(parsedPanelMaxWidth)
+                ? parsedPanelMaxWidth
+                : Math.min(840, window.innerWidth - 220);
+              const panelPaddingX = (parseFloat(poemPanelStyle?.paddingLeft || '0') || 0)
+                + (parseFloat(poemPanelStyle?.paddingRight || '0') || 0);
+              const panelColumnGap = parseFloat(poemPanelStyle?.columnGap || poemPanelStyle?.gap || '16') || 16;
+              const zhColumnWidth = Math.ceil(poemPanelEl?.querySelector('.term-poem-zh')?.getBoundingClientRect().width || 0);
+              const titleMinWidth = Math.max(160, Math.floor(maxWidth * 0.45));
+              const titleCapWidth = Math.max(maxWidth, Math.floor(panelMaxWidth - panelPaddingX - panelColumnGap - zhColumnWidth));
+              const measureTitleEl = createMeasurementClone(enTitleEl, getMeasurementHost());
+              measureTitleEl.style.fontSize = '';
+              measureTitleEl.style.minHeight = '0px';
+              const baseFontSize = parseFloat(window.getComputedStyle(measureTitleEl).fontSize) || 14;
+              const minFontSize = Math.max(9.5, baseFontSize - 4);
+              let chosenWidth = maxWidth;
+              let chosenFontSize = null;
+              let bestMatch = null;
+              let bestFallback = null;
+              let fallbackWidth = maxWidth;
 
-            for (let w = titleMinWidth; w <= titleCapWidth; w += 2) {
-              enTitleEl.style.width = `${w}px`;
-              enTitleEl.style.maxWidth = `${w}px`;
-              const measuredHeight = Math.ceil(enTitleEl.getBoundingClientRect().height);
-              const enLineHeight = parseFloat(window.getComputedStyle(enTitleEl).lineHeight) || 1;
-              const enLineCount = Math.max(1, Math.round(measuredHeight / enLineHeight));
+              for (let fontSize = baseFontSize; fontSize >= minFontSize; fontSize -= 0.25) {
+                measureTitleEl.style.fontSize = `${fontSize}px`;
 
-              if (
-                enLineCount < fallbackLineCount ||
-                (enLineCount === fallbackLineCount && w > fallbackWidth)
-              ) {
-                fallbackLineCount = enLineCount;
-                fallbackWidth = w;
-              }
+                for (let w = titleMinWidth; w <= titleCapWidth; w += 1) {
+                  measureTitleEl.style.width = `${w}px`;
+                  measureTitleEl.style.maxWidth = `${w}px`;
+                  const enLineCount = getRenderedLineCount(measureTitleEl);
+                  const fontLoss = baseFontSize - fontSize;
+                  const lineDelta = Math.abs(enLineCount - zhLineCount);
+                  const candidate = {
+                    width: w,
+                    fontSize,
+                    enLineCount,
+                    score: lineDelta * 100000 + fontLoss * 1000 + w
+                  };
 
-              if (enLineCount <= zhLineCount) {
-                if (
-                  enLineCount > bestLineCount ||
-                  (enLineCount === bestLineCount && (bestWidth === null || w < bestWidth))
-                ) {
-                  bestLineCount = enLineCount;
-                  bestWidth = w;
+                  if (!bestFallback || candidate.score < bestFallback.score) {
+                    bestFallback = candidate;
+                    fallbackWidth = w;
+                  }
+
+                  if (enLineCount === zhLineCount) {
+                    const matchScore = fontLoss * 1000 + w;
+                    if (!bestMatch || matchScore < bestMatch.score) {
+                      bestMatch = {
+                        width: w,
+                        fontSize,
+                        score: matchScore
+                      };
+                    }
+                  }
                 }
               }
+
+              const chosen = bestMatch ?? bestFallback;
+              chosenWidth = chosen?.width ?? fallbackWidth;
+              chosenFontSize = chosen && Math.abs(chosen.fontSize - baseFontSize) >= 0.01
+                ? Number(chosen.fontSize.toFixed(2))
+                : null;
+              setPoemTitleEnWidth((prev) => (prev === chosenWidth ? prev : chosenWidth));
+              setPoemTitleEnFontSize((prev) => (prev === chosenFontSize ? prev : chosenFontSize));
             }
-            chosenWidth = bestWidth ?? fallbackWidth;
-            enTitleEl.style.width = prevTitleWidth;
-            enTitleEl.style.maxWidth = prevTitleMaxWidth;
-            setPoemTitleEnWidth((prev) => (prev === chosenWidth ? prev : chosenWidth));
           }
+
+          const hasWidowLine = (element) => {
+            const textNode = Array.from(element.childNodes)
+              .find((node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim());
+            if (!textNode) return false;
+
+            const text = textNode.textContent || '';
+            const wordRegex = /\S+/g;
+            const lineTops = [];
+            let match;
+
+            while ((match = wordRegex.exec(text))) {
+              const range = document.createRange();
+              range.setStart(textNode, match.index);
+              range.setEnd(textNode, match.index + match[0].length);
+              const rect = range.getBoundingClientRect();
+              if (rect.height > 0) lineTops.push(Math.round(rect.top));
+              range.detach?.();
+            }
+
+            if (lineTops.length < 2) return false;
+            const lastTop = lineTops[lineTops.length - 1];
+            let wordsOnLastLine = 0;
+            for (let i = lineTops.length - 1; i >= 0; i -= 1) {
+              if (lineTops[i] !== lastTop) break;
+              wordsOnLastLine += 1;
+            }
+            return wordsOnLastLine <= 1;
+          };
+
+          const targetHeight = zhVerseEl.getBoundingClientRect().height;
+          const currentWidth = Math.floor(enNoteEl.clientWidth);
+          if (!targetHeight || !currentWidth) return;
+
+          const poemPanelEl = enTranslationEl.closest('.term-poem');
+          const panelWidth = Math.floor(poemPanelEl?.getBoundingClientRect().width || 0);
+          const panelMaxWidth = Math.min(840, window.innerWidth - 220);
+          const nonTranslationWidth = Math.max(0, panelWidth - currentWidth);
+          const maxWidth = Math.max(
+            currentWidth,
+            Math.floor(panelMaxWidth - nonTranslationWidth)
+          );
+          const minWidth = Math.min(300, maxWidth);
+          const measureTranslationEl = createMeasurementClone(enTranslationEl, getMeasurementHost());
+          let bestWidth = maxWidth;
+          let bestScore = Number.POSITIVE_INFINITY;
+
+          for (let w = maxWidth; w >= minWidth; w -= 2) {
+            measureTranslationEl.style.width = `${w}px`;
+            const measuredHeight = Math.ceil(measureTranslationEl.getBoundingClientRect().height);
+            const widowPenalty = hasWidowLine(measureTranslationEl) ? 1000 : 0;
+            const overflow = Math.max(0, measuredHeight - targetHeight);
+            const delta = Math.abs(measuredHeight - targetHeight);
+            const score = overflow * 10000 + delta + widowPenalty;
+            if (score < bestScore || (score === bestScore && w < bestWidth)) {
+              bestScore = score;
+              bestWidth = w;
+            }
+          }
+
+          setPoemTranslationWidth((prev) => (prev === bestWidth ? prev : bestWidth));
+        } finally {
+          measurementHost?.remove();
         }
-
-        const hasWidowLine = () => {
-          const textNode = Array.from(enTranslationEl.childNodes)
-            .find((node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim());
-          if (!textNode) return false;
-
-          const text = textNode.textContent || '';
-          const wordRegex = /\S+/g;
-          const lineTops = [];
-          let match;
-
-          while ((match = wordRegex.exec(text))) {
-            const range = document.createRange();
-            range.setStart(textNode, match.index);
-            range.setEnd(textNode, match.index + match[0].length);
-            const rect = range.getBoundingClientRect();
-            if (rect.height > 0) lineTops.push(Math.round(rect.top));
-            range.detach?.();
-          }
-
-          if (lineTops.length < 2) return false;
-          const lastTop = lineTops[lineTops.length - 1];
-          let wordsOnLastLine = 0;
-          for (let i = lineTops.length - 1; i >= 0; i -= 1) {
-            if (lineTops[i] !== lastTop) break;
-            wordsOnLastLine += 1;
-          }
-          return wordsOnLastLine <= 1;
-        };
-
-        const targetHeight = zhVerseEl.getBoundingClientRect().height;
-        const currentWidth = Math.floor(enNoteEl.clientWidth);
-        if (!targetHeight || !currentWidth) return;
-
-        const poemPanelEl = enTranslationEl.closest('.term-poem');
-        const panelWidth = Math.floor(poemPanelEl?.getBoundingClientRect().width || 0);
-        const panelMaxWidth = Math.min(840, window.innerWidth - 220);
-        const nonTranslationWidth = Math.max(0, panelWidth - currentWidth);
-        const maxWidth = Math.max(
-          currentWidth,
-          Math.floor(panelMaxWidth - nonTranslationWidth)
-        );
-        const minWidth = Math.min(300, maxWidth);
-        const prevInlineWidth = enTranslationEl.style.width;
-        let bestWidth = maxWidth;
-        let bestScore = Number.POSITIVE_INFINITY;
-
-        for (let w = maxWidth; w >= minWidth; w -= 2) {
-          enTranslationEl.style.width = `${w}px`;
-          const measuredHeight = Math.ceil(enTranslationEl.getBoundingClientRect().height);
-          const widowPenalty = hasWidowLine() ? 1000 : 0;
-          const overflow = Math.max(0, measuredHeight - targetHeight);
-          const delta = Math.abs(measuredHeight - targetHeight);
-          const score = overflow * 10000 + delta + widowPenalty;
-          if (score < bestScore || (score === bestScore && w < bestWidth)) {
-            bestScore = score;
-            bestWidth = w;
-          }
-        }
-
-        enTranslationEl.style.width = prevInlineWidth;
-        setPoemTranslationWidth((prev) => (prev === bestWidth ? prev : bestWidth));
-      });
+    };
+    const scheduleMeasure = () => {
+      window.cancelAnimationFrame(frameId);
+      frameId = window.requestAnimationFrame(measurePoemLayout);
     };
 
-    scheduleMeasure();
+    measurePoemLayout();
 
     let resizeObserver;
     if (typeof ResizeObserver !== 'undefined') {
@@ -539,6 +621,7 @@ const TermCenterPanels = ({
                 ref={poemEnTitleRef}
                 style={{
                   ...(poemTitleEnWidth ? { width: `${poemTitleEnWidth}px`, maxWidth: `${poemTitleEnWidth}px` } : {}),
+                  ...(poemTitleEnFontSize ? { fontSize: `${poemTitleEnFontSize}px` } : {}),
                   ...(poemTitleHeight ? { minHeight: `${poemTitleHeight}px` } : {})
                 }}
               >

@@ -112,12 +112,12 @@
 
 .term-menu-path-zh {
     font-family: "FZZJ-YZDKJW", "FZZJ-YZDKJW-Regular", "Noto Serif SC", Helvetica, sans-serif;
-    font-size: 26.5px;
+    font-size: 23.83px;
 }
 
 .term-menu-path-en {
     font-family: "Stoke", "Stoke-Light", Helvetica, sans-serif;
-    font-size: 19.25px;
+    font-size: 16.58px;
     letter-spacing: 0.87px;
 }
 
@@ -460,11 +460,11 @@
     }
 
     .term-menu-path-zh {
-        font-size: 30px;
+        font-size: 27.33px;
     }
 
     .term-menu-path-en {
-        font-size: 21px;
+        font-size: 18.33px;
         letter-spacing: 0.96px;
     }
 }
@@ -475,11 +475,11 @@
     }
 
     .term-menu-path-zh {
-        font-size: 32px;
+        font-size: 29.33px;
     }
 
     .term-menu-path-en {
-        font-size: 22.5px;
+        font-size: 19.83px;
         letter-spacing: 1.02px;
     }
 }
@@ -490,11 +490,11 @@
     }
 
     .term-menu-path-zh {
-        font-size: 23px;
+        font-size: 20.33px;
     }
 
     .term-menu-path-en {
-        font-size: 16px;
+        font-size: 13.33px;
         letter-spacing: 0.62px;
     }
 }
@@ -513,22 +513,22 @@
     }
 
     .term-menu-path-zh {
-        font-size: 21px;
+        font-size: 18.33px;
     }
 
     .term-menu-path-en {
-        font-size: 14px;
+        font-size: 11.33px;
         letter-spacing: 0.5px;
     }
 }
 
 @media (max-width: 460px) {
     .term-menu-path-zh {
-        font-size: 19px;
+        font-size: 16.33px;
     }
 
     .term-menu-path-en {
-        font-size: 13px;
+        font-size: 10.33px;
     }
 }
 

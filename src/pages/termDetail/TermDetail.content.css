@@ -242,7 +242,7 @@
     max-width: 100%;
     font-size: 14px;
     font-weight: 600;
-    line-height: calc(1.35em + 1pt);
+    line-height: calc(1.35em + 2pt);
     display: block;
     white-space: normal;
     overflow-wrap: anywhere;
@@ -251,10 +251,10 @@
 
 .term-poem-note-translation {
     position: relative;
-    top: 1pt;
+    top: 0;
     width: 460px;
     max-width: 100%;
-    line-height: calc(22px + 1pt);
+    line-height: 30px;
     text-wrap: pretty;
 }
 
@@ -516,9 +516,13 @@
         font-size: 15px;
     }
 
+    .term-poem-note-title-en {
+        line-height: 33px;
+    }
+
     .term-poem-note-translation {
         width: 520px;
-        line-height: 24px;
+        line-height: 33px;
     }
 
     .term-phases {
@@ -593,9 +597,13 @@
         max-width: min(980px, calc(100vw - 320px));
     }
 
+    .term-poem-note-title-en {
+        line-height: 35px;
+    }
+
     .term-poem-note-translation {
         width: 560px;
-        line-height: 26px;
+        line-height: 35px;
     }
 
     .term-center-content .term-ritual {

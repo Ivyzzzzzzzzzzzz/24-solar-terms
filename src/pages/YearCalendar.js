@@ -72,6 +72,7 @@ const YearCalendar = () => {
   const [hoveredTerm, setHoveredTerm] = useState(null);
   const [isLiteEffects, setIsLiteEffects] = useState(false);
   const hoveredTermIdRef = useRef(null);
+  const calendarScrollRef = useRef(null);
   const handleTermHover = useCallback((term) => {
     if (!term?.id) return;
     if (hoveredTermIdRef.current === term.id) return;
@@ -420,6 +421,33 @@ const YearCalendar = () => {
     previewTermId(hoveredTerm?.id || getCurrentTermId());
   }, [hoveredTerm, previewTermId]);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const { body, documentElement } = document;
+    const lockClass = 'year-calendar-no-scroll';
+
+    body.classList.add(lockClass);
+    documentElement.classList.add(lockClass);
+
+    const allowCalendarScrollOnly = (event) => {
+      if (event.ctrlKey || event.metaKey) return;
+      if (calendarScrollRef.current?.contains(event.target)) return;
+
+      event.preventDefault();
+    };
+
+    window.addEventListener('wheel', allowCalendarScrollOnly, { passive: false, capture: true });
+    window.addEventListener('touchmove', allowCalendarScrollOnly, { passive: false, capture: true });
+
+    return () => {
+      window.removeEventListener('wheel', allowCalendarScrollOnly, { capture: true });
+      window.removeEventListener('touchmove', allowCalendarScrollOnly, { capture: true });
+      body.classList.remove(lockClass);
+      documentElement.classList.remove(lockClass);
+    };
+  }, []);
+
   return (
     <main className="year-calendar-page">
       <Link className="year-calendar-back-link" to="/" aria-label="Back" onClick={handleBackClick}>
@@ -454,7 +482,7 @@ const YearCalendar = () => {
             </div>
           </div>
         </div>
-        <div className="year-day-scroll">
+        <div className="year-day-scroll" ref={calendarScrollRef}>
           <div className={`year-day-stream${isLiteEffects ? ' is-lite-effects' : ''}`} role="list" style={fieldWashStyle}>
             <div className="year-day-stream-field" aria-hidden="true">
               {termAuraNodes.map((aura) => (

@@ -8,8 +8,9 @@
   --intro-corner-size: var(--screen-corner-size);
   --intro-content-offset-top: clamp(36px, 9vh, 92px);
   --intro-content-pad-x: 26px;
+  --intro-content-shift-x: 0px;
   --intro-header-top: max(var(--landing-pad-top), calc(var(--intro-corner-size) - 8px));
-  --intro-content-left: max(13vw, calc((100vw - 680px) / 2));
+  --intro-content-left: calc((100vw - 600px) / 2);
   padding: var(--intro-header-top) var(--landing-pad-right) var(--screen-frame-pad-bottom-safe) var(--landing-pad-left);
   background: transparent;
   color: rgba(20, 18, 16, 0.9);
@@ -98,7 +99,7 @@
 
 .intro-content {
   margin: var(--intro-content-offset-top) auto 0;
-  width: min(74vw, 680px);
+  width: min(66vw, 600px);
   max-height: min(56vh, 420px);
   padding: 22px 26px 26px;
   overflow-y: auto;
@@ -112,6 +113,7 @@
   font-size: clamp(10.6pt, 1.12vw, 11.4pt);
   line-height: 1.8;
   position: relative;
+  transform: translateX(var(--intro-content-shift-x));
   z-index: 2;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -125,6 +127,15 @@
   mask-repeat: no-repeat;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+}
+
+.intro-content p {
+  text-wrap: pretty;
+}
+
+.intro-no-widow {
+  display: inline-block;
+  white-space: nowrap;
 }
 
 .intro-content.has-bottom-fade {
@@ -221,7 +232,7 @@
   .intro-page {
     --intro-content-offset-top: clamp(48px, 9vh, 108px);
     --intro-content-pad-x: 32px;
-    --intro-content-left: max(12vw, calc((100vw - 820px) / 2));
+    --intro-content-left: calc((100vw - 680px) / 2);
   }
 
   .intro-back-label {
@@ -238,7 +249,7 @@
   }
 
   .intro-content {
-    width: min(68vw, 820px);
+    width: min(56vw, 680px);
     max-height: min(60vh, 520px);
     padding: 28px 32px 32px;
     font-size: clamp(11.8pt, 0.92vw, 13pt);
@@ -268,7 +279,7 @@
   .intro-page {
     --intro-content-offset-top: clamp(54px, 9vh, 120px);
     --intro-content-pad-x: 36px;
-    --intro-content-left: max(12vw, calc((100vw - 900px) / 2));
+    --intro-content-left: calc((100vw - 740px) / 2);
   }
 
   .intro-back-label {
@@ -284,7 +295,7 @@
   }
 
   .intro-content {
-    width: min(62vw, 900px);
+    width: min(48vw, 740px);
     max-height: min(62vh, 580px);
     padding: 32px 36px 36px;
     font-size: clamp(12.4pt, 0.82vw, 13.6pt);
@@ -344,6 +355,7 @@
   .intro-page {
     --intro-content-offset-top: 40px;
     --intro-content-pad-x: 18px;
+    --intro-content-shift-x: 0px;
     --intro-content-left: var(--landing-pad-left);
   }
 
@@ -358,7 +370,7 @@
   }
 
   .intro-content {
-    width: min(100%, 680px);
+    width: min(100%, 600px);
     margin-top: 40px;
     max-height: min(58vh, 480px);
     padding: 18px 18px 22px;

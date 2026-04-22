@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAmbientTerm } from '../audio/AmbientAudioProvider';
 import { getCurrentTermId } from '../data';
@@ -30,11 +30,61 @@ const INTRO_COPY = {
   ]
 };
 
+const preventIntroWidow = (text = '') => {
+  const normalized = String(text).trim().replace(/\s+/g, ' ');
+  return normalized.replace(/\s+([^\s]+)\s*$/, '\u00A0$1');
+};
+
+const getIntroZhNoWidowParts = (text = '') => {
+  const chars = Array.from(String(text).trim());
+  if (chars.length <= 2) {
+    return {
+      head: chars.join(''),
+      tail: '',
+      hasTail: false
+    };
+  }
+
+  const normalized = chars.join('');
+  const trailingPunctuation = normalized.match(/[，。！？；：、,.!?;:）】》」』”’]+$/u)?.[0] || '';
+  const keepCount = Math.min(chars.length, 2 + Array.from(trailingPunctuation).length);
+
+  if (chars.length <= keepCount) {
+    return {
+      head: chars.join(''),
+      tail: '',
+      hasTail: false
+    };
+  }
+
+  return {
+    head: chars.slice(0, -keepCount).join(''),
+    tail: chars.slice(-keepCount).join(''),
+    hasTail: true
+  };
+};
+
+const renderIntroParagraphText = (text, lang) => {
+  if (lang !== 'zh') return preventIntroWidow(text);
+
+  const { head, tail, hasTail } = getIntroZhNoWidowParts(text);
+  if (!hasTail) return head;
+
+  return (
+    <>
+      {head}
+      <span className="intro-no-widow">{tail}</span>
+    </>
+  );
+};
+
 const Intro = () => {
   const navigate = useNavigate();
   useAmbientTerm(getCurrentTermId());
   const backgroundOwnerRef = useRef(Symbol('intro-term-background'));
+  const introPageRef = useRef(null);
   const introContentRef = useRef(null);
+  const introTitleRef = useRef(null);
   const [introLang, setIntroLang] = useState('en');
   const [showTopFade, setShowTopFade] = useState(false);
   const [showBottomFade, setShowBottomFade] = useState(true);
@@ -119,6 +169,71 @@ const Intro = () => {
     setShowBottomFade(nextShowBottom);
   }, [introLang]);
 
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const pageEl = introPageRef.current;
+    const titleEl = introTitleRef.current;
+    const contentEl = introContentRef.current;
+
+    if (!pageEl || !titleEl || !contentEl) return undefined;
+
+    let frameId = null;
+    let isDisposed = false;
+
+    const updateIntroAlignment = () => {
+      if (isDisposed) return;
+
+      if (!window.matchMedia('(min-width: 861px)').matches) {
+        pageEl.style.setProperty('--intro-content-shift-x', '0px');
+        pageEl.style.removeProperty('--intro-content-left');
+        return;
+      }
+
+      const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+      const titleRect = titleEl.getBoundingClientRect();
+      const contentRect = contentEl.getBoundingClientRect();
+      const contentWidth = contentRect.width;
+
+      if (!viewportWidth || !titleRect.left || !contentWidth) return;
+
+      const centeredLeft = (viewportWidth - contentWidth) / 2;
+      const balancedLeft = Math.max(0, (titleRect.left - contentWidth) / 2);
+      const shiftX = balancedLeft - centeredLeft;
+
+      pageEl.style.setProperty('--intro-content-shift-x', `${shiftX.toFixed(2)}px`);
+      pageEl.style.setProperty('--intro-content-left', `${balancedLeft.toFixed(2)}px`);
+    };
+
+    const queueIntroAlignment = () => {
+      if (frameId !== null) window.cancelAnimationFrame(frameId);
+      frameId = window.requestAnimationFrame(() => {
+        frameId = null;
+        updateIntroAlignment();
+      });
+    };
+
+    queueIntroAlignment();
+
+    const resizeObserver = typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(queueIntroAlignment)
+      : null;
+
+    resizeObserver?.observe(titleEl);
+    resizeObserver?.observe(contentEl);
+    window.addEventListener('resize', queueIntroAlignment);
+    document.fonts?.ready?.then(queueIntroAlignment).catch(() => {});
+
+    return () => {
+      isDisposed = true;
+      if (frameId !== null) window.cancelAnimationFrame(frameId);
+      resizeObserver?.disconnect();
+      window.removeEventListener('resize', queueIntroAlignment);
+      pageEl.style.removeProperty('--intro-content-shift-x');
+      pageEl.style.removeProperty('--intro-content-left');
+    };
+  }, [introLang]);
+
   const handleIntroScroll = (event) => {
     const contentEl = event.currentTarget;
     const scrollTop = contentEl.scrollTop;
@@ -130,13 +245,13 @@ const Intro = () => {
   };
 
   return (
-    <div className="intro-page">
+    <div className="intro-page" ref={introPageRef}>
       <div id="termP5Mount" className="intro-p5" aria-hidden="true"></div>
       <header className="intro-header">
         <Link className="intro-back" to="/" aria-label="Back" onClick={handleBackClick}>
           <span className="intro-back-label">Back</span>
         </Link>
-        <div className="intro-title">
+        <div className="intro-title" ref={introTitleRef}>
           <div className="intro-title-zh">时序有声</div>
           <div className="intro-title-en">A Living Calendar</div>
         </div>
@@ -168,7 +283,7 @@ const Intro = () => {
       >
         {INTRO_COPY[introLang].map((paragraph, index) => (
           <p key={`intro-copy-${introLang}-${index}`} className={index === 0 ? 'intro-lead' : ''} lang={introLang === 'zh' ? 'zh-Hans' : 'en'}>
-            {paragraph}
+            {renderIntroParagraphText(paragraph, introLang)}
           </p>
         ))}
       </main>

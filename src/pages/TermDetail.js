@@ -244,13 +244,6 @@ const TermDetail = () => {
   const menuAutoAdvanceTimerRef = useRef(null);
   const menuAutoAdvanceStartedAtRef = useRef(0);
   const menuAutoAdvanceRemainingRef = useRef(MENU_AUTO_ADVANCE_MS);
-  const handleBackClick = useCallback((event) => {
-    event.preventDefault();
-    const idx = window.history?.state?.idx;
-    if (typeof idx === 'number' && idx > 0) navigate(-1);
-    else navigate('/');
-  }, [navigate]);
-
   const clearMenuAutoAdvanceTimer = useCallback(() => {
     if (menuAutoAdvanceTimerRef.current) {
       window.clearTimeout(menuAutoAdvanceTimerRef.current);
@@ -560,15 +553,11 @@ const TermDetail = () => {
     >
       <TermBackground termId={term.id} />
         <div className="frame term-frame">
-        <Link className="term-back-link" to="/" aria-label="Back" onClick={handleBackClick}>
-          <span className="term-back-link-label">Back</span>
-        </Link>
-
         <div className="term-main">
           <div className="term-content">
             <div className="term-header">
-              <Link className="term-left-home-link" to="/" aria-label="Go to landing page">
-                <span className="term-left-home-orb" aria-hidden="true" style={orbPaletteStyle}>
+              <Link className="term-left-home-link" to="/" aria-label="Go to landing page" style={orbPaletteStyle}>
+                <span className="term-left-home-orb" aria-hidden="true">
                   <span className="term-left-home-orb-fluid">
                     <span className="term-left-home-orb-spectrum"></span>
                     <span className="term-left-home-orb-stream"></span>

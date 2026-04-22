@@ -97,6 +97,12 @@ body.landing-no-scroll {
   overflow: hidden;
 }
 
+html.year-calendar-no-scroll,
+body.year-calendar-no-scroll {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

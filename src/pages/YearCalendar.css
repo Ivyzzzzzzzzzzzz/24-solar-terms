@@ -8,14 +8,15 @@
   max-width: none;
   margin: 0;
   box-sizing: border-box;
-  --landing-pad-top: max(var(--screen-orb-top), calc(var(--screen-edge-pad-min) + env(safe-area-inset-top)));
-  --year-pad-left: var(--screen-frame-pad-left-safe);
-  --year-pad-right: var(--screen-frame-pad-right-safe);
+  --year-pad-top: clamp(56px, calc(3.6vw + 2vh), 96px);
+  --year-screen-edge-pad-inline: clamp(88px, 7.2vw, 132px);
+  --year-pad-left: var(--year-screen-edge-pad-inline);
+  --year-pad-right: var(--year-screen-edge-pad-inline);
   --year-edge-pad-min: var(--screen-edge-pad-min);
   --year-pad-bottom: 8px;
   --year-grid-side-budget: 190px;
   padding:
-    max(var(--landing-pad-top), calc(var(--year-edge-pad-min) + env(safe-area-inset-top)))
+    max(var(--year-pad-top), calc(var(--year-edge-pad-min) + env(safe-area-inset-top)))
     max(var(--year-pad-right), calc(var(--year-edge-pad-min) + env(safe-area-inset-right)))
     max(var(--year-pad-bottom), calc(var(--year-edge-pad-min) + env(safe-area-inset-bottom)))
     max(var(--year-pad-left), calc(var(--year-edge-pad-min) + env(safe-area-inset-left)));
@@ -1040,7 +1041,17 @@
 
 .year-day-scroll {
   position: relative;
-  overflow: visible;
+  max-height: calc(100dvh - var(--year-pad-top) - max(var(--year-pad-bottom), var(--year-edge-pad-min)));
+  overflow-y: auto;
+  overflow-x: visible;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.year-day-scroll::-webkit-scrollbar {
+  display: none;
 }
 
 .year-day-stream {
@@ -1503,11 +1514,8 @@
 @media (max-height: 900px) {
   .year-day-scroll {
     max-height: calc(100dvh - 152px);
-    overflow-y: auto;
     overflow-x: hidden;
     padding-right: 4px;
-    overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
     scrollbar-gutter: stable;
   }
 }
@@ -1517,6 +1525,8 @@
     --cols: 22;
     --grid-scale: 0.98;
     --header-h: 56px;
+    --year-pad-top: 56px;
+    --year-screen-edge-pad-inline: 10px;
     --year-edge-pad-min: 10px;
     --year-pad-bottom: 6px;
     --year-grid-side-budget: 176px;
