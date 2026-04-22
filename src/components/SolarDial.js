@@ -582,7 +582,7 @@ const SolarDial = ({ onTermChange }) => {
   const yearBoxProgressPath = annularGuidePath(200, 200, 98, 86, -90, yearBoxProgressEnd);
   const outerSnapGuidePath = annularGuidePath(200, 200, 186, 166, -10.5, 10.5);
   const houCenterAngles = [270, 30, 150];
-  const houArcSpan = 104;
+  const houArcSpan = 116;
   const houTextPaths = houCenterAngles.map((centerDeg) => {
     const startDeg = centerDeg - (houArcSpan / 2);
     const endDeg = centerDeg + (houArcSpan / 2);

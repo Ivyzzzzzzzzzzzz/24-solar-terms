@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAmbientTerm } from '../audio/AmbientAudioProvider';
-import { getCurrentTermId } from '../data';
+import { getCurrentTermId, TERM_COLORS } from '../data';
 import {
   claimTermBackgroundOwner,
   ensureTermBackgroundScript,
@@ -15,6 +15,27 @@ import './Intro.css';
 
 const SEASON_LOOP_DURATION_MS = 60000;
 const LOOP_ENSURE_INTERVAL_MS = 320;
+
+const hexToRgbChannels = (hex) => {
+  const value = String(hex || '').replace('#', '').trim();
+  const normalized = value.length === 3
+    ? value.split('').map((ch) => ch + ch).join('')
+    : value;
+  const intValue = Number.parseInt(normalized, 16);
+  if (Number.isNaN(intValue)) return '146 158 170';
+  return `${(intValue >> 16) & 255} ${(intValue >> 8) & 255} ${intValue & 255}`;
+};
+
+const darkenRgbChannels = (channels, factor = 0.78) => {
+  const values = String(channels || '').split(/\s+/).map(Number);
+  const safeValues = values.length === 3 && values.every(Number.isFinite)
+    ? values
+    : [146, 158, 170];
+  return safeValues
+    .map((channel) => Math.max(0, Math.min(255, Math.round(channel * factor))))
+    .join(' ');
+};
+
 const INTRO_COPY = {
   en: [
     "The 24 Solar Terms are a traditional East Asian calendrical system that divides the solar year into 24 seasonal markers. Developed in ancient China, the system tracks the sun's movement through the year and names recurring changes in climate, daylight, temperature, weather, and ecological activity. Rather than measuring time only through numbered dates or months, the 24 Solar Terms describe time through observable transformation in the natural world: the first rain of spring, the ripening of grain, the height of heat, the arrival of frost, or the lengthening and shortening of days.",
@@ -79,8 +100,14 @@ const renderIntroParagraphText = (text, lang) => {
 };
 
 const Intro = () => {
-  const navigate = useNavigate();
-  useAmbientTerm(getCurrentTermId());
+  const currentTermId = getCurrentTermId();
+  useAmbientTerm(currentTermId);
+  const introOrbBaseColor = TERM_COLORS[currentTermId]?.base || '#9aa6b2';
+  const introOrbBaseRgb = hexToRgbChannels(introOrbBaseColor);
+  const introOrbPaletteStyle = {
+    '--intro-orb-color-base-rgb': introOrbBaseRgb,
+    '--intro-orb-ring-rgb': darkenRgbChannels(introOrbBaseRgb)
+  };
   const backgroundOwnerRef = useRef(Symbol('intro-term-background'));
   const introPageRef = useRef(null);
   const introContentRef = useRef(null);
@@ -88,13 +115,6 @@ const Intro = () => {
   const [introLang, setIntroLang] = useState('en');
   const [showTopFade, setShowTopFade] = useState(false);
   const [showBottomFade, setShowBottomFade] = useState(true);
-
-  const handleBackClick = (event) => {
-    event.preventDefault();
-    const idx = window.history?.state?.idx;
-    if (typeof idx === 'number' && idx > 0) navigate(-1);
-    else navigate('/');
-  };
 
   useEffect(() => {
     let alive = true;
@@ -247,10 +267,24 @@ const Intro = () => {
   return (
     <div className="intro-page" ref={introPageRef}>
       <div id="termP5Mount" className="intro-p5" aria-hidden="true"></div>
+      <Link
+        className="intro-home-link"
+        to="/"
+        aria-label="Go to landing page"
+        style={introOrbPaletteStyle}
+      >
+        <span className="intro-home-orb" aria-hidden="true">
+          <span className="intro-home-orb-fluid">
+            <span className="intro-home-orb-spectrum"></span>
+            <span className="intro-home-orb-stream"></span>
+            <span className="intro-home-orb-layer intro-home-orb-layer-cool"></span>
+            <span className="intro-home-orb-layer intro-home-orb-layer-warm"></span>
+            <span className="intro-home-orb-layer intro-home-orb-layer-gold"></span>
+            <span className="intro-home-orb-layer intro-home-orb-layer-muted"></span>
+          </span>
+        </span>
+      </Link>
       <header className="intro-header">
-        <Link className="intro-back" to="/" aria-label="Back" onClick={handleBackClick}>
-          <span className="intro-back-label">Back</span>
-        </Link>
         <div className="intro-title" ref={introTitleRef}>
           <div className="intro-title-zh">时序有声</div>
           <div className="intro-title-en">A Living Calendar</div>

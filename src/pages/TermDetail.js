@@ -180,6 +180,16 @@ const hexToRgbChannels = (hex) => {
   return `${(intValue >> 16) & 255} ${(intValue >> 8) & 255} ${intValue & 255}`;
 };
 
+const darkenRgbChannels = (channels, factor = 0.78) => {
+  const values = String(channels || '').split(/\s+/).map(Number);
+  const safeValues = values.length === 3 && values.every(Number.isFinite)
+    ? values
+    : [146, 158, 170];
+  return safeValues
+    .map((channel) => Math.max(0, Math.min(255, Math.round(channel * factor))))
+    .join(' ');
+};
+
 const getEvenlySpacedEllipsePoints = (count, cx, cy, rx, ry, startAngle = -Math.PI / 2) => {
   if (count <= 0) return [];
 
@@ -459,7 +469,8 @@ const TermDetail = () => {
   const termBaseColor = TERM_COLORS[term.id]?.base || '#9aa6b2';
   const orbBaseRgb = hexToRgbChannels(termBaseColor);
   const orbPaletteStyle = {
-    '--term-orb-color-base-rgb': orbBaseRgb
+    '--term-orb-color-base-rgb': orbBaseRgb,
+    '--term-orb-ring-rgb': darkenRgbChannels(orbBaseRgb)
   };
   const nextTerm = TERM_LIST[nextTermIndex];
   const navEllipsePoints = getEvenlySpacedEllipsePoints(

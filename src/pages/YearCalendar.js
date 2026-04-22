@@ -64,6 +64,11 @@ const averageColors = (colors, fallback) => {
 const rgbStr = (c) => `rgb(${c.r}, ${c.g}, ${c.b})`;
 const rgbChannels = (c) => `${c.r} ${c.g} ${c.b}`;
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
+const darkenRgb = (c, factor = 0.78) => ({
+  r: Math.max(0, Math.min(255, Math.round(c.r * factor))),
+  g: Math.max(0, Math.min(255, Math.round(c.g * factor))),
+  b: Math.max(0, Math.min(255, Math.round(c.b * factor)))
+});
 
 const YearCalendar = () => {
   const navigate = useNavigate();
@@ -215,10 +220,12 @@ const YearCalendar = () => {
       ? Math.max(0, TERM_LIST.findIndex((term) => term.id === hoveredTerm.id))
       : fallbackOrbTermIndex;
     const term = TERM_LIST[baseIndex];
-    const baseRgb = rgbChannels(hexToRgb((TERM_COLORS[term?.id] || { base: '#9aa6b2' }).base));
+    const baseColor = hexToRgb((TERM_COLORS[term?.id] || { base: '#9aa6b2' }).base);
+    const baseRgb = rgbChannels(baseColor);
 
     return {
-      '--year-orb-color-base-rgb': baseRgb
+      '--year-orb-color-base-rgb': baseRgb,
+      '--year-orb-ring-rgb': rgbChannels(darkenRgb(baseColor))
     };
   }, [fallbackOrbTermIndex, hoveredTerm]);
 
@@ -458,11 +465,15 @@ const YearCalendar = () => {
         aria-label={`Solar terms year calendar ${year}`}
       >
         <div className="year-calendar-home-col">
-          <Link className="year-calendar-home-link-inline" to="/" aria-label="Go to landing page">
+          <Link
+            className="year-calendar-home-link-inline"
+            to="/"
+            aria-label="Go to landing page"
+            style={orbPaletteStyle}
+          >
             <span
               className={`year-calendar-home-orb-inline${isLiteEffects ? ' is-lite-effects' : ''}`}
               aria-hidden="true"
-              style={orbPaletteStyle}
             >
               <span className="year-calendar-home-orb-fluid">
                 <span className="year-calendar-home-orb-spectrum"></span>

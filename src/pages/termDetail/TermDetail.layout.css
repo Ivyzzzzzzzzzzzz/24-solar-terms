@@ -311,7 +311,7 @@
     flex-wrap: nowrap;
     gap: clamp(10px, 1.8vw, 22px);
     justify-content: center;
-    margin-left: clamp(58px, 5vw, 84px);
+    margin-left: clamp(70px, calc(5vw + 12px), 96px);
     min-height: 34px;
     text-align: center;
 }
@@ -322,7 +322,7 @@
     align-items: flex-start;
     justify-content: flex-start;
     gap: 2px;
-    margin-left: clamp(58px, 5vw, 84px);
+    margin-left: clamp(70px, calc(5vw + 12px), 96px);
     margin-top: 18px;
     color: #54504c;
     text-align: left;
@@ -356,6 +356,11 @@
     justify-content: center;
     text-decoration: none;
     opacity: 0.92;
+    --orb-outer-dot-size: 2.55px;
+    --orb-outer-dot-r: 29px;
+    --orb-outer-dot-m: 25.1px;
+    --orb-outer-dot-h: 14.5px;
+    --orb-outer-dot-color: rgb(var(--term-orb-ring-rgb, 0 0 0));
 }
 
 .term-left-home-link::before,
@@ -369,11 +374,11 @@
         conic-gradient(
             from 18deg,
             transparent 0deg 22deg,
-            rgba(0, 0, 0, 0.58) 22deg 62deg,
+            rgb(var(--term-orb-ring-rgb, 0 0 0) / 0.76) 22deg 62deg,
             transparent 62deg 118deg,
-            rgba(0, 0, 0, 0.4) 118deg 156deg,
+            rgb(var(--term-orb-ring-rgb, 0 0 0) / 0.56) 118deg 156deg,
             transparent 156deg 232deg,
-            rgba(0, 0, 0, 0.48) 232deg 282deg,
+            rgb(var(--term-orb-ring-rgb, 0 0 0) / 0.66) 232deg 282deg,
             transparent 282deg 360deg
         );
     -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1.7px), #000 calc(100% - 1.55px));
@@ -383,23 +388,39 @@
     animation: orbBrokenRingDrift 18s linear infinite;
 }
 
+.term-left-home-link::before {
+    display: none;
+    background: none;
+    opacity: 0;
+    animation: none;
+}
+
 .term-left-home-link::after {
-    inset: -12px;
-    background:
-        conic-gradient(
-            from 128deg,
-            transparent 0deg 34deg,
-            rgba(0, 0, 0, 0.32) 34deg 78deg,
-            transparent 78deg 164deg,
-            rgba(0, 0, 0, 0.42) 164deg 214deg,
-            transparent 214deg 286deg,
-            rgba(0, 0, 0, 0.36) 286deg 318deg,
-            transparent 318deg 360deg
-        );
-    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1.35px), #000 calc(100% - 1.2px));
-    mask: radial-gradient(farthest-side, transparent calc(100% - 1.35px), #000 calc(100% - 1.2px));
-    opacity: 0.5;
-    animation: orbBrokenRingDriftReverse 26s linear infinite;
+    inset: auto;
+    top: 50%;
+    left: 50%;
+    width: var(--orb-outer-dot-size);
+    height: var(--orb-outer-dot-size);
+    border-radius: 999px;
+    background: transparent;
+    -webkit-mask: none;
+    mask: none;
+    opacity: 1;
+    transform: translate(-50%, -50%);
+    animation: none;
+    box-shadow:
+        0 calc(0px - var(--orb-outer-dot-r)) 0 var(--orb-outer-dot-color),
+        var(--orb-outer-dot-h) calc(0px - var(--orb-outer-dot-m)) 0 var(--orb-outer-dot-color),
+        var(--orb-outer-dot-m) calc(0px - var(--orb-outer-dot-h)) 0 var(--orb-outer-dot-color),
+        var(--orb-outer-dot-r) 0 0 var(--orb-outer-dot-color),
+        var(--orb-outer-dot-m) var(--orb-outer-dot-h) 0 var(--orb-outer-dot-color),
+        var(--orb-outer-dot-h) var(--orb-outer-dot-m) 0 var(--orb-outer-dot-color),
+        0 var(--orb-outer-dot-r) 0 var(--orb-outer-dot-color),
+        calc(0px - var(--orb-outer-dot-h)) var(--orb-outer-dot-m) 0 var(--orb-outer-dot-color),
+        calc(0px - var(--orb-outer-dot-m)) var(--orb-outer-dot-h) 0 var(--orb-outer-dot-color),
+        calc(0px - var(--orb-outer-dot-r)) 0 0 var(--orb-outer-dot-color),
+        calc(0px - var(--orb-outer-dot-m)) calc(0px - var(--orb-outer-dot-h)) 0 var(--orb-outer-dot-color),
+        calc(0px - var(--orb-outer-dot-h)) calc(0px - var(--orb-outer-dot-m)) 0 var(--orb-outer-dot-color);
 }
 
 .term-left-home-link:hover,
@@ -414,7 +435,7 @@
 
 .term-left-home-link:hover::after,
 .term-left-home-link:focus-visible::after {
-    opacity: 0.68;
+    opacity: 1;
 }
 
 .term-left-home-link:focus-visible {
@@ -1163,6 +1184,9 @@
     .term-left-home-link {
         width: 38px;
         height: 38px;
+        --orb-outer-dot-r: 31px;
+        --orb-outer-dot-m: 26.85px;
+        --orb-outer-dot-h: 15.5px;
     }
 
     .term-grid-icon {
@@ -1172,12 +1196,12 @@
 
     .term-title-stack {
         gap: clamp(14px, 1.8vw, 28px);
-        margin-left: clamp(72px, 4vw, 98px);
+        margin-left: clamp(84px, calc(4vw + 12px), 110px);
     }
 
     .term-title-switch-hint {
         gap: 4px;
-        margin-left: clamp(72px, 4vw, 98px);
+        margin-left: clamp(84px, calc(4vw + 12px), 110px);
         margin-top: 22px;
     }
 
@@ -1245,6 +1269,9 @@
     .term-left-home-link {
         width: 42px;
         height: 42px;
+        --orb-outer-dot-r: 33px;
+        --orb-outer-dot-m: 28.6px;
+        --orb-outer-dot-h: 16.5px;
     }
 
     .term-grid-icon {
@@ -1253,11 +1280,11 @@
     }
 
     .term-title-stack {
-        margin-left: clamp(80px, 4vw, 108px);
+        margin-left: clamp(92px, calc(4vw + 12px), 120px);
     }
 
     .term-title-switch-hint {
-        margin-left: clamp(80px, 4vw, 108px);
+        margin-left: clamp(92px, calc(4vw + 12px), 120px);
         margin-top: 24px;
     }
 
@@ -1326,11 +1353,11 @@
     }
 
     .term-title-stack {
-        margin-left: 56px;
+        margin-left: 68px;
     }
 
     .term-title-switch-hint {
-        margin-left: 56px;
+        margin-left: 68px;
     }
 
     .term-title-zh {

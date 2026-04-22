@@ -1072,7 +1072,7 @@ export const HOU_MAP_LANDING = {
   dahan: [
     "鸡始乳 — Hens brood",
     "征鸟厉疾 — Birds of prey quicken",
-    "水泽腹坚 — The hearts of waters and marshes freeze solid"
+    "水泽腹坚 — Waters and marshes freeze solid"
   ]
 };
 
