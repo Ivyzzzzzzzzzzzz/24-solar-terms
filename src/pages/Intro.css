@@ -2,14 +2,15 @@
   height: 100vh;
   height: 100dvh;
   min-height: 100dvh;
-  --landing-pad-top: 96px;
-  --landing-pad-x: 136px;
-  --intro-corner-size: 108px;
+  --landing-pad-top: max(var(--screen-orb-top), calc(var(--screen-edge-pad-min) + env(safe-area-inset-top)));
+  --landing-pad-left: var(--screen-frame-pad-left-safe);
+  --landing-pad-right: var(--screen-frame-pad-right-safe);
+  --intro-corner-size: var(--screen-corner-size);
   --intro-content-offset-top: clamp(36px, 9vh, 92px);
   --intro-content-pad-x: 26px;
   --intro-header-top: max(var(--landing-pad-top), calc(var(--intro-corner-size) - 8px));
   --intro-content-left: max(13vw, calc((100vw - 680px) / 2));
-  padding: max(var(--landing-pad-top), calc(var(--intro-corner-size) - 8px)) var(--landing-pad-x) 56px;
+  padding: var(--intro-header-top) var(--landing-pad-right) var(--screen-frame-pad-bottom-safe) var(--landing-pad-left);
   background: transparent;
   color: rgba(20, 18, 16, 0.9);
   position: fixed;
@@ -218,9 +219,6 @@
 
 @media (min-width: 1440px) {
   .intro-page {
-    --landing-pad-top: 112px;
-    --landing-pad-x: 160px;
-    --intro-corner-size: 124px;
     --intro-content-offset-top: clamp(48px, 9vh, 108px);
     --intro-content-pad-x: 32px;
     --intro-content-left: max(12vw, calc((100vw - 820px) / 2));
@@ -268,9 +266,6 @@
 
 @media (min-width: 1920px) {
   .intro-page {
-    --landing-pad-top: 124px;
-    --landing-pad-x: 188px;
-    --intro-corner-size: 136px;
     --intro-content-offset-top: clamp(54px, 9vh, 120px);
     --intro-content-pad-x: 36px;
     --intro-content-left: max(12vw, calc((100vw - 900px) / 2));
@@ -310,8 +305,8 @@
   .intro-header {
     position: absolute;
     top: max(var(--landing-pad-top), calc(var(--intro-corner-size) - 8px));
-    left: var(--landing-pad-x);
-    right: var(--landing-pad-x);
+    left: var(--landing-pad-left);
+    right: var(--landing-pad-right);
   }
 
   .intro-content {
@@ -347,12 +342,9 @@
 
 @media (max-width: 860px) {
   .intro-page {
-    --landing-pad-top: 56px;
-    --landing-pad-x: 32px;
-    --intro-corner-size: 96px;
     --intro-content-offset-top: 40px;
     --intro-content-pad-x: 18px;
-    --intro-content-left: var(--landing-pad-x);
+    --intro-content-left: var(--landing-pad-left);
   }
 
   .intro-header {
@@ -375,18 +367,14 @@
   }
 
   .intro-lang-toggle {
-    left: calc(var(--landing-pad-x) + var(--intro-content-pad-x));
+    left: calc(var(--landing-pad-left) + var(--intro-content-pad-x));
   }
 }
 
 @media (max-width: 560px) {
   .intro-page {
-    --landing-pad-top: max(18px, env(safe-area-inset-top));
-    --landing-pad-x: 14px;
-    --intro-corner-size: 82px;
     --intro-content-offset-top: 30px;
     --intro-content-pad-x: 14px;
-    padding-bottom: 18px;
   }
 
   .intro-header {
@@ -405,7 +393,6 @@
 
 @media (max-width: 420px) {
   .intro-page {
-    --intro-corner-size: 72px;
     --intro-content-pad-x: 12px;
   }
 

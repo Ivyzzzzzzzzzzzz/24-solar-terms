@@ -50,21 +50,24 @@ const Intro = () => {
     let alive = true;
     const owner = claimTermBackgroundOwner(backgroundOwnerRef.current);
     let lastLoopEnsureAt = 0;
-    const ensureSeasonLoopActive = (force = false) => {
+    const ensureSeasonLoopActive = ({ bypassInterval = false, restart = false } = {}) => {
       const now = (typeof performance !== 'undefined' && typeof performance.now === 'function')
         ? performance.now()
         : Date.now();
-      if (!force && now - lastLoopEnsureAt < LOOP_ENSURE_INTERVAL_MS) return;
+      if (!bypassInterval && now - lastLoopEnsureAt < LOOP_ENSURE_INTERVAL_MS) return;
       lastLoopEnsureAt = now;
       claimTermBackgroundOwner(owner);
-      startTermBackgroundSeasonLoop({ durationMs: SEASON_LOOP_DURATION_MS });
+      startTermBackgroundSeasonLoop({
+        durationMs: SEASON_LOOP_DURATION_MS,
+        restart
+      });
     };
     const handlePointerMove = (event) => {
       ensureSeasonLoopActive();
       moveTermBackgroundPointer({ x: event.clientX, y: event.clientY });
     };
     const handlePointerDown = (event) => {
-      ensureSeasonLoopActive(true);
+      ensureSeasonLoopActive({ bypassInterval: true });
       pressTermBackgroundPointer({ x: event.clientX, y: event.clientY });
     };
     const handlePointerLeave = () => {
@@ -78,7 +81,7 @@ const Intro = () => {
     ensureTermBackgroundScript()
       .then(() => {
         if (!alive) return;
-        ensureSeasonLoopActive(true);
+        ensureSeasonLoopActive({ bypassInterval: true, restart: true });
       })
       .catch(() => {});
 

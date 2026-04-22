@@ -4,6 +4,73 @@ body,
   width: 100%;
 }
 
+:root {
+  --screen-edge-pad-min: 12px;
+  --screen-corner-size: 108px;
+  --screen-frame-pad-top-base: 172px;
+  --screen-frame-pad-top-offset: 0px;
+  --screen-frame-pad-top: calc(var(--screen-frame-pad-top-base) - var(--screen-frame-pad-top-offset));
+  --screen-orb-top: max(12px, calc(var(--screen-frame-pad-top-base) - 74px));
+  --screen-frame-pad-x: calc(var(--screen-orb-top) + 30px);
+  --screen-frame-pad-bottom: 108px;
+  --screen-frame-pad-top-safe: max(var(--screen-frame-pad-top), calc(var(--screen-edge-pad-min) + env(safe-area-inset-top)));
+  --screen-frame-pad-right-safe: max(var(--screen-frame-pad-x), calc(var(--screen-edge-pad-min) + env(safe-area-inset-right)));
+  --screen-frame-pad-bottom-safe: max(var(--screen-frame-pad-bottom), calc(var(--screen-edge-pad-min) + env(safe-area-inset-bottom)));
+  --screen-frame-pad-left-safe: max(var(--screen-frame-pad-x), calc(var(--screen-edge-pad-min) + env(safe-area-inset-left)));
+}
+
+@media (min-width: 1440px) {
+  :root {
+    --screen-corner-size: 124px;
+    --screen-frame-pad-top-base: 190px;
+    --screen-frame-pad-x: calc(var(--screen-orb-top) + 38px);
+    --screen-frame-pad-bottom: 124px;
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --screen-corner-size: 136px;
+    --screen-frame-pad-top-base: 208px;
+    --screen-frame-pad-x: calc(var(--screen-orb-top) + 46px);
+    --screen-frame-pad-bottom: 136px;
+  }
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --screen-frame-pad-top-base: 142px;
+    --screen-frame-pad-x: calc(var(--screen-orb-top) + 24px);
+    --screen-frame-pad-bottom: 52px;
+  }
+}
+
+@media (max-width: 980px) {
+  :root {
+    --screen-corner-size: 88px;
+    --screen-frame-pad-top-base: 118px;
+    --screen-frame-pad-x: calc(var(--screen-orb-top) + 18px);
+    --screen-frame-pad-bottom: 30px;
+  }
+}
+
+@media (max-width: 760px) {
+  :root {
+    --screen-edge-pad-min: 10px;
+    --screen-corner-size: 74px;
+    --screen-frame-pad-top-base: max(82px, calc(env(safe-area-inset-top) + 70px));
+    --screen-frame-pad-x: 24px;
+    --screen-frame-pad-bottom: 132px;
+  }
+}
+
+@media (max-width: 460px) {
+  :root {
+    --screen-corner-size: 66px;
+    --screen-frame-pad-bottom: 140px;
+  }
+}
+
 html,
 body {
   min-height: 100%;

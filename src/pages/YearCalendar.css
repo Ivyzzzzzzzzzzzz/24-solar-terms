@@ -2,12 +2,23 @@
 
 .year-calendar-page {
   height: 100vh;
-  width: 100vw;
+  height: 100dvh;
+  min-height: 100dvh;
+  width: 100%;
   max-width: none;
   margin: 0;
-  --landing-pad-top: 60px;
-  --landing-pad-x: 112px;
-  padding: var(--landing-pad-top) var(--landing-pad-x) 8px;
+  box-sizing: border-box;
+  --landing-pad-top: max(var(--screen-orb-top), calc(var(--screen-edge-pad-min) + env(safe-area-inset-top)));
+  --year-pad-left: var(--screen-frame-pad-left-safe);
+  --year-pad-right: var(--screen-frame-pad-right-safe);
+  --year-edge-pad-min: var(--screen-edge-pad-min);
+  --year-pad-bottom: 8px;
+  --year-grid-side-budget: 190px;
+  padding:
+    max(var(--landing-pad-top), calc(var(--year-edge-pad-min) + env(safe-area-inset-top)))
+    max(var(--year-pad-right), calc(var(--year-edge-pad-min) + env(safe-area-inset-right)))
+    max(var(--year-pad-bottom), calc(var(--year-edge-pad-min) + env(safe-area-inset-bottom)))
+    max(var(--year-pad-left), calc(var(--year-edge-pad-min) + env(safe-area-inset-left)));
   background: #fcfcfa;
   color: rgba(20, 18, 16, 0.88);
   --cols: 22;
@@ -23,8 +34,8 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 108px;
-  height: 108px;
+  width: var(--screen-corner-size);
+  height: var(--screen-corner-size);
   background: #ffffff;
   clip-path: polygon(0 0, 100% 0, 0 100%);
   border-right: 1px solid rgba(84, 80, 76, 0.12);
@@ -37,8 +48,8 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 108px;
-  height: 108px;
+  width: var(--screen-corner-size);
+  height: var(--screen-corner-size);
   z-index: 6;
   display: block;
   text-decoration: none;
@@ -46,11 +57,11 @@
 
 .year-calendar-back-link-label {
   position: absolute;
-  top: 42px;
-  left: 18px;
+  top: calc(var(--screen-corner-size) * 0.39);
+  left: calc(var(--screen-corner-size) * 0.17);
   display: inline-block;
   font-family: "Roboto Mono", "Roboto Mono Regular", monospace;
-  font-size: 12px;
+  font-size: clamp(9px, 1vw, 12px);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: rgba(84, 80, 76, 0.9);
@@ -255,6 +266,7 @@
   align-items: start;
   justify-content: center;
   position: relative;
+  max-width: 100%;
   border: none;
   /* background: rgba(255, 255, 255, 0.28); */
   flex: none;
@@ -1041,7 +1053,11 @@
   column-gap: 0;
   row-gap: 0;
   justify-content: start;
-  width: min(92vw, calc(980px * var(--grid-scale)));
+  width: min(
+    calc(980px * var(--grid-scale)),
+    max(0px, calc(100vw - var(--year-pad-left) - var(--year-pad-right) - var(--year-grid-side-budget)))
+  );
+  max-width: 100%;
   height: auto;
   background: transparent;
   overflow: visible;
@@ -1296,23 +1312,10 @@
 
 @media (min-width: 1440px) {
   .year-calendar-page {
-    --landing-pad-top: 72px;
-    --landing-pad-x: 136px;
+    --year-pad-bottom: 12px;
+    --year-grid-side-budget: 220px;
     --grid-scale: 1.16;
     --header-h: 72px;
-    padding-bottom: 12px;
-  }
-
-  .year-calendar-page::before,
-  .year-calendar-back-link {
-    width: 124px;
-    height: 124px;
-  }
-
-  .year-calendar-back-link-label {
-    top: 48px;
-    left: 20px;
-    font-size: 13px;
   }
 
   .year-calendar-title {
@@ -1379,7 +1382,10 @@
   }
 
   .year-day-stream {
-    width: min(92vw, calc(1180px * var(--grid-scale)));
+    width: min(
+      calc(1180px * var(--grid-scale)),
+      max(0px, calc(100vw - var(--year-pad-left) - var(--year-pad-right) - var(--year-grid-side-budget)))
+    );
   }
 
   .year-day {
@@ -1412,23 +1418,10 @@
 
 @media (min-width: 1920px) {
   .year-calendar-page {
-    --landing-pad-top: 84px;
-    --landing-pad-x: 164px;
+    --year-pad-bottom: 14px;
+    --year-grid-side-budget: 240px;
     --grid-scale: 1.22;
     --header-h: 78px;
-    padding-bottom: 14px;
-  }
-
-  .year-calendar-page::before,
-  .year-calendar-back-link {
-    width: 136px;
-    height: 136px;
-  }
-
-  .year-calendar-back-link-label {
-    top: 53px;
-    left: 22px;
-    font-size: 14px;
   }
 
   .year-calendar-title {
@@ -1483,7 +1476,10 @@
   }
 
   .year-day-stream {
-    width: min(90vw, calc(1320px * var(--grid-scale)));
+    width: min(
+      calc(1320px * var(--grid-scale)),
+      max(0px, calc(100vw - var(--year-pad-left) - var(--year-pad-right) - var(--year-grid-side-budget)))
+    );
   }
 
   .year-day {
@@ -1521,9 +1517,9 @@
     --cols: 22;
     --grid-scale: 0.98;
     --header-h: 56px;
-    --landing-pad-top: 14px;
-    --landing-pad-x: 10px;
-    padding: var(--landing-pad-top) var(--landing-pad-x) 6px;
+    --year-edge-pad-min: 10px;
+    --year-pad-bottom: 6px;
+    --year-grid-side-budget: 176px;
   }
 
   .year-calendar-back-link {
@@ -1566,7 +1562,10 @@
   }
 
   .year-day-stream {
-    width: min(94vw, calc(980px * var(--grid-scale)));
+    width: min(
+      calc(980px * var(--grid-scale)),
+      max(0px, calc(100vw - var(--year-pad-left) - var(--year-pad-right) - var(--year-grid-side-budget)))
+    );
   }
 
   .year-day-scroll {

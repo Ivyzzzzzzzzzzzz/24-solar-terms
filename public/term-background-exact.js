@@ -381,12 +381,12 @@ function createIntroSeasonTheme(progress) {
       grassCol: '#2f7f35',
       grassMix: 0.84,
       grassHeightMin: 0.2,
-      grassHeightMax: 0.76,
+      grassHeightMax: 0.35,
       seasonGrowthTarget: 1.0,
       seasonGrowthPull: 0.76,
       growthRate: 0.045,
       growthDecay: 0.012,
-      growthScale: 1.02,
+      growthScale: 0.25,
       seasonDensityTarget: 1.0,
       seasonDensityPull: 0.7,
       densityGrowthRate: 0.035,
@@ -645,6 +645,62 @@ function createIntroSeasonTheme(progress) {
   return base;
 }
 
+function createIntroSeasonLoopRenderTheme(progress) {
+  const tt = ((progress % 1) + 1) % 1;
+  const theme = createIntroSeasonTheme(tt);
+  const summerPeakTheme = createIntroSeasonTheme(0.2);
+  const autumnGrassTheme = createIntroSeasonTheme(0.72);
+  const winterGrassTheme = createIntroSeasonTheme(0.94);
+  const next = {
+    ...theme,
+    bg: theme?.bg ? { ...theme.bg } : theme?.bg
+  };
+  const summerBlend = smoothstep(0.16, 0.4, tt) * (1 - smoothstep(0.58, 0.82, tt));
+  const autumnDormancyBlend = smoothstep(0.48, 0.62, tt) * (1 - smoothstep(0.78, 0.88, tt));
+  const winterLeadBlend = smoothstep(0.76, 0.88, tt);
+  const springCarryBlend = 1 - smoothstep(0.0, 0.08, tt);
+  const winterStateBlend = Math.max(winterLeadBlend, springCarryBlend);
+  const summerHeightCapMin = (summerPeakTheme.grassHeightMin ?? 0) * 0.5;
+  const summerHeightCapMax = (summerPeakTheme.grassHeightMax ?? 0) * 0.5;
+  const autumnDormantHeightMin = Math.min(autumnGrassTheme.grassHeightMin ?? 0, summerHeightCapMin);
+  const autumnDormantHeightMax = Math.min(autumnGrassTheme.grassHeightMax ?? 0, summerHeightCapMax);
+  const winterVisibleHeightMin = Math.max(winterGrassTheme.grassHeightMin ?? 0, 0.058);
+  const winterVisibleHeightMax = Math.max(winterGrassTheme.grassHeightMax ?? 0, 0.145);
+
+  if (summerBlend > 0.0001) {
+    next.grassHeightMin = lerpNum(theme.grassHeightMin ?? 0, (theme.grassHeightMin ?? 0) * 0.5, summerBlend);
+    next.grassHeightMax = lerpNum(theme.grassHeightMax ?? 0, (theme.grassHeightMax ?? 0) * 0.42, summerBlend);
+  }
+
+  if (autumnDormancyBlend > 0.0001) {
+    next.grassHeightMin = lerpNum(next.grassHeightMin ?? 0, autumnDormantHeightMin, autumnDormancyBlend);
+    next.grassHeightMax = lerpNum(next.grassHeightMax ?? 0, autumnDormantHeightMax, autumnDormancyBlend);
+    next.seasonGrowthTarget = lerpNum(next.seasonGrowthTarget ?? 0, 0, autumnDormancyBlend);
+    next.seasonGrowthPull = lerpNum(next.seasonGrowthPull ?? 0, 0, autumnDormancyBlend);
+    next.growthRate = lerpNum(next.growthRate ?? 0, 0, autumnDormancyBlend);
+    next.growthDecay = lerpNum(next.growthDecay ?? 0, Math.max(next.growthDecay ?? 0, 0.028), autumnDormancyBlend);
+    next.growthScale = lerpNum(next.growthScale ?? 0, 0, autumnDormancyBlend);
+    next.seasonDensityPull = lerpNum(next.seasonDensityPull ?? 0, 0, autumnDormancyBlend);
+    next.densityGrowthRate = lerpNum(next.densityGrowthRate ?? 0, 0, autumnDormancyBlend);
+    next.densityDecay = lerpNum(next.densityDecay ?? 0, 0.012, autumnDormancyBlend);
+  }
+
+  if (winterStateBlend > 0.0001) {
+    next.grassHeightMin = lerpNum(next.grassHeightMin ?? 0, winterVisibleHeightMin, winterStateBlend);
+    next.grassHeightMax = lerpNum(next.grassHeightMax ?? 0, winterVisibleHeightMax, winterStateBlend);
+    next.seasonGrowthTarget = lerpNum(next.seasonGrowthTarget ?? 0, 0, winterStateBlend);
+    next.seasonGrowthPull = lerpNum(next.seasonGrowthPull ?? 0, 0, winterStateBlend);
+    next.growthRate = lerpNum(next.growthRate ?? 0, 0, winterStateBlend);
+    next.growthDecay = lerpNum(next.growthDecay ?? 0, 0.012, winterStateBlend);
+    next.growthScale = lerpNum(next.growthScale ?? 0, 0, winterStateBlend);
+    next.seasonDensityPull = lerpNum(next.seasonDensityPull ?? 0, 0, winterStateBlend);
+    next.densityGrowthRate = lerpNum(next.densityGrowthRate ?? 0, 0, winterStateBlend);
+    next.densityDecay = lerpNum(next.densityDecay ?? 0, 0.006, winterStateBlend);
+  }
+
+  return next;
+}
+
 let INTRO_THEME_BOUNDS = null;
 
 function computeIntroThemeBounds() {
@@ -815,6 +871,21 @@ function getNowMs() {
   return Date.now();
 }
 
+function getViewportSize() {
+  if (typeof window === 'undefined') {
+    return { width: 0, height: 0 };
+  }
+
+  const visualViewport = window.visualViewport;
+  const viewportWidth = Math.round(visualViewport?.width || window.innerWidth || 0);
+  const viewportHeight = Math.round(visualViewport?.height || window.innerHeight || 0);
+
+  return {
+    width: Math.max(1, viewportWidth),
+    height: Math.max(1, viewportHeight)
+  };
+}
+
 function getTermBgMount() {
   if (typeof document === 'undefined') return null;
   return document.getElementById('termP5Mount') || document.body;
@@ -827,11 +898,12 @@ function getTermBgCanvasElement() {
 
 function applyTermBgCanvasViewportStyle(canvas) {
   if (!canvas || !canvas.style) return;
+  const viewport = getViewportSize();
   canvas.style.position = 'fixed';
   canvas.style.top = '0';
   canvas.style.left = '0';
-  canvas.style.width = '100vw';
-  canvas.style.height = '100vh';
+  canvas.style.width = viewport.width > 0 ? `${viewport.width}px` : '100vw';
+  canvas.style.height = viewport.height > 0 ? `${viewport.height}px` : '100vh';
   canvas.style.display = 'block';
   canvas.style.pointerEvents = 'none';
   canvas.style.zIndex = '0';
@@ -914,12 +986,13 @@ function resetRuntimeState() {
 
 function resetPointerInteraction() {
   const canvas = typeof window !== 'undefined' ? window.__termBgCanvas : null;
+  const viewport = getViewportSize();
   const viewportWidth =
     (canvas && (canvas.clientWidth || canvas.width)) ||
-    (typeof window !== 'undefined' ? window.innerWidth : 0);
+    viewport.width;
   const viewportHeight =
     (canvas && (canvas.clientHeight || canvas.height)) ||
-    (typeof window !== 'undefined' ? window.innerHeight : 0);
+    viewport.height;
 
   POINTER.x = viewportWidth * 0.5;
   POINTER.y = viewportHeight * 0.72;
@@ -951,12 +1024,13 @@ function projectPointerToField(x, y) {
   }
 
   const canvas = typeof window !== 'undefined' ? window.__termBgCanvas : null;
+  const viewport = getViewportSize();
   const fallbackWidth =
     (canvas && (canvas.clientWidth || canvas.width)) ||
-    (typeof window !== 'undefined' ? window.innerWidth : 0);
+    viewport.width;
   const fallbackHeight =
     (canvas && (canvas.clientHeight || canvas.height)) ||
-    (typeof window !== 'undefined' ? window.innerHeight : 0);
+    viewport.height;
 
   const fieldWidth = p5Ready && Number.isFinite(width) ? width : fallbackWidth;
   const fieldHeight = p5Ready && Number.isFinite(height) ? height : fallbackHeight;
@@ -1126,7 +1200,8 @@ function getPointerWindForBlade(blade, theme) {
 
 function setup() {
   const mount = getTermBgMount();
-  const canvas = createCanvas(windowWidth, windowHeight);
+  const viewport = getViewportSize();
+  const canvas = createCanvas(viewport.width, viewport.height);
   window.__termBgCanvas = canvas.elt;
   applyTermBgCanvasViewportStyle(canvas.elt);
   canvas.parent(mount);
@@ -1154,15 +1229,27 @@ function setup() {
   }
 }
 
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
+function syncCanvasToViewport(preserveFieldState = true) {
+  const viewport = getViewportSize();
+  if (viewport.width <= 0 || viewport.height <= 0) return;
+
+  resizeCanvas(viewport.width, viewport.height);
+  applyTermBgCanvasViewportStyle(window.__termBgCanvas);
   resetPointerInteraction();
-  initField(BACKGROUND_MODE !== 'season-loop');
+  initField(preserveFieldState);
   initRain();
   initRainSystem();
   initWindSystem();
   initSnow();
   initFrost();
+}
+
+function windowResized() {
+  // Fullscreen enter/exit can emit a short burst of intermediate resize values.
+  // Rebuilding against the settled visual viewport keeps the field from jumping.
+  window.requestAnimationFrame(() => {
+    syncCanvasToViewport(true);
+  });
 }
 
 function assignTheme(theme) {
@@ -1498,10 +1585,17 @@ function initField(keepState = false) {
     const spacing = map(n, 0, 1, spacingMin, spacingMax);
     const jitter = random(-jitterMax, jitterMax);
     const x = xCursor + jitter;
-    const h = map(n, 0, 1, height * grassHeightMin, height * grassHeightMax) * random(0.85, 1.15);
-    const mem = keepState && old[i] ? old[i].memWet : 0;
+    const previousBlade = keepState && old[i] ? old[i] : null;
 
-    blades.push(new Blade(x, baseY, h, random(1000), mem));
+    blades.push(new Blade({
+      x,
+      baseY,
+      heightSample: previousBlade?.heightSample ?? n,
+      heightVariance: previousBlade?.heightVariance ?? random(0.85, 1.15),
+      seed: previousBlade?.seed ?? random(1000),
+      memWet: previousBlade?.memWet ?? 0,
+      state: previousBlade
+    }));
 
     xCursor += spacing;
     i++;
@@ -1559,7 +1653,7 @@ function initWindSystem() {
   scheduleWindGustPhase(false);
 }
 
-function startSeasonLoop(durationMs = 160000, forceRecreate = false) {
+function startSeasonLoop(durationMs = 160000, forceRecreate = false, restart = false) {
   const previousMode = BACKGROUND_MODE;
   const wasIntroLoopActive =
     previousMode === 'season-loop' &&
@@ -1587,7 +1681,7 @@ function startSeasonLoop(durationMs = 160000, forceRecreate = false) {
     return;
   }
 
-  if (wasIntroLoopActive && !forceRecreate) {
+  if (wasIntroLoopActive && !forceRecreate && !restart) {
     // Keep the current intro loop state when redundant start calls arrive
     // (e.g. StrictMode/dev mount replay), so we avoid visible startup jumps.
     syncTermBgCanvasMount();
@@ -1595,13 +1689,14 @@ function startSeasonLoop(durationMs = 160000, forceRecreate = false) {
     return;
   }
 
+  resetRuntimeState();
   seasonLoopStartMs = getNowMs();
   seasonLoopProgress = 0;
   ACTIVE_THEME = 'intro-season-loop';
   syncTermBgCanvasMount();
   bindPointerInteractions();
   resetPointerInteraction();
-  assignTheme(createIntroSeasonTheme(0));
+  assignTheme(createIntroSeasonLoopRenderTheme(0));
   initField(false);
   initRain();
   initRainSystem();
@@ -1615,7 +1710,7 @@ function updateSeasonLoopTheme() {
   const elapsedMs = getNowMs() - seasonLoopStartMs;
   const loopMs = ((elapsedMs % seasonLoopDurationMs) + seasonLoopDurationMs) % seasonLoopDurationMs;
   seasonLoopProgress = loopMs / seasonLoopDurationMs;
-  assignTheme(createIntroSeasonTheme(seasonLoopProgress));
+  assignTheme(createIntroSeasonLoopRenderTheme(seasonLoopProgress));
 }
 
 function syncParticleCounts() {
@@ -1830,7 +1925,7 @@ class SnowFlake {
         }
       }
       if (nearest && bestDx < 10) {
-        const tipY = nearest.baseY - nearest.h;
+        const tipY = nearest.baseY - nearest.getRenderHeight(THEME);
         const settleY = constrain(this.y, tipY - 2, nearest.baseY);
         addSnowSettled(nearest.x + random(-2, 2), settleY + random(-1, 1), this.r);
         this.reset(false);
@@ -2008,24 +2103,45 @@ function drawRain(dt) {
   }
 }
 
+function getGrassHeightReference() {
+  const viewportHeight = Number.isFinite(height) && height > 0 ? height : getViewportSize().height;
+  if (BACKGROUND_MODE === 'season-loop' || ACTIVE_THEME === 'intro-season-loop') {
+    return Math.min(viewportHeight, 920);
+  }
+  return viewportHeight;
+}
+
 class Blade {
-  constructor(x, baseY, h, seed, memWet = 0) {
+  constructor({ x, baseY, heightSample, heightVariance = 1, seed, memWet = 0, state = null }) {
     this.x = x;
     this.baseY = baseY;
-    this.h = h;
+    this.heightSample = clamp(heightSample ?? 0.5, 0, 1);
+    this.heightVariance = clamp(heightVariance, 0.7, 1.3);
     this.seed = seed;
 
-    this.baseTilt = random(-0.25, 0.25);
-    this.bend = random(-0.03, 0.03);
+    this.baseTilt = state?.baseTilt ?? random(-0.25, 0.25);
+    this.bend = state?.bend ?? random(-0.03, 0.03);
     this.targetBend = 0;
     this.v = 0;
     this.memWet = memWet;
     this.tick = 0;
     this.tickVel = 0;
     this.lastTickAt = -9999;
-    this.emergeAt = random();
-    this.densityBias = random(0.88, 1.18);
+    this.emergeAt = state?.emergeAt ?? random();
     this.pressAmount = 0;
+
+    this.densityBias = state?.densityBias ?? random(0.88, 1.18);
+
+    if (state?.branches?.length) {
+      this.branches = state.branches.map((branch) => ({
+        t: branch.t,
+        side: branch.side,
+        lenRatio: branch.lenRatio ?? branch.len ?? 0.11,
+        bias: branch.bias,
+        vitality: branch.vitality
+      }));
+      return;
+    }
 
     this.branches = [];
     const theme = THEME;
@@ -2035,10 +2151,10 @@ class Blade {
     for (let i = 0; i < nBranches; i++) {
       const t = random(0.35, 0.85);
       const side = random() < 0.5 ? -1 : 1;
-      const len = random(this.h * 0.07, this.h * 0.16);
+      const lenRatio = random(0.07, 0.16);
       const bias = random(0.10, 0.28);
       const vitality = random();
-      this.branches.push({ t, side, len, bias, vitality });
+      this.branches.push({ t, side, lenRatio, bias, vitality });
     }
   }
 
@@ -2061,12 +2177,23 @@ class Blade {
     return densityPhase * densityPhase * (3 - 2 * densityPhase);
   }
 
+  getStemBaseHeight(theme) {
+    const referenceHeight = getGrassHeightReference();
+    return map(
+      this.heightSample,
+      0,
+      1,
+      referenceHeight * theme.grassHeightMin,
+      referenceHeight * theme.grassHeightMax
+    ) * this.heightVariance;
+  }
+
   getRenderHeight(theme, densityEase = this.getDensityEase()) {
     const wet = constrain(this.memWet, 0, 1);
     const growthFactor = (1 + growthLevel * theme.growthScale) * lerp(0.22, 1, densityEase);
     const wetFactor = 1 - wet * theme.wetDroop;
     const pressFactor = 1 - smoothstep(0, 0.92, this.pressAmount) * 0.44;
-    return max(6, this.h * growthFactor * wetFactor * pressFactor);
+    return max(6, this.getStemBaseHeight(theme) * growthFactor * wetFactor * pressFactor);
   }
 
   update(dt, wind, theme) {
@@ -2167,7 +2294,7 @@ class Blade {
       const ang = (bendAmt * p.k) + br.side * br.bias;
       const droop = wet * 0.10;
       const vitalityScale = lerp(0.85, 1.0, 1 - br.vitality * 0.45);
-      const brLen = br.len * growthFactor * wetFactor * (h / max(6, this.h * growthFactor * wetFactor)) * branchLengthScale * vitalityScale;
+      const brLen = br.lenRatio * h * branchLengthScale * vitalityScale;
       const bx = p.x + sin(ang) * brLen;
       const by = p.y - cos(ang) * brLen + droop * brLen;
       line(p.x, p.y, bx, by);
@@ -2273,8 +2400,9 @@ window.__termBgApplyTheme = (key) => {
 window.__termBgStartSeasonLoop = (options = {}) => {
   const durationMs = options.durationMs ?? 160000;
   const forceRecreate = options.forceRecreate === true;
+  const restart = options.restart === true;
   pendingThemeKey = null;
-  startSeasonLoop(durationMs, forceRecreate);
+  startSeasonLoop(durationMs, forceRecreate, restart);
 };
 
 window.__termBgPointerMove = (point) => {
