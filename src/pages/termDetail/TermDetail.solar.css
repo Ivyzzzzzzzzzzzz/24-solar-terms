@@ -1,7 +1,7 @@
 /* TermDetail: solar info panel + interaction/glint/shadow */
 .term-solar-panel-wrap {
     position: absolute;
-    top: calc(var(--term-frame-pad-top) + 7px);
+    top: calc(var(--term-orb-top) + var(--term-title-row-height, 34px) + var(--term-title-hint-gap-y, 18px));
     right: var(--term-frame-pad-right);
     width: 210px;
     z-index: 2;
@@ -386,10 +386,6 @@
 }
 
 @media (max-width: 980px) {
-    .term-solar-panel-wrap {
-        top: calc(var(--term-frame-pad-top) + 4px);
-    }
-
     .term-solar-panel-instruction {
         font-size: 13px;
     }

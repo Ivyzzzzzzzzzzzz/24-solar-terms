@@ -92,10 +92,13 @@
     --term-ritual-artboard-size: 94px;
 }
 
-.term-center-content .term-ritual.term-ritual-lichun,
-.term-center-content .term-ritual.term-ritual-mangzhong,
-.term-center-content .term-ritual.term-ritual-yushui {
+.term-center-content .term-ritual.term-ritual-mangzhong {
     --term-ritual-artboard-size: 145px;
+}
+
+.term-center-content .term-ritual.term-ritual-lichun,
+.term-center-content .term-ritual.term-ritual-yushui {
+    --term-ritual-artboard-size: 158px;
 }
 
 .term-center-content .term-poem {
@@ -396,6 +399,15 @@
     background-size: contain;
 }
 
+.term-ritual-lichun .term-ritual-artboard,
+.term-ritual-yushui .term-ritual-artboard {
+    filter:
+        contrast(1.08)
+        drop-shadow(0.45px 0 0 rgba(84, 80, 76, 0.38))
+        drop-shadow(-0.45px 0 0 rgba(84, 80, 76, 0.38))
+        drop-shadow(0 0.45px 0 rgba(84, 80, 76, 0.32));
+}
+
 .term-ritual-copy {
     display: inline-flex;
     width: fit-content;
@@ -570,10 +582,13 @@
         --term-ritual-artboard-size: 106px;
     }
 
-    .term-center-content .term-ritual.term-ritual-lichun,
-    .term-center-content .term-ritual.term-ritual-mangzhong,
-    .term-center-content .term-ritual.term-ritual-yushui {
+    .term-center-content .term-ritual.term-ritual-mangzhong {
         --term-ritual-artboard-size: 162px;
+    }
+
+    .term-center-content .term-ritual.term-ritual-lichun,
+    .term-center-content .term-ritual.term-ritual-yushui {
+        --term-ritual-artboard-size: 176px;
     }
 
     .term-ritual {
@@ -653,10 +668,13 @@
         --term-ritual-artboard-size: 115px;
     }
 
-    .term-center-content .term-ritual.term-ritual-lichun,
-    .term-center-content .term-ritual.term-ritual-mangzhong,
-    .term-center-content .term-ritual.term-ritual-yushui {
+    .term-center-content .term-ritual.term-ritual-mangzhong {
         --term-ritual-artboard-size: 176px;
+    }
+
+    .term-center-content .term-ritual.term-ritual-lichun,
+    .term-center-content .term-ritual.term-ritual-yushui {
+        --term-ritual-artboard-size: 192px;
     }
 
     .term-ritual {

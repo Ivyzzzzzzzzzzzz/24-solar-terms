@@ -17,6 +17,15 @@ body,
   --screen-frame-pad-right-safe: max(var(--screen-frame-pad-x), calc(var(--screen-edge-pad-min) + env(safe-area-inset-right)));
   --screen-frame-pad-bottom-safe: max(var(--screen-frame-pad-bottom), calc(var(--screen-edge-pad-min) + env(safe-area-inset-bottom)));
   --screen-frame-pad-left-safe: max(var(--screen-frame-pad-x), calc(var(--screen-edge-pad-min) + env(safe-area-inset-left)));
+  --screen-stage-y: 0px;
+  --screen-shallow-scale: 1;
+}
+
+@media (min-width: 901px) and (min-aspect-ratio: 16/9) {
+  :root {
+    --screen-stage-y: clamp(-28px, -2.4vh, -18px);
+    --screen-shallow-scale: 0.96;
+  }
 }
 
 @media (min-width: 1440px) {

@@ -141,6 +141,13 @@ body.term-solar-panel-hovering .ambient-sound-control-shell.is-term .ambient-sou
   }
 }
 
+@media (min-width: 901px) and (min-aspect-ratio: 16/9) {
+  .ambient-sound-control-shell {
+    transform: translateY(calc(-14px + var(--screen-stage-y))) scale(var(--screen-shallow-scale));
+    transform-origin: bottom right;
+  }
+}
+
 @media (max-width: 980px) {
   .ambient-sound-control-shell:not(.is-calendar) {
     right: 32px;

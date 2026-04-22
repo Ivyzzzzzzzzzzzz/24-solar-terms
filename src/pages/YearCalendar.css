@@ -15,8 +15,13 @@
   --year-edge-pad-min: var(--screen-edge-pad-min);
   --year-pad-bottom: 8px;
   --year-grid-side-budget: 190px;
+  --year-stage-y: var(--screen-stage-y);
+  --year-pad-top-effective: max(
+    calc(var(--year-edge-pad-min) + env(safe-area-inset-top)),
+    calc(var(--year-pad-top) + var(--year-stage-y))
+  );
   padding:
-    max(var(--year-pad-top), calc(var(--year-edge-pad-min) + env(safe-area-inset-top)))
+    var(--year-pad-top-effective)
     max(var(--year-pad-right), calc(var(--year-edge-pad-min) + env(safe-area-inset-right)))
     max(var(--year-pad-bottom), calc(var(--year-edge-pad-min) + env(safe-area-inset-bottom)))
     max(var(--year-pad-left), calc(var(--year-edge-pad-min) + env(safe-area-inset-left)));
@@ -1131,7 +1136,7 @@
 
 .year-day-scroll {
   position: relative;
-  max-height: calc(100dvh - var(--year-pad-top) - max(var(--year-pad-bottom), var(--year-edge-pad-min)));
+  max-height: calc(100dvh - var(--year-pad-top-effective) - max(var(--year-pad-bottom), var(--year-edge-pad-min)));
   overflow-y: auto;
   overflow-x: visible;
   overscroll-behavior: contain;
@@ -1609,7 +1614,7 @@
 
 @media (max-height: 900px) {
   .year-day-scroll {
-    max-height: calc(100dvh - 152px);
+    max-height: calc(100dvh - 152px - var(--year-stage-y));
     overflow-x: hidden;
     padding-right: 4px;
     scrollbar-gutter: stable;

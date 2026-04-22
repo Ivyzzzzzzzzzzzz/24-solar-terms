@@ -2,13 +2,19 @@
 .landing-page {
     height: 100%;
     overflow: hidden;
-    --landing-pad-top: max(var(--screen-orb-top), calc(var(--screen-edge-pad-min) + env(safe-area-inset-top)));
+    --landing-pad-top: max(
+        calc(var(--screen-edge-pad-min) + env(safe-area-inset-top)),
+        calc(var(--screen-orb-top) - clamp(14px, 1.2vw, 22px))
+    );
     --landing-pad-left: var(--screen-frame-pad-left-safe);
     --landing-pad-right: var(--screen-frame-pad-right-safe);
-    --landing-grid-top: var(--landing-pad-top);
+    --landing-stage-y: var(--screen-stage-y);
+    --landing-grid-top: calc(var(--landing-pad-top) + var(--landing-stage-y));
     --landing-grid-right: var(--landing-pad-right);
     --landing-grid-size: 34px;
     --landing-dial-max: 660px;
+    --landing-dial-size: min(84vmin, var(--landing-dial-max));
+    --landing-dial-y: 0px;
 }
 
 #p5Mount {
@@ -57,7 +63,7 @@
 
 .landing-title-wrap {
     position: absolute;
-    top: var(--landing-pad-top);
+    top: calc(var(--landing-pad-top) + var(--landing-stage-y));
     left: var(--landing-pad-left);
     display: flex;
     flex-direction: column;
@@ -285,8 +291,9 @@
 
 .landing-dial {
     position: relative;
-    width: min(84vmin, var(--landing-dial-max));
+    width: var(--landing-dial-size);
     aspect-ratio: 1 / 1;
+    transform: translateY(calc(var(--landing-dial-y) + var(--landing-stage-y)));
 }
 
 .en {
@@ -301,6 +308,7 @@
     .landing-page {
         --landing-grid-size: 38px;
         --landing-dial-max: 760px;
+        --landing-dial-size: min(78vmin, var(--landing-dial-max));
     }
 
     .landing-title-wrap {
@@ -341,15 +349,13 @@
         height: 24px;
     }
 
-    .landing-dial {
-        width: min(78vmin, var(--landing-dial-max));
-    }
 }
 
 @media (min-width: 1920px) {
     .landing-page {
         --landing-grid-size: 42px;
         --landing-dial-max: 900px;
+        --landing-dial-size: min(74vmin, var(--landing-dial-max));
     }
 
     .landing-title {
@@ -375,8 +381,56 @@
         height: 26px;
     }
 
-    .landing-dial {
-        width: min(74vmin, var(--landing-dial-max));
+}
+
+@media (min-width: 901px) and (min-aspect-ratio: 16/9) {
+    .landing-page {
+        --landing-pad-top: max(
+            calc(var(--screen-edge-pad-min) + env(safe-area-inset-top)),
+            calc(var(--screen-orb-top) - clamp(32px, 2.4vw, 48px))
+        );
+        --landing-grid-size: clamp(34px, 1.85vw, 38px);
+        --landing-dial-max: 850px;
+        --landing-dial-size: min(76vmin, var(--landing-dial-max));
+        --landing-dial-y: 0px;
+        --landing-stage-y: var(--screen-stage-y);
+    }
+
+    .landing-title-wrap {
+        gap: 7px;
+    }
+
+    .landing-title-row {
+        gap: 6px;
+    }
+
+    .landing-title {
+        font-size: clamp(17px, 1.05vw, 21px);
+    }
+
+    .landing-title-zh {
+        font-size: clamp(28px, 1.78vw, 36px);
+    }
+
+    .landing-meta {
+        --landing-meta-text-size: clamp(14px, 0.86vw, 18px);
+        gap: 5px;
+        margin-top: 10px;
+    }
+
+    .landing-meta-date {
+        gap: 7px;
+        min-height: 24px;
+    }
+
+    .term-grid-link {
+        width: var(--landing-grid-size);
+        height: var(--landing-grid-size);
+    }
+
+    .term-grid-icon {
+        width: clamp(22px, 1.18vw, 24px);
+        height: clamp(22px, 1.18vw, 24px);
     }
 }
 

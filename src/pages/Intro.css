@@ -2,14 +2,18 @@
   height: 100vh;
   height: 100dvh;
   min-height: 100dvh;
-  --landing-pad-top: max(var(--screen-orb-top), calc(var(--screen-edge-pad-min) + env(safe-area-inset-top)));
+  --intro-stage-y: var(--screen-stage-y);
+  --landing-pad-top: max(
+    calc(var(--screen-edge-pad-min) + env(safe-area-inset-top)),
+    calc(var(--screen-orb-top) + var(--intro-stage-y))
+  );
   --landing-pad-left: var(--screen-frame-pad-left-safe);
   --landing-pad-right: var(--screen-frame-pad-right-safe);
   --intro-corner-size: var(--screen-corner-size);
   --intro-content-offset-top: clamp(36px, 9vh, 92px);
   --intro-content-pad-x: 26px;
   --intro-content-shift-x: 0px;
-  --intro-header-top: max(var(--landing-pad-top), calc(var(--intro-corner-size) - 8px));
+  --intro-header-top: max(var(--landing-pad-top), calc(var(--intro-corner-size) - 8px + var(--intro-stage-y)));
   --intro-content-left: calc((100vw - 600px) / 2);
   --intro-orb-top: var(--landing-pad-top);
   --intro-orb-left: calc(var(--landing-pad-left) + 10px);
@@ -833,7 +837,7 @@
 @media (min-width: 861px) {
   .intro-header {
     position: absolute;
-    top: max(var(--landing-pad-top), calc(var(--intro-corner-size) - 8px));
+    top: var(--intro-header-top);
     left: var(--landing-pad-left);
     right: var(--landing-pad-right);
   }
