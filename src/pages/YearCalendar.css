@@ -324,7 +324,7 @@
   --orb-year-glow-color: rgb(var(--year-orb-color-base-rgb, 154 166 178) / 0.24);
   --orb-selector-color: rgb(var(--year-orb-color-base-rgb, 154 166 178) / 0.82);
   --orb-selector-glow-color: rgb(var(--year-orb-color-base-rgb, 154 166 178) / 0.32);
-  --orb-term-trace-color: rgba(68, 66, 60, 0.16);
+  --orb-term-trace-color: rgba(68, 66, 60, 0.32);
 }
 
 .year-calendar-home-link-inline::before,
@@ -361,8 +361,8 @@
       var(--orb-year-fill-color) 0deg var(--orb-year-progress-deg, 0deg),
       transparent var(--orb-year-progress-deg, 0deg) 360deg
     );
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5.1px), #000 calc(100% - 4.6px) calc(100% - 3.3px), transparent calc(100% - 2.8px));
-  mask: radial-gradient(farthest-side, transparent calc(100% - 5.1px), #000 calc(100% - 4.6px) calc(100% - 3.3px), transparent calc(100% - 2.8px));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6.5px), #000 calc(100% - 6px) calc(100% - 4.7px), transparent calc(100% - 4.2px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 6.5px), #000 calc(100% - 6px) calc(100% - 4.7px), transparent calc(100% - 4.2px));
   opacity: 0.9;
   animation: none;
   filter: drop-shadow(0 0 5px var(--orb-year-glow-color));
@@ -1033,6 +1033,15 @@
     transform: scale(1);
     opacity: calc(var(--year-aura-wave-opacity, 0.2) * 0.72);
   }
+
+  .year-calendar-toggle-word,
+  .year-calendar-toggle-word-zh {
+    animation: none;
+    transform: none;
+    text-shadow:
+      0 0 6px rgba(20, 18, 16, 0.24),
+      0 0 14px rgba(20, 18, 16, 0.14);
+  }
 }
 
 .year-calendar-year-col {
@@ -1135,17 +1144,39 @@
 }
 
 .year-calendar-toggle-word {
-  font-size: 16px;
+  font-size: 13px;
   letter-spacing: 0.08em;
   line-height: 1;
   text-transform: none;
+  animation: yearCalendarToggleTextGlow 2.6s ease-in-out infinite;
+  transform-origin: left center;
+  will-change: transform, text-shadow;
 }
 
 .year-calendar-toggle-word-zh {
-  font-size: 18px;
+  font-size: 15px;
   line-height: 1.2;
   letter-spacing: 0.02em;
   font-family: "FZFangSong-Z02S", "FangSong", "Songti SC", serif;
+  animation: yearCalendarToggleTextGlow 2.6s ease-in-out infinite;
+  transform-origin: left center;
+  will-change: transform, text-shadow;
+}
+
+@keyframes yearCalendarToggleTextGlow {
+  0%, 100% {
+    transform: scale(1);
+    text-shadow:
+      0 0 3px rgba(20, 18, 16, 0.12),
+      0 0 8px rgba(20, 18, 16, 0.08);
+  }
+  50% {
+    transform: scale(1.035);
+    text-shadow:
+      0 0 7px rgba(20, 18, 16, 0.32),
+      0 0 16px rgba(20, 18, 16, 0.2),
+      0 5px 12px rgba(20, 18, 16, 0.16);
+  }
 }
 
 .year-calendar-text-toggle.is-off .year-calendar-toggle-word,
@@ -1521,11 +1552,11 @@
   }
 
   .year-calendar-toggle-word {
-    font-size: 17px;
+    font-size: 14px;
   }
 
   .year-calendar-toggle-word-zh {
-    font-size: 20px;
+    font-size: 16px;
   }
 
   .year-day-stream {
@@ -1617,11 +1648,11 @@
   }
 
   .year-calendar-toggle-word {
-    font-size: 18px;
+    font-size: 15px;
   }
 
   .year-calendar-toggle-word-zh {
-    font-size: 22px;
+    font-size: 18px;
   }
 
   .year-day-stream {

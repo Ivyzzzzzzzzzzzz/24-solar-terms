@@ -7,7 +7,7 @@ import {
 
 const MIN_GAIN = 0.0001;
 const TRANSITION_SEC = 14;
-const MASTER_LEVEL = 0.34;
+const MASTER_LEVEL = 0.72;
 
 const clamp01 = (value) => Math.max(0, Math.min(1, value));
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));

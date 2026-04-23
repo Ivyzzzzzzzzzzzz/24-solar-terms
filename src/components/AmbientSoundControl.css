@@ -78,23 +78,36 @@ body.term-solar-panel-hovering .ambient-sound-control-shell.is-term .ambient-sou
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  gap: 1px;
+  gap: 2px;
   font-size: 13px;
   line-height: 1.24;
 }
 
-.ambient-sound-control-state-en {
-  order: 2;
+.ambient-sound-control-line {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+}
+
+.ambient-sound-control-en {
   font-family: "Roboto Mono", Helvetica, sans-serif;
   letter-spacing: 0.07em;
 }
 
-.ambient-sound-control-state-zh {
-  order: 1;
+.ambient-sound-control-zh {
   font-family: "FZFangSong-Z02S", "FZFangSong-Z02S-Regular", Helvetica, sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.2;
   letter-spacing: 0;
+}
+
+.ambient-sound-control-label {
+  color: rgba(45, 41, 37, 0.68);
+}
+
+.ambient-sound-control-value {
+  color: rgba(45, 41, 37, 0.88);
 }
 
 @keyframes ambientSoundOnBreath {

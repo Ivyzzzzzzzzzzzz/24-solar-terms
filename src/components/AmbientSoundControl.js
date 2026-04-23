@@ -4,11 +4,11 @@ import { useAmbientAudio } from '../audio/AmbientAudioProvider';
 import './AmbientSoundControl.css';
 
 const STATUS_LABEL = {
-  idle: { en: 'Sound off', zh: '关闭声音' },
-  starting: { en: 'Starting sound', zh: '启动声音中' },
-  ready: { en: 'Sound on', zh: '开启声音' },
-  error: { en: 'Retry sound', zh: '重试声音' },
-  unsupported: { en: 'Audio unavailable', zh: '音频不可用' }
+  idle: { en: 'Off', zh: '关' },
+  starting: { en: 'Starting', zh: '启动中' },
+  ready: { en: 'On', zh: '开' },
+  error: { en: 'Retry', zh: '重试' },
+  unsupported: { en: 'Unavailable', zh: '不可用' }
 };
 
 const AmbientSoundControl = () => {
@@ -21,7 +21,7 @@ const AmbientSoundControl = () => {
   } = useAmbientAudio();
 
   const stateLabel = STATUS_LABEL[status] || STATUS_LABEL.idle;
-  const stateLabelText = `${stateLabel.en} ${stateLabel.zh}`;
+  const stateLabelText = `Music 音乐： ${stateLabel.en} ${stateLabel.zh}`;
   const path = location.pathname || '/';
   const pageClass = path.startsWith('/term/')
     ? 'is-term'
@@ -42,8 +42,14 @@ const AmbientSoundControl = () => {
         aria-label={supported ? stateLabelText : 'Audio unavailable 音频不可用'}
       >
         <span className="ambient-sound-control-state">
-          <span className="ambient-sound-control-state-en">{stateLabel.en}</span>
-          <span className="ambient-sound-control-state-zh">{stateLabel.zh}</span>
+          <span className="ambient-sound-control-line ambient-sound-control-label">
+            <span className="ambient-sound-control-en">Music</span>
+            <span className="ambient-sound-control-zh">音乐：</span>
+          </span>
+          <span className="ambient-sound-control-line ambient-sound-control-value">
+            <span className="ambient-sound-control-en">{stateLabel.en}</span>
+            <span className="ambient-sound-control-zh">{stateLabel.zh}</span>
+          </span>
         </span>
       </button>
     </div>

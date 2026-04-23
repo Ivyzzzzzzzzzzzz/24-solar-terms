@@ -510,7 +510,7 @@ const YearCalendar = () => {
             aria-label={isTextOn ? 'Turn text off' : 'Turn text on'}
           >
             <span className="year-calendar-toggle-word">See dates</span>
-            <span className="year-calendar-toggle-word-zh">显示日期</span>
+            <span className="year-calendar-toggle-word-zh">显示<br />日期</span>
           </button>
         </div>
       </section>

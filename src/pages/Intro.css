@@ -72,7 +72,7 @@
   --orb-year-glow-color: rgb(var(--intro-orb-color-base-rgb, 154 166 178) / 0.24);
   --orb-selector-color: rgb(var(--intro-orb-color-base-rgb, 154 166 178) / 0.82);
   --orb-selector-glow-color: rgb(var(--intro-orb-color-base-rgb, 154 166 178) / 0.32);
-  --orb-term-trace-color: rgba(68, 66, 60, 0.16);
+  --orb-term-trace-color: rgba(68, 66, 60, 0.32);
 }
 
 .intro-home-link::before,
@@ -109,8 +109,8 @@
       var(--orb-year-fill-color) 0deg var(--orb-year-progress-deg, 0deg),
       transparent var(--orb-year-progress-deg, 0deg) 360deg
     );
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5.1px), #000 calc(100% - 4.6px) calc(100% - 3.3px), transparent calc(100% - 2.8px));
-  mask: radial-gradient(farthest-side, transparent calc(100% - 5.1px), #000 calc(100% - 4.6px) calc(100% - 3.3px), transparent calc(100% - 2.8px));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6.5px), #000 calc(100% - 6px) calc(100% - 4.7px), transparent calc(100% - 4.2px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 6.5px), #000 calc(100% - 6px) calc(100% - 4.7px), transparent calc(100% - 4.2px));
   opacity: 0.9;
   animation: none;
   filter: drop-shadow(0 0 5px var(--orb-year-glow-color));
