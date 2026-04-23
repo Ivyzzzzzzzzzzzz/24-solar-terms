@@ -1,6 +1,6 @@
 .ambient-sound-control-shell {
   position: fixed;
-  right: 160px;
+  right: var(--screen-frame-pad-left-safe);
   bottom: 96px;
   z-index: 120;
   pointer-events: none;
@@ -8,20 +8,12 @@
 }
 
 .ambient-sound-control-shell.is-calendar {
-  right: 112px;
+  right: max(clamp(88px, 7.2vw, 132px), calc(var(--screen-edge-pad-min) + env(safe-area-inset-left)));
   bottom: 60px;
 }
 
 .ambient-sound-control-shell.is-default {
   bottom: 20px;
-}
-
-.ambient-sound-control-shell.is-term {
-  right: 128px;
-}
-
-.ambient-sound-control-shell.is-landing {
-  right: 128px;
 }
 
 .ambient-sound-control {
@@ -127,20 +119,6 @@ body.term-solar-panel-hovering .ambient-sound-control-shell.is-term .ambient-sou
   }
 }
 
-@media (max-width: 1024px) {
-  .ambient-sound-control-shell:not(.is-calendar) {
-    right: 108px;
-  }
-
-  .ambient-sound-control-shell.is-term {
-    right: 92px;
-  }
-
-  .ambient-sound-control-shell.is-landing {
-    right: 92px;
-  }
-}
-
 @media (min-width: 901px) and (min-aspect-ratio: 16/9) {
   .ambient-sound-control-shell {
     transform: translateY(calc(-14px + var(--screen-stage-y))) scale(var(--screen-shallow-scale));
@@ -148,38 +126,9 @@ body.term-solar-panel-hovering .ambient-sound-control-shell.is-term .ambient-sou
   }
 }
 
-@media (max-width: 980px) {
-  .ambient-sound-control-shell:not(.is-calendar) {
-    right: 32px;
-  }
-
-  .ambient-sound-control-shell.is-term {
-    right: 62px;
-  }
-
-  .ambient-sound-control-shell.is-landing {
-    right: 62px;
-  }
-}
-
-@media (max-width: 760px) {
-  .ambient-sound-control-shell {
-    right: 10px;
-  }
-
-  .ambient-sound-control-shell.is-term {
-    right: 24px;
-  }
-
-  .ambient-sound-control-shell.is-landing {
-    right: 24px;
-  }
-}
-
 @media (max-width: 560px) {
   .ambient-sound-control-shell.is-landing,
   .ambient-sound-control-shell.is-term {
-    right: 24px;
     bottom: max(16px, env(safe-area-inset-top));
   }
 
