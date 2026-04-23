@@ -9,7 +9,9 @@ import {
   moveTermBackgroundPointer,
   pressTermBackgroundPointer,
   releaseTermBackgroundOwner,
-  startTermBackgroundSeasonLoop
+  startTermBackgroundSeasonLoop,
+  getYearProgressInfo,
+  yearProgressDeg
 } from '../lib';
 import './Intro.css';
 
@@ -104,9 +106,11 @@ const Intro = () => {
   useAmbientTerm(currentTermId);
   const introOrbBaseColor = TERM_COLORS[currentTermId]?.base || '#9aa6b2';
   const introOrbBaseRgb = hexToRgbChannels(introOrbBaseColor);
+  const introYearProgress = getYearProgressInfo();
   const introOrbPaletteStyle = {
     '--intro-orb-color-base-rgb': introOrbBaseRgb,
-    '--intro-orb-ring-rgb': darkenRgbChannels(introOrbBaseRgb)
+    '--intro-orb-ring-rgb': darkenRgbChannels(introOrbBaseRgb),
+    '--orb-year-progress-deg': yearProgressDeg(introYearProgress.progress)
   };
   const backgroundOwnerRef = useRef(Symbol('intro-term-background'));
   const introPageRef = useRef(null);

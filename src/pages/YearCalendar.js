@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { useAmbientAudio } from '../audio/AmbientAudioProvider';
 import { TERM_LIST, TERM_COLORS, getCurrentTermId } from '../data';
+import { getYearProgressInfo, yearProgressDeg } from '../lib';
 import './YearCalendar.css';
 
 const GRID_COLS = 22;
@@ -127,6 +128,9 @@ const YearCalendar = () => {
     return { year: d.getFullYear(), month: d.getMonth(), day: d.getDate() };
   }, []);
   const year = today.year;
+  const yearProgressInfo = useMemo(() => (
+    getYearProgressInfo(new Date(today.year, today.month, today.day))
+  ), [today.day, today.month, today.year]);
   const fallbackOrbTermIndex = useMemo(() => {
     const now = new Date();
     const start = new Date(now.getFullYear(), 0, 1);
@@ -225,9 +229,10 @@ const YearCalendar = () => {
 
     return {
       '--year-orb-color-base-rgb': baseRgb,
-      '--year-orb-ring-rgb': rgbChannels(darkenRgb(baseColor))
+      '--year-orb-ring-rgb': rgbChannels(darkenRgb(baseColor)),
+      '--orb-year-progress-deg': yearProgressDeg(yearProgressInfo.progress)
     };
-  }, [fallbackOrbTermIndex, hoveredTerm]);
+  }, [fallbackOrbTermIndex, hoveredTerm, yearProgressInfo.progress]);
 
   const dayStream = useMemo(() => {
     const days = [];

@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAmbientAudio, useAmbientTerm } from '../audio/AmbientAudioProvider';
 import { TERM_LIST, HOU_MAP, TERM_CONTENT_MAP, TERM_POEM_MAP, TERM_POEM_META_EN_MAP, TERM_COLORS } from '../data';
 import { TermBackground } from '../components';
+import { getTermYearProgressInfo, yearProgressDeg } from '../lib';
 import TermMenuRing from './termDetail/TermMenuRing';
 import TermCenterPanels from './termDetail/TermCenterPanels';
 import './termDetail/TermDetail.layout.css';
@@ -514,9 +515,11 @@ const TermDetail = () => {
   const nextTermIndex = currentTermIndex >= 0 ? (currentTermIndex + 1) % TERM_LIST.length : 0;
   const termBaseColor = TERM_COLORS[term.id]?.base || '#9aa6b2';
   const orbBaseRgb = hexToRgbChannels(termBaseColor);
+  const termYearProgress = getTermYearProgressInfo(term);
   const orbPaletteStyle = {
     '--term-orb-color-base-rgb': orbBaseRgb,
-    '--term-orb-ring-rgb': darkenRgbChannels(orbBaseRgb)
+    '--term-orb-ring-rgb': darkenRgbChannels(orbBaseRgb),
+    '--orb-year-progress-deg': yearProgressDeg(termYearProgress.progress)
   };
   const nextTerm = TERM_LIST[nextTermIndex];
   const navEllipsePoints = getEvenlySpacedEllipsePoints(
