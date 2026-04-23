@@ -161,8 +161,9 @@
 
 .term-solar-panel-note-zh {
     margin-top: auto;
-    font-family: "FZZJ-YZDKJW-Regular", "Noto Serif SC", Helvetica, sans-serif;
-    font-size: 16px;
+    font-family: "FZFangSong-Z02S", "FZFangSong-Z02S-Regular", Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
     line-height: 1.35;
     opacity: 1;
 }
@@ -421,8 +422,7 @@
         font-size: 13px;
     }
 
-    .term-solar-panel-note,
-    .term-solar-panel-note-zh {
+    .term-solar-panel-note {
         font-size: 11px;
     }
 }

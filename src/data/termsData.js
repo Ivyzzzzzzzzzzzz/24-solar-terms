@@ -656,7 +656,7 @@ export const TERM_CONTENT_MAP = {
       '当热意开始累积，细小的凉意会变得更容易被察觉。'
     ],
     ritualNotes: [
-      'Lotus seeds: Common in summer soups and desserts, they suggest calm seasonal nourishment.',
+      'Lotus seeds: Common in summer soups and desserts, they suggest nourishment.',
       'Lotus leaf: Seen in objects, wrapping, and imagery, it became a symbol of midsummer.'
     ],
     ritualNotesZh: [

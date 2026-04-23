@@ -615,7 +615,10 @@ const TermCenterPanels = ({
           <div className="term-poem-verse term-cn-content-typestyle" ref={poemZhVerseRef}>{renderLines(poemZhLines, 'poem-zh')}</div>
         </div>
         <div className="term-poem-note" ref={poemEnNoteRef}>
-          <div className="term-poem-note-meta-en" style={poemMetaHeight ? { minHeight: `${poemMetaHeight}px` } : undefined}>
+          <div
+            className="term-poem-note-meta-en"
+            style={poemMetaHeight ? { minHeight: `${poemMetaHeight}px`, height: `${poemMetaHeight}px` } : undefined}
+          >
             {poemTitleEn && (
               <div
                 className="term-poem-note-title-en term-en-content-typestyle"

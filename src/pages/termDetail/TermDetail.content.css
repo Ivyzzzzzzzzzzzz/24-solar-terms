@@ -75,7 +75,6 @@
 }
 
 .term-center-content .term-ritual {
-    --term-ritual-note-height: 214px;
     --term-ritual-note-gap: 8px;
     --term-ritual-copy-width-default: 258px;
     --term-ritual-artboard-size: 125px;
@@ -172,10 +171,10 @@
 
 .term-poem-zh-meta {
     min-height: 44px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 2px;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    row-gap: 2px;
+    align-items: start;
     max-width: 8em;
 }
 
@@ -203,6 +202,7 @@
     margin-top: 0;
     writing-mode: horizontal-tb;
     text-orientation: mixed;
+    align-self: start;
 }
 
 .term-poem-title {
@@ -247,17 +247,18 @@
 
 .term-poem-note-meta-en {
     min-height: 44px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 2px;
-    line-height: 40pt;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    row-gap: 2px;
+    align-items: start;
 }
 
 .term-poem-note-author-en {
     font-size: 14px;
     font-weight: 600;
     line-height: 1.35;
+    align-self: start;
+    transform: translateY(-6.5px);
 }
 
 .term-poem-note-title-en {
@@ -433,9 +434,9 @@
     display: inline-flex;
     width: var(--ritual-copy-width, var(--term-ritual-copy-width-default));
     max-width: min(var(--ritual-copy-width, var(--term-ritual-copy-width-default)), calc(100vw - 140px));
-    min-height: var(--term-ritual-note-height);
-    height: var(--term-ritual-note-height);
-    max-height: var(--term-ritual-note-height);
+    height: auto;
+    min-height: 0;
+    max-height: none;
     padding: 6px 8px;
     border: 1px solid var(--term-detail-outline);
     box-sizing: border-box;
@@ -850,9 +851,9 @@
         position: static;
         width: var(--ritual-copy-width, var(--term-ritual-copy-width-default));
         max-width: min(var(--ritual-copy-width, var(--term-ritual-copy-width-default)), calc(100vw - 28px));
-        min-height: var(--term-ritual-note-height);
-        height: var(--term-ritual-note-height);
-        max-height: var(--term-ritual-note-height);
+        height: auto;
+        min-height: 0;
+        max-height: none;
         padding: 4px 6px;
         letter-spacing: 0;
         opacity: 1;
