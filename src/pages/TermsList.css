@@ -4,11 +4,7 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    --terms-stage-y: var(--screen-stage-y);
-    --terms-pad-top: max(
-        calc(var(--screen-edge-pad-min) + env(safe-area-inset-top)),
-        calc(var(--screen-orb-top) + var(--terms-stage-y))
-    );
+    --terms-pad-top: var(--screen-page-top);
     --terms-pad-left: var(--screen-frame-pad-left-safe);
     --terms-pad-right: var(--screen-frame-pad-right-safe);
     --terms-pad-bottom: var(--screen-frame-pad-bottom-safe);

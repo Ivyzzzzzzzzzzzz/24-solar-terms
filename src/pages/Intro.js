@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAmbientTerm } from '../audio/AmbientAudioProvider';
 import { getCurrentTermId, TERM_COLORS } from '../data';
@@ -111,7 +111,6 @@ const Intro = () => {
   const backgroundOwnerRef = useRef(Symbol('intro-term-background'));
   const introPageRef = useRef(null);
   const introContentRef = useRef(null);
-  const introTitleRef = useRef(null);
   const [introLang, setIntroLang] = useState('en');
   const [showTopFade, setShowTopFade] = useState(false);
   const [showBottomFade, setShowBottomFade] = useState(true);
@@ -189,71 +188,6 @@ const Intro = () => {
     setShowBottomFade(nextShowBottom);
   }, [introLang]);
 
-  useLayoutEffect(() => {
-    if (typeof window === 'undefined') return undefined;
-
-    const pageEl = introPageRef.current;
-    const titleEl = introTitleRef.current;
-    const contentEl = introContentRef.current;
-
-    if (!pageEl || !titleEl || !contentEl) return undefined;
-
-    let frameId = null;
-    let isDisposed = false;
-
-    const updateIntroAlignment = () => {
-      if (isDisposed) return;
-
-      if (!window.matchMedia('(min-width: 861px)').matches) {
-        pageEl.style.setProperty('--intro-content-shift-x', '0px');
-        pageEl.style.removeProperty('--intro-content-left');
-        return;
-      }
-
-      const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
-      const titleRect = titleEl.getBoundingClientRect();
-      const contentRect = contentEl.getBoundingClientRect();
-      const contentWidth = contentRect.width;
-
-      if (!viewportWidth || !titleRect.left || !contentWidth) return;
-
-      const centeredLeft = (viewportWidth - contentWidth) / 2;
-      const balancedLeft = Math.max(0, (titleRect.left - contentWidth) / 2);
-      const shiftX = balancedLeft - centeredLeft;
-
-      pageEl.style.setProperty('--intro-content-shift-x', `${shiftX.toFixed(2)}px`);
-      pageEl.style.setProperty('--intro-content-left', `${balancedLeft.toFixed(2)}px`);
-    };
-
-    const queueIntroAlignment = () => {
-      if (frameId !== null) window.cancelAnimationFrame(frameId);
-      frameId = window.requestAnimationFrame(() => {
-        frameId = null;
-        updateIntroAlignment();
-      });
-    };
-
-    queueIntroAlignment();
-
-    const resizeObserver = typeof ResizeObserver !== 'undefined'
-      ? new ResizeObserver(queueIntroAlignment)
-      : null;
-
-    resizeObserver?.observe(titleEl);
-    resizeObserver?.observe(contentEl);
-    window.addEventListener('resize', queueIntroAlignment);
-    document.fonts?.ready?.then(queueIntroAlignment).catch(() => {});
-
-    return () => {
-      isDisposed = true;
-      if (frameId !== null) window.cancelAnimationFrame(frameId);
-      resizeObserver?.disconnect();
-      window.removeEventListener('resize', queueIntroAlignment);
-      pageEl.style.removeProperty('--intro-content-shift-x');
-      pageEl.style.removeProperty('--intro-content-left');
-    };
-  }, [introLang]);
-
   const handleIntroScroll = (event) => {
     const contentEl = event.currentTarget;
     const scrollTop = contentEl.scrollTop;
@@ -284,43 +218,47 @@ const Intro = () => {
           </span>
         </span>
       </Link>
-      <header className="intro-header">
-        <div className="intro-title" ref={introTitleRef}>
-          <div className="intro-title-zh">时序有声</div>
-          <div className="intro-title-en">A Living Calendar</div>
-        </div>
-      </header>
+      <div className="intro-copy-layout">
+        <header className="intro-header">
+          <div className="intro-title">
+            <div className="intro-title-zh">时序有声</div>
+            <div className="intro-title-en">A Living Calendar</div>
+          </div>
+        </header>
 
-      <div className="intro-lang-toggle" role="group" aria-label="Intro language">
-        <button
-          type="button"
-          className={`intro-lang-toggle-btn${introLang === 'zh' ? ' is-active' : ''}`}
-          aria-pressed={introLang === 'zh'}
-          onClick={() => setIntroLang('zh')}
-        >
-          CN
-        </button>
-        <button
-          type="button"
-          className={`intro-lang-toggle-btn${introLang === 'en' ? ' is-active' : ''}`}
-          aria-pressed={introLang === 'en'}
-          onClick={() => setIntroLang('en')}
-        >
-          EN
-        </button>
+        <section className="intro-copy-frame" aria-label="Intro copy">
+          <div className="intro-lang-toggle" role="group" aria-label="Intro language">
+            <button
+              type="button"
+              className={`intro-lang-toggle-btn${introLang === 'zh' ? ' is-active' : ''}`}
+              aria-pressed={introLang === 'zh'}
+              onClick={() => setIntroLang('zh')}
+            >
+              CN
+            </button>
+            <button
+              type="button"
+              className={`intro-lang-toggle-btn${introLang === 'en' ? ' is-active' : ''}`}
+              aria-pressed={introLang === 'en'}
+              onClick={() => setIntroLang('en')}
+            >
+              EN
+            </button>
+          </div>
+
+          <main
+            ref={introContentRef}
+            className={`intro-content${introLang === 'zh' ? ' is-zh' : ''}${showTopFade ? ' has-top-fade' : ''}${showBottomFade ? ' has-bottom-fade' : ''}`}
+            onScroll={handleIntroScroll}
+          >
+            {INTRO_COPY[introLang].map((paragraph, index) => (
+              <p key={`intro-copy-${introLang}-${index}`} className={index === 0 ? 'intro-lead' : ''} lang={introLang === 'zh' ? 'zh-Hans' : 'en'}>
+                {renderIntroParagraphText(paragraph, introLang)}
+              </p>
+            ))}
+          </main>
+        </section>
       </div>
-
-      <main
-        ref={introContentRef}
-        className={`intro-content${introLang === 'zh' ? ' is-zh' : ''}${showTopFade ? ' has-top-fade' : ''}${showBottomFade ? ' has-bottom-fade' : ''}`}
-        onScroll={handleIntroScroll}
-      >
-        {INTRO_COPY[introLang].map((paragraph, index) => (
-          <p key={`intro-copy-${introLang}-${index}`} className={index === 0 ? 'intro-lead' : ''} lang={introLang === 'zh' ? 'zh-Hans' : 'en'}>
-            {renderIntroParagraphText(paragraph, introLang)}
-          </p>
-        ))}
-      </main>
     </div>
   );
 };

@@ -2,14 +2,10 @@
 .landing-page {
     height: 100%;
     overflow: hidden;
-    --landing-pad-top: max(
-        calc(var(--screen-edge-pad-min) + env(safe-area-inset-top)),
-        calc(var(--screen-orb-top) - clamp(14px, 1.2vw, 22px))
-    );
     --landing-pad-left: var(--screen-frame-pad-left-safe);
     --landing-pad-right: var(--screen-frame-pad-right-safe);
     --landing-stage-y: var(--screen-stage-y);
-    --landing-grid-top: calc(var(--landing-pad-top) + var(--landing-stage-y));
+    --landing-grid-top: var(--screen-page-top);
     --landing-grid-right: var(--landing-pad-right);
     --landing-grid-size: 34px;
     --landing-dial-max: 660px;
@@ -63,7 +59,7 @@
 
 .landing-title-wrap {
     position: absolute;
-    top: calc(var(--landing-pad-top) + var(--landing-stage-y));
+    top: var(--landing-grid-top);
     left: var(--landing-pad-left);
     display: flex;
     flex-direction: column;
@@ -385,10 +381,6 @@
 
 @media (min-width: 901px) and (min-aspect-ratio: 16/9) {
     .landing-page {
-        --landing-pad-top: max(
-            calc(var(--screen-edge-pad-min) + env(safe-area-inset-top)),
-            calc(var(--screen-orb-top) - clamp(32px, 2.4vw, 48px))
-        );
         --landing-grid-size: clamp(34px, 1.85vw, 38px);
         --landing-dial-max: 850px;
         --landing-dial-size: min(76vmin, var(--landing-dial-max));
@@ -450,7 +442,6 @@
 
 @media (max-width: 760px) {
     .landing-page {
-        --landing-grid-top: max(8px, env(safe-area-inset-top));
         --landing-grid-right: max(10px, calc(var(--screen-edge-pad-min) + env(safe-area-inset-right)));
         --landing-grid-size: 30px;
     }

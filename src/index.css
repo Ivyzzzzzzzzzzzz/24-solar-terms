@@ -11,6 +11,11 @@ body,
   --screen-frame-pad-top-offset: 0px;
   --screen-frame-pad-top: calc(var(--screen-frame-pad-top-base) - var(--screen-frame-pad-top-offset));
   --screen-orb-top: max(12px, calc(var(--screen-frame-pad-top-base) - 74px));
+  --screen-page-pad-top: max(
+    calc(var(--screen-edge-pad-min) + env(safe-area-inset-top)),
+    calc(var(--screen-orb-top) - clamp(14px, 1.2vw, 22px))
+  );
+  --screen-page-top: max(12px, calc(var(--screen-page-pad-top) + var(--screen-stage-y)));
   --screen-frame-pad-x: calc(var(--screen-orb-top) + 30px);
   --screen-frame-pad-bottom: 108px;
   --screen-frame-pad-top-safe: max(var(--screen-frame-pad-top), calc(var(--screen-edge-pad-min) + env(safe-area-inset-top)));
@@ -25,6 +30,10 @@ body,
   :root {
     --screen-stage-y: clamp(-28px, -2.4vh, -18px);
     --screen-shallow-scale: 0.96;
+    --screen-page-pad-top: max(
+      calc(var(--screen-edge-pad-min) + env(safe-area-inset-top)),
+      calc(var(--screen-orb-top) - clamp(32px, 2.4vw, 48px))
+    );
   }
 }
 
