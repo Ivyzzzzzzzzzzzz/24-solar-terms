@@ -146,6 +146,14 @@ const Intro = () => {
     window.addEventListener('pointermove', handlePointerMove, { passive: true });
     window.addEventListener('pointerdown', handlePointerDown, { passive: true });
     window.addEventListener('blur', handlePointerLeave);
+    const loopWatchdog = window.setInterval(() => {
+      ensureSeasonLoopActive({ bypassInterval: true });
+    }, 1000);
+    const handlePageWake = () => {
+      ensureSeasonLoopActive({ bypassInterval: true });
+    };
+    window.addEventListener('focus', handlePageWake);
+    document.addEventListener('visibilitychange', handlePageWake);
 
     ensureTermBackgroundScript()
       .then(() => {
@@ -159,6 +167,9 @@ const Intro = () => {
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('pointerdown', handlePointerDown);
       window.removeEventListener('blur', handlePointerLeave);
+      window.clearInterval(loopWatchdog);
+      window.removeEventListener('focus', handlePageWake);
+      document.removeEventListener('visibilitychange', handlePageWake);
       leaveTermBackgroundPointer();
       releaseTermBackgroundOwner(owner);
     };

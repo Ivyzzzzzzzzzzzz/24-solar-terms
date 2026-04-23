@@ -645,9 +645,32 @@ function createIntroSeasonTheme(progress) {
   return base;
 }
 
+function remapIntroSeasonLoopProgress(progress) {
+  const tt = ((progress % 1) + 1) % 1;
+  const timeline = [
+    { display: 0.0, source: 0.0 },
+    { display: 0.2, source: 0.2 },
+    { display: 0.58, source: 0.7 },
+    { display: 0.78, source: 0.9 },
+    { display: 1.0, source: 1.0 }
+  ];
+
+  for (let i = 0; i < timeline.length - 1; i++) {
+    const a = timeline[i];
+    const b = timeline[i + 1];
+    if (tt >= a.display && tt <= b.display) {
+      const localT = (tt - a.display) / Math.max(0.0001, b.display - a.display);
+      return lerpNum(a.source, b.source, localT);
+    }
+  }
+
+  return tt;
+}
+
 function createIntroSeasonLoopRenderTheme(progress) {
   const tt = ((progress % 1) + 1) % 1;
-  const theme = createIntroSeasonTheme(tt);
+  const seasonT = remapIntroSeasonLoopProgress(tt);
+  const theme = createIntroSeasonTheme(seasonT);
   const summerPeakTheme = createIntroSeasonTheme(0.2);
   const autumnGrassTheme = createIntroSeasonTheme(0.72);
   const winterGrassTheme = createIntroSeasonTheme(0.94);
@@ -655,21 +678,29 @@ function createIntroSeasonLoopRenderTheme(progress) {
     ...theme,
     bg: theme?.bg ? { ...theme.bg } : theme?.bg
   };
-  const summerBlend = smoothstep(0.16, 0.4, tt) * (1 - smoothstep(0.58, 0.82, tt));
-  const autumnDormancyBlend = smoothstep(0.48, 0.62, tt) * (1 - smoothstep(0.78, 0.88, tt));
-  const winterLeadBlend = smoothstep(0.76, 0.88, tt);
+  const summerBlend = smoothstep(0.16, 0.46, tt) * (1 - smoothstep(0.54, 0.72, tt));
+  const autumnDormancyBlend = smoothstep(0.44, 0.58, tt) * (1 - smoothstep(0.78, 0.90, tt));
+  const winterLeadBlend = smoothstep(0.70, 0.84, tt);
   const springCarryBlend = 1 - smoothstep(0.0, 0.08, tt);
-  const winterStateBlend = Math.max(winterLeadBlend, springCarryBlend);
-  const summerHeightCapMin = (summerPeakTheme.grassHeightMin ?? 0) * 0.5;
-  const summerHeightCapMax = (summerPeakTheme.grassHeightMax ?? 0) * 0.5;
-  const autumnDormantHeightMin = Math.min(autumnGrassTheme.grassHeightMin ?? 0, summerHeightCapMin);
-  const autumnDormantHeightMax = Math.min(autumnGrassTheme.grassHeightMax ?? 0, summerHeightCapMax);
-  const winterVisibleHeightMin = Math.max(winterGrassTheme.grassHeightMin ?? 0, 0.058);
-  const winterVisibleHeightMax = Math.max(winterGrassTheme.grassHeightMax ?? 0, 0.145);
+  const winterHeightBlend = Math.max(winterLeadBlend, springCarryBlend);
+  const summerTrimBlend = smoothstep(0.18, 0.42, tt) * (1 - smoothstep(0.38, 0.54, tt));
+  const summerShrinkHeightCapMin = (summerPeakTheme.grassHeightMin ?? 0) * 0.5;
+  const summerShrinkHeightCapMax = (summerPeakTheme.grassHeightMax ?? 0) * 0.42;
+  const autumnDormantHeightMin = Math.min(autumnGrassTheme.grassHeightMin ?? 0, summerShrinkHeightCapMin);
+  const autumnDormantHeightMax = Math.min(autumnGrassTheme.grassHeightMax ?? 0, summerShrinkHeightCapMax);
+  const winterVisibleHeightMin = Math.max(winterGrassTheme.grassHeightMin ?? 0, 0.052);
+  const winterVisibleHeightMax = Math.max(winterGrassTheme.grassHeightMax ?? 0, 0.12);
 
   if (summerBlend > 0.0001) {
     next.grassHeightMin = lerpNum(theme.grassHeightMin ?? 0, (theme.grassHeightMin ?? 0) * 0.5, summerBlend);
-    next.grassHeightMax = lerpNum(theme.grassHeightMax ?? 0, (theme.grassHeightMax ?? 0) * 0.42, summerBlend);
+    next.grassHeightMax = lerpNum(theme.grassHeightMax ?? 0, (theme.grassHeightMax ?? 0) * 0.54, summerBlend);
+  }
+
+  if (summerTrimBlend > 0.0001) {
+    next.grassHeightMin = lerpNum(next.grassHeightMin ?? 0, (next.grassHeightMin ?? 0) * 0.88, summerTrimBlend);
+    next.grassHeightMax = lerpNum(next.grassHeightMax ?? 0, (next.grassHeightMax ?? 0) * 0.88, summerTrimBlend);
+    next.seasonGrowthTarget = lerpNum(next.seasonGrowthTarget ?? 0, (next.seasonGrowthTarget ?? 0) * 0.94, summerTrimBlend);
+    next.growthScale = lerpNum(next.growthScale ?? 0, (next.growthScale ?? 0) * 0.96, summerTrimBlend);
   }
 
   if (autumnDormancyBlend > 0.0001) {
@@ -685,17 +716,20 @@ function createIntroSeasonLoopRenderTheme(progress) {
     next.densityDecay = lerpNum(next.densityDecay ?? 0, 0.012, autumnDormancyBlend);
   }
 
-  if (winterStateBlend > 0.0001) {
-    next.grassHeightMin = lerpNum(next.grassHeightMin ?? 0, winterVisibleHeightMin, winterStateBlend);
-    next.grassHeightMax = lerpNum(next.grassHeightMax ?? 0, winterVisibleHeightMax, winterStateBlend);
-    next.seasonGrowthTarget = lerpNum(next.seasonGrowthTarget ?? 0, 0, winterStateBlend);
-    next.seasonGrowthPull = lerpNum(next.seasonGrowthPull ?? 0, 0, winterStateBlend);
-    next.growthRate = lerpNum(next.growthRate ?? 0, 0, winterStateBlend);
-    next.growthDecay = lerpNum(next.growthDecay ?? 0, 0.012, winterStateBlend);
-    next.growthScale = lerpNum(next.growthScale ?? 0, 0, winterStateBlend);
-    next.seasonDensityPull = lerpNum(next.seasonDensityPull ?? 0, 0, winterStateBlend);
-    next.densityGrowthRate = lerpNum(next.densityGrowthRate ?? 0, 0, winterStateBlend);
-    next.densityDecay = lerpNum(next.densityDecay ?? 0, 0.006, winterStateBlend);
+  if (winterHeightBlend > 0.0001) {
+    next.grassHeightMin = lerpNum(next.grassHeightMin ?? 0, winterVisibleHeightMin, winterHeightBlend);
+    next.grassHeightMax = lerpNum(next.grassHeightMax ?? 0, winterVisibleHeightMax, winterHeightBlend);
+  }
+
+  if (winterLeadBlend > 0.0001) {
+    next.seasonGrowthTarget = lerpNum(next.seasonGrowthTarget ?? 0, 0, winterLeadBlend);
+    next.seasonGrowthPull = lerpNum(next.seasonGrowthPull ?? 0, 0, winterLeadBlend);
+    next.growthRate = lerpNum(next.growthRate ?? 0, 0, winterLeadBlend);
+    next.growthDecay = lerpNum(next.growthDecay ?? 0, 0.012, winterLeadBlend);
+    next.growthScale = lerpNum(next.growthScale ?? 0, 0, winterLeadBlend);
+    next.seasonDensityPull = lerpNum(next.seasonDensityPull ?? 0, 0, winterLeadBlend);
+    next.densityGrowthRate = lerpNum(next.densityGrowthRate ?? 0, 0, winterLeadBlend);
+    next.densityDecay = lerpNum(next.densityDecay ?? 0, 0.006, winterLeadBlend);
   }
 
   return next;
@@ -851,6 +885,8 @@ let snowCover = 0;
 let p5Ready = false;
 let pendingThemeKey = null;
 let pointerListenersBound = false;
+let lastDrawAtMs = 0;
+let lastLoopWakeAtMs = 0;
 
 const POINTER = {
   x: 0,
@@ -959,6 +995,29 @@ function ensureTermBgP5Instance() {
   return true;
 }
 
+function wakeTermBgAnimationLoop(forceRedraw = false) {
+  if (!p5Ready || typeof window === 'undefined') return;
+  const instance = window.__termBgP5Instance;
+  if (!instance) return;
+
+  const now = getNowMs();
+  if (!forceRedraw && now - lastLoopWakeAtMs < 600) return;
+  lastLoopWakeAtMs = now;
+
+  try {
+    if (typeof instance.loop === 'function') {
+      instance.loop();
+    }
+    if (
+      forceRedraw &&
+      now - lastDrawAtMs > 250 &&
+      typeof instance.redraw === 'function'
+    ) {
+      instance.redraw(1);
+    }
+  } catch (_) {}
+}
+
 function resetRuntimeState() {
   blades = [];
   drops = [];
@@ -982,6 +1041,7 @@ function resetRuntimeState() {
   seasonLoopProgress = 0;
   seasonLoopStartMs = 0;
   tPrev = 0;
+  lastDrawAtMs = 0;
 }
 
 function resetPointerInteraction() {
@@ -1686,6 +1746,7 @@ function startSeasonLoop(durationMs = 160000, forceRecreate = false, restart = f
     // (e.g. StrictMode/dev mount replay), so we avoid visible startup jumps.
     syncTermBgCanvasMount();
     bindPointerInteractions();
+    wakeTermBgAnimationLoop(true);
     return;
   }
 
@@ -1703,6 +1764,7 @@ function startSeasonLoop(durationMs = 160000, forceRecreate = false, restart = f
   initWindSystem();
   initSnow();
   initFrost();
+  wakeTermBgAnimationLoop(true);
 }
 
 function updateSeasonLoopTheme() {
@@ -2317,6 +2379,7 @@ class Blade {
 let tPrev = 0;
 
 function draw() {
+  lastDrawAtMs = getNowMs();
   updateSeasonLoopTheme();
   background(BG.r, BG.g, BG.b);
 
@@ -2403,6 +2466,10 @@ window.__termBgStartSeasonLoop = (options = {}) => {
   const restart = options.restart === true;
   pendingThemeKey = null;
   startSeasonLoop(durationMs, forceRecreate, restart);
+};
+
+window.__termBgEnsureActive = () => {
+  wakeTermBgAnimationLoop(true);
 };
 
 window.__termBgPointerMove = (point) => {
