@@ -1682,6 +1682,96 @@
   }
 }
 
+@media (min-width: 2560px) {
+  .year-calendar-page {
+    --year-pad-bottom: 16px;
+    --year-grid-side-budget: 268px;
+    --grid-scale: 1.28;
+    --header-h: 84px;
+  }
+
+  .year-calendar-title {
+    font-size: 24px;
+  }
+
+  .year-calendar-grid {
+    grid-template-columns: 48px 36px max-content 68px;
+    column-gap: 18px;
+  }
+
+  .year-calendar-term-preview-en-top {
+    top: -36px;
+    left: 112px;
+    font-size: 23px;
+  }
+
+  .year-calendar-home-link-inline {
+    width: 56px;
+    height: 56px;
+    flex-basis: 56px;
+  }
+
+  .year-calendar-home-link-inline .term-grid-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .year-calendar-year-switch-wrap {
+    transform: translateX(-52px);
+    gap: 7px;
+  }
+
+  .year-calendar-term-preview {
+    width: 36px;
+    min-height: 36px;
+  }
+
+  .year-calendar-term-preview-zh {
+    font-size: 30px;
+  }
+
+  .year-calendar-year-current {
+    width: 36px;
+    min-height: 94px;
+  }
+
+  .year-calendar-toggle-word {
+    font-size: 16px;
+  }
+
+  .year-calendar-toggle-word-zh {
+    font-size: 19px;
+  }
+
+  .year-day-stream {
+    width: min(
+      calc(1460px * var(--grid-scale)),
+      max(0px, calc(100vw - var(--year-pad-left) - var(--year-pad-right) - var(--year-grid-side-budget)))
+    );
+  }
+
+  .year-day {
+    --year-day-num-size: clamp(10px, 0.4vw, 14px);
+    --year-term-day-num-size: clamp(11px, 0.46vw, 16px);
+    min-height: 38px;
+    padding: 4px;
+    font-size: clamp(10px, 0.4vw, 14px);
+  }
+
+  .year-day-tooltip {
+    gap: 6px;
+    padding: 12px 14px;
+  }
+
+  .year-day-tooltip-zh {
+    font-size: 24px;
+  }
+
+  .year-day-tooltip-en {
+    font-size: 15px;
+  }
+}
+
 @media (max-height: 900px) {
   .year-day-scroll {
     max-height: calc(100dvh - 152px - var(--year-stage-y));

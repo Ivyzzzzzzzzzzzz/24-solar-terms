@@ -387,6 +387,63 @@
     }
 }
 
+@media (min-width: 2560px) {
+    .term-solar-panel-wrap {
+        width: 320px;
+    }
+
+    .term-solar-panel {
+        width: 320px;
+        gap: 5px;
+    }
+
+    .term-solar-panel-copy {
+        padding: 8px;
+    }
+
+    .term-solar-panel-value {
+        font-size: 17px;
+    }
+
+    .term-solar-panel-note {
+        font-size: 16px;
+        line-height: 1.58;
+    }
+
+    .term-solar-panel-note-zh {
+        font-size: 19px;
+        line-height: 31px;
+    }
+
+    .term-solar-panel-caption-toggle-btn {
+        font-size: 13px;
+        padding: 4px 10px;
+    }
+
+    .term-solar-panel-caption-body {
+        font-size: 16px;
+    }
+
+    .term-solar-panel-caption-body-zh {
+        font-size: 19px;
+        line-height: 32px;
+    }
+
+    .term-solar-panel-instruction {
+        left: calc(100% + 24px);
+        font-size: 18px;
+    }
+
+    .term-solar-panel-instruction-zh {
+        font-size: 19px;
+    }
+
+    .term-solar-panel-instruction-en {
+        font-size: 17px;
+        max-width: 108px;
+    }
+}
+
 @media (max-width: 980px) {
     .term-solar-panel-instruction {
         font-size: 13px;

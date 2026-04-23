@@ -55,6 +55,15 @@ body,
   }
 }
 
+@media (min-width: 2560px) {
+  :root {
+    --screen-corner-size: 152px;
+    --screen-frame-pad-top-base: 228px;
+    --screen-frame-pad-x: calc(var(--screen-orb-top) + 56px);
+    --screen-frame-pad-bottom: 152px;
+  }
+}
+
 @media (max-width: 1024px) {
   :root {
     --screen-frame-pad-top-base: 142px;

@@ -198,8 +198,16 @@ const TermCenterPanels = ({
     const minLen = 88;
     const maxLen = 140;
     const normalized = Math.max(0, Math.min(1, (weightedLen - minLen) / (maxLen - minLen)));
-    const minWidth = 238;
-    const maxWidth = 288;
+    const viewportWidth = typeof window === 'undefined' ? 1280 : window.innerWidth || 1280;
+    const wideScreenBoost = viewportWidth >= 2560
+      ? 58
+      : viewportWidth >= 1920
+        ? 34
+        : viewportWidth >= 1440
+          ? 18
+          : 0;
+    const minWidth = 238 + wideScreenBoost;
+    const maxWidth = 288 + wideScreenBoost;
     return Math.round(minWidth + normalized * (maxWidth - minWidth));
   };
 

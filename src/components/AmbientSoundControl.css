@@ -131,6 +131,87 @@ body.term-solar-panel-hovering .ambient-sound-control-shell.is-term .ambient-sou
   }
 }
 
+@media (min-width: 1440px) {
+  .ambient-sound-control-shell {
+    bottom: 110px;
+  }
+
+  .ambient-sound-control-shell.is-default {
+    bottom: 24px;
+  }
+
+  .ambient-sound-control-shell.is-calendar {
+    bottom: 68px;
+  }
+
+  .ambient-sound-control {
+    min-height: 38px;
+    padding: 8px 15px;
+  }
+
+  .ambient-sound-control-state {
+    font-size: 14px;
+  }
+
+  .ambient-sound-control-zh {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .ambient-sound-control-shell {
+    bottom: 120px;
+  }
+
+  .ambient-sound-control-shell.is-default {
+    bottom: 28px;
+  }
+
+  .ambient-sound-control-shell.is-calendar {
+    bottom: 72px;
+  }
+
+  .ambient-sound-control {
+    min-height: 40px;
+    padding: 8px 17px;
+  }
+
+  .ambient-sound-control-state {
+    font-size: 15px;
+  }
+
+  .ambient-sound-control-zh {
+    font-size: 17px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .ambient-sound-control-shell {
+    bottom: 132px;
+  }
+
+  .ambient-sound-control-shell.is-default {
+    bottom: 34px;
+  }
+
+  .ambient-sound-control-shell.is-calendar {
+    bottom: 80px;
+  }
+
+  .ambient-sound-control {
+    min-height: 42px;
+    padding: 9px 19px;
+  }
+
+  .ambient-sound-control-state {
+    font-size: 16px;
+  }
+
+  .ambient-sound-control-zh {
+    font-size: 18px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ambient-sound-control.is-on {
     animation: none;

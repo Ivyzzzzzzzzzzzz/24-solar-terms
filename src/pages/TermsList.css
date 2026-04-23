@@ -75,6 +75,39 @@
     margin-top: clamp(22px, 2.6vw, 38px);
 }
 
+@media (min-width: 1440px) {
+    .terms-main {
+        width: min(1240px, 100%);
+    }
+
+    .terms-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: clamp(12px, 1.5vw, 20px);
+    }
+}
+
+@media (min-width: 1920px) {
+    .terms-main {
+        width: min(1380px, 100%);
+    }
+
+    .terms-grid {
+        grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
+        gap: clamp(14px, 1.2vw, 22px);
+    }
+}
+
+@media (min-width: 2560px) {
+    .terms-main {
+        width: min(1560px, 100%);
+    }
+
+    .terms-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: clamp(16px, 1vw, 24px);
+    }
+}
+
 @media (max-width: 680px) {
     .terms-grid {
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));

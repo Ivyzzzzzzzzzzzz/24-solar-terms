@@ -697,6 +697,100 @@
     }
 }
 
+@media (min-width: 2560px) {
+    .term-center-content {
+        --term-panel-box-width: min(560px, calc((100vw - 620px) * 0.72));
+        width: min(1160px, 58vw);
+        max-width: calc(100vw - 420px);
+        min-height: 360px;
+    }
+
+    .term-center-content.is-ritual-active {
+        width: min(1520px, calc(100vw - 220px));
+        max-width: calc(100vw - 220px);
+    }
+
+    .term-cn-content-typestyle {
+        font-size: 22px;
+        line-height: 37px;
+    }
+
+    .term-en-content-typestyle {
+        font-size: 19px;
+        line-height: 27px;
+        letter-spacing: -0.2px;
+    }
+
+    .term-center-content .term-poem {
+        max-width: min(1060px, calc(100vw - 380px));
+    }
+
+    .term-poem {
+        gap: 24px;
+        padding: 16px 18px 14px;
+    }
+
+    .term-poem-author,
+    .term-poem-title {
+        font-size: 18px;
+    }
+
+    .term-poem-note-title-en {
+        line-height: 26px;
+    }
+
+    .term-poem-note-translation {
+        width: 620px;
+        line-height: 34px;
+    }
+
+    .term-phases {
+        min-height: 224px;
+    }
+
+    .term-phases-row {
+        min-height: 32px;
+    }
+
+    .term-center-content .term-ritual {
+        --term-ritual-copy-width-default: 338px;
+        --term-ritual-artboard-size: 166px;
+        max-width: min(1520px, calc(100vw - 220px));
+    }
+
+    .term-center-content .term-ritual.term-ritual-lixia,
+    .term-center-content .term-ritual.term-ritual-xiaoxue {
+        --term-ritual-artboard-size: 140px;
+    }
+
+    .term-center-content .term-ritual.term-ritual-xiazhi {
+        --term-ritual-artboard-size: 126px;
+    }
+
+    .term-center-content .term-ritual.term-ritual-mangzhong {
+        --term-ritual-artboard-size: 192px;
+    }
+
+    .term-center-content .term-ritual.term-ritual-lichun,
+    .term-center-content .term-ritual.term-ritual-yushui {
+        --term-ritual-artboard-size: 210px;
+    }
+
+    .term-ritual {
+        grid-template-columns: repeat(2, minmax(330px, auto));
+        column-gap: calc(var(--term-menu-content-gap, 120px) + 30px);
+    }
+
+    .term-ritual-col {
+        min-width: 330px;
+    }
+
+    .term-ritual-artboard {
+        width: var(--term-ritual-artboard-size);
+        height: var(--term-ritual-artboard-size);
+    }
+}
+
 @media (max-width: 1024px) {
     .term-center-content {
         --term-panel-box-width: min(352px, calc((100vw - 200px) * 0.8));

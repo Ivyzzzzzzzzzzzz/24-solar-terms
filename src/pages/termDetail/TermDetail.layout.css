@@ -1362,6 +1362,92 @@
     }
 }
 
+@media (min-width: 2560px) {
+    .term-page {
+        --term-corner-size: 148px;
+        --term-frame-pad-top-base: 224px;
+        --term-frame-pad-right: calc(var(--term-orb-top-base) + 56px);
+        --term-frame-pad-bottom: 148px;
+        --term-frame-pad-left: calc(var(--term-orb-top-base) + 56px);
+        --term-menu-ring-size: 156px;
+        --term-content-shift-right: 78px;
+        --term-title-row-height: 46px;
+        --term-title-hint-gap-y: 26px;
+    }
+
+    .term-grid-link {
+        width: 46px;
+        height: 46px;
+    }
+
+    .term-left-home-link {
+        width: 56px;
+        height: 56px;
+    }
+
+    .term-grid-icon {
+        width: 28px;
+        height: 28px;
+    }
+
+    .term-title-stack {
+        margin-left: clamp(104px, calc(3.2vw + 16px), 132px);
+        gap: clamp(18px, 1.4vw, 30px);
+    }
+
+    .term-title-switch-hint {
+        margin-left: clamp(112px, calc(3.2vw + 24px), 140px);
+        gap: 5px;
+    }
+
+    .term-title-switch-hint-zh {
+        font-size: 19px;
+    }
+
+    .term-title-switch-hint-en {
+        font-size: 16px;
+    }
+
+    .term-title-zh {
+        font-size: clamp(38px, 1.65vw, 48px);
+    }
+
+    .term-title-en {
+        font-size: clamp(28px, 1.12vw, 34px);
+        letter-spacing: 1.55px;
+    }
+
+    .term-date {
+        gap: 32px;
+    }
+
+    .term-date-zh {
+        height: 214px;
+        gap: 12px;
+    }
+
+    .term-date-line,
+    .term-date-text {
+        font-size: 19px;
+        line-height: 22px;
+    }
+
+    .term-date-en {
+        font-size: 18px;
+        line-height: 15px;
+        letter-spacing: 1.2px;
+    }
+
+    .term-summary {
+        width: min(780px, 100%);
+    }
+
+    .term-summary-text {
+        font-size: clamp(18px, 0.78vw, 20px);
+        line-height: 1.54;
+    }
+}
+
 @media (max-width: 1024px) {
     .term-page {
         --term-frame-pad-top-base: 142px;
