@@ -85,8 +85,15 @@
 
 .landing-title-link:hover .landing-title-row,
 .landing-title-link:focus-visible .landing-title-row {
-    transform: translateX(3px);
-    filter: drop-shadow(0 4px 12px rgba(84, 80, 76, 0.22));
+    transform: none;
+    filter: none;
+    background: rgba(84, 80, 76, 0.12);
+    border-color: rgba(84, 80, 76, 0.62);
+}
+
+.landing-title-link:focus-visible .landing-title-row {
+    outline: 1px solid rgba(84, 80, 76, 0.7);
+    outline-offset: 1px;
 }
 
 .landing-title-row {
@@ -94,43 +101,17 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 6px;
-    transition: transform 220ms ease, filter 220ms ease;
+    padding: 2px 10px 4px;
+    border: 1px solid rgba(84, 80, 76, 0.38);
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.2);
+    transition: border-color 180ms ease, background 180ms ease;
 }
 
 .landing-title,
 .landing-title-zh {
-    animation: landingTitleTextGlow 2.6s ease-in-out infinite;
     transform-origin: left center;
-    will-change: transform, text-shadow;
-}
-
-@keyframes landingTitleTextGlow {
-    0%, 100% {
-        transform: scale(1);
-        text-shadow:
-            0 0 5px rgba(84, 80, 76, 0.18),
-            0 0 12px rgba(84, 80, 76, 0.12),
-            0 4px 10px rgba(84, 80, 76, 0.1);
-    }
-    50% {
-        transform: scale(1.026);
-        text-shadow:
-            0 0 10px rgba(84, 80, 76, 0.48),
-            0 0 24px rgba(84, 80, 76, 0.34),
-            0 0 42px rgba(84, 80, 76, 0.18),
-            0 10px 22px rgba(84, 80, 76, 0.26);
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .landing-title,
-    .landing-title-zh {
-        animation: none;
-        transform: none;
-        text-shadow:
-            0 0 10px rgba(84, 80, 76, 0.32),
-            0 0 24px rgba(84, 80, 76, 0.18);
-    }
+    transform: none;
 }
 
 .landing-meta {
