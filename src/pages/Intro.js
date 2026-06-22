@@ -183,7 +183,11 @@ const Intro = () => {
     if (typeof document === 'undefined') return undefined;
     document.body.classList.add('landing-no-scroll');
     if (typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      try {
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      } catch (_) {
+        // Test environments may expose scrollTo without implementing it.
+      }
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
     }

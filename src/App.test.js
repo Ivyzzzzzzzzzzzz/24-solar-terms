@@ -20,7 +20,7 @@ jest.mock('react-router-dom', () => {
 
 import App from './App';
 
-test('renders the landing page title link', () => {
+test('renders the landing page title link', async () => {
   render(<App />);
-  expect(screen.getByLabelText(/Introduction to the 24 solar terms/i)).toBeInTheDocument();
+  expect(await screen.findByLabelText(/Introduction to A Living Calendar/i)).toBeInTheDocument();
 });
